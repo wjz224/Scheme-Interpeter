@@ -55,9 +55,25 @@ the work for each step.  In contrast, if you pair program, things you figure out
 in Java won't need to be re-learned in Python, so you'll do only about 50% of
 the work for Python... that savings adds up!
 
-Note, too, that you are **required** to follow the documentation instructions
+If you wish to work in a team, you must email Prof Spear <spear@lehigh.edu>.
+Your email must follow these rules:
+
+1. You must cc your project partner, so that I know that both team members
+are aware of the team request.
+2. You must tell me which team member's repository you will be working in.
+
+I will change the permissions on that repository, so that both students can
+read and write to it.  You will not need to submit the assignment twice.
+
+## Documentation
+
+You are **required** to follow the documentation instructions
 that accompany each part of the assignment.  Correct code that does not have
 documentation will not receive full points.
+
+**DO NOT FORGET THE QUESTIONS AT THE END OF THIS FILE**
+
+## Deadlines
 
 This assignment is due by 11:59 PM on Friday, September 9th.  You should have
 received this assignment by using `git` to `clone` a repository onto the machine
