@@ -11,6 +11,23 @@ public class MyReverse<T> {
    * @return A list that is the reverse of `in`
    */
   List<T> reverse(List<T> in) {
-    return null;
+    // Base case there is no list return null
+    if(in == null){
+      return null;
+    }
+    // Base case where there is only one element in the list
+    if(in.size() < 2){
+      return in;
+    }
+    else{
+      // Store removed element
+      T remove = in.remove(0);
+      // Recursively call reverse function that recursively removes all elements and adds elements back into list in  reverese
+      reverse(in);
+      // Adding back elements into list
+      in.add(remove);
+    }
+    // return list
+    return in;
   }
 }
