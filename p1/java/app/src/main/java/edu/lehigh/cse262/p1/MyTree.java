@@ -14,7 +14,7 @@ public class MyTree<T extends Comparable<T>>{
      */
     // inner class for tree nodes
     private TreeNode root ;
-    private int size;
+    
     private class TreeNode{
         // value of node
         T value;
@@ -36,11 +36,12 @@ public class MyTree<T extends Comparable<T>>{
     MyTree(){
         // start tree with a null root
         root = null;
-        size = 0;
     }
     
     void insert(T value) {
+        // if root is null call constructor to create node for root
         if(root == null){
+            // set root to new node.
             root = new TreeNode(value);
         }
         else{
@@ -82,7 +83,8 @@ public class MyTree<T extends Comparable<T>>{
 
     /** Clear the tree */
     void clear() {
-        // [CSE 262] Implement Me!
+        // just set root to null and tree would be destroyed, no link to previous tree.
+        root = null;
     }
 
     /**
@@ -92,8 +94,30 @@ public class MyTree<T extends Comparable<T>>{
      */
 
     void inslist(List<T> l) {
-        // [CSE 262] Implement Me!
+        // if list is null or empty, than insert nothing and return from the function
+        if(l == null || l.size() < 1){
+            return;
+        }
+        // if root is null, than call the constructor with list's first element
+        if(root == null){
+            // Setting root to newly created node using list's first element
+            root = new TreeNode(l.get(0));
+            // For loop that inserts each element from the list. Since root already was created with first element, we will start at second element
+            for(int i = 1; i < l.size(); i++){
+                // insert element into tree.
+                this.insert(l.get(i));
+            }
+        }
+        // if root is not null, than for loop will just insert all elements starting from the first element.
+        else{
+            // for loop that inserts each element from the list, starting at the second element
+            for(int i = 0; i < l.size(); i++){
+                // insert element into tree.
+                this.insert(l.get(i));
+            }
+        }
     }
+    
 
     /**
      * Perform an in-order traversal, applying `func` to every element that is
