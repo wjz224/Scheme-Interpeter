@@ -38,6 +38,10 @@ public class ReadList<T> {
       // add converted input to list 
       list.add(convert);
     }
+    // create reverse object 
+    MyReverse<T> reverseO = new MyReverse<>();
+    // call reverse object's reverse method to get the reverse of the list
+    list = reverseO.reverse(list);
     // return list
     return list;
   }
