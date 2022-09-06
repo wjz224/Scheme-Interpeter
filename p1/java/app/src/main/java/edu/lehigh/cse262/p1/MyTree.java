@@ -6,7 +6,7 @@ import java.util.function.Function;
 /**
  * A binary tree, implemented from scratch
  */
-public class MyTree<T> {
+public class MyTree<T extends Comparable<T>>{
     /**
      * Insert a value into the tree
      * 
@@ -40,9 +40,43 @@ public class MyTree<T> {
     }
     
     void insert(T value) {
-        int count = 0;
         if(root == null){
-            root = new TreeNode(item);
+            root = new TreeNode(value);
+        }
+        else{
+            TreeNode parent, current;
+            // initalizing parent
+            parent = null;
+            // setting current to root
+            current = root;
+            // While loop iterates through and looks for leaf node until current node is null
+            while(current != null){ 
+                parent = current;
+                // if value is less than current node's value, than go to the left child
+                if(value.compareTo(current.value) < 0){
+                    // setting current to left child
+                    current = current.left;
+                }
+                else if(value.compareTo(current.value) > 0){
+                    // setting current to right child
+                    current = current.right;
+                }
+                else{
+                    // if value is found in BST than return and do not do insert 
+                    return;
+                }
+            }
+            // when current node is null, its parent left and right childs are the potential spots for inserting the value
+            // if value is less than parent value, than it will be the left child.
+            if(value.compareTo(parent.value) < 0){
+                // Creating a new node with the value and inserting it as the left child
+                parent.left = new TreeNode(value);
+            }
+            // if value is greater than parent value, than it will be right child
+            else {
+                // Creating a new node with the value and inserting it as the right child
+                parent.right = new TreeNode(value);
+            }
         }
     }
 
