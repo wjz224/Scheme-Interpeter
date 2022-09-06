@@ -12,8 +12,38 @@ public class MyTree<T> {
      * 
      * @param value The value to insert
      */
+    // inner class for tree nodes
+    private TreeNode root ;
+    private int size;
+    private class TreeNode{
+        // value of node
+        T value;
+        // left node pointer
+        TreeNode left;
+        // right node pointer
+        TreeNode right;
+        // inner class constructor for tree nodes
+        TreeNode(T val){
+            value = val;
+            // left node starts null
+            left =  null;
+            // right node starts null
+            right = null;
+        }
+        
+    }
+    // Tree constructor
+    MyTree(){
+        // start tree with a null root
+        root = null;
+        size = 0;
+    }
+    
     void insert(T value) {
-        // [CSE 262] Implement Me!
+        int count = 0;
+        if(root == null){
+            root = new TreeNode(item);
+        }
     }
 
     /** Clear the tree */
@@ -26,6 +56,7 @@ public class MyTree<T> {
      *
      * @param l The list of elements to insert into the tree
      */
+
     void inslist(List<T> l) {
         // [CSE 262] Implement Me!
     }
