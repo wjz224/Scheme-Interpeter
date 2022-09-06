@@ -1,5 +1,6 @@
 package edu.lehigh.cse262.p1;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -15,6 +16,13 @@ public class MyMap<T> {
    */
   List<T> map(List<T> list, Function<T, T> func) {
     // [CSE 262] Implement Me!
-    return null;
+    if(list == null){
+      return null;
+    }
+    List<T> output = new ArrayList<>();
+    for(int i = 0; i < list.size(); i++){
+        output.add(func.apply(list.get(i)));
+    }
+    return output;
   }
 }
