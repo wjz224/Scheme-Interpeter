@@ -131,12 +131,16 @@ public class MyTree<T extends Comparable<T>>{
     }
 
     void inorderHelper(TreeNode node, Function<T,T> func){
-        // recursive call to the left child
-        inorderHelper(node.left,func);
-        // setting new value to node after applying function
-        node.value = func.apply(node.value);
-        // recursive call to the reight child
-        inorderHelper(node.right,func);
+        // if node is not null, than we are at end of recursive calls
+        if(node != null){
+            // recursive call to the left child
+            inorderHelper(node.left,func);
+            // visiting the node and setting new value to node after applying function
+            node.value = func.apply(node.value);
+            // recursive call to the right child
+            inorderHelper(node.right,func);
+        }
+
     }
 
     /**
@@ -146,6 +150,17 @@ public class MyTree<T extends Comparable<T>>{
      * @param func A function to apply to each item
      */
     void preorder(Function<T, T> func) {
-        
+        // calls helper function for recursive call starting on root
+        preorderHelper(root,func);
+    }
+    void preorderHelper(TreeNode node, Function <T,T> func){
+        if(node != null){
+            // recursive call to the left child
+            preorderHelper(node.left,func);
+            // recursive call to the right child
+            preorderHelper(node.right,func);
+            // visiting the node and setting new value after applying function
+            node.value = func.apply(node.value);
+        }
     }
 }
