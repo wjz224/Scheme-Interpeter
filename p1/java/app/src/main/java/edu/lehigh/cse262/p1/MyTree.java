@@ -126,7 +126,17 @@ public class MyTree<T extends Comparable<T>>{
      * @param func A function to apply to each item
      */
     void inorder(Function<T, T> func) {
-        // [CSE 262] Implement Me!
+        // calls helper function for recursive call starting on root
+        inorderHelper(root,func);
+    }
+
+    void inorderHelper(TreeNode node, Function<T,T> func){
+        // recursive call to the left child
+        inorderHelper(node.left,func);
+        // setting new value to node after applying function
+        node.value = func.apply(node.value);
+        // recursive call to the reight child
+        inorderHelper(node.right,func);
     }
 
     /**
@@ -136,6 +146,6 @@ public class MyTree<T extends Comparable<T>>{
      * @param func A function to apply to each item
      */
     void preorder(Function<T, T> func) {
-        // [CSE 262] Implement Me!
+        
     }
 }
