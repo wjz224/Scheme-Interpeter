@@ -27,6 +27,9 @@ class tree:
         self.root = None
     # tree ins(x) method - inserts x into tree
     def ins(self,x):
+        # if x is none than return, don't insert
+        if(x == None):
+            return
         # If there is no root, insert x by creating a root node
         if (self.root == None):
             # creating root as new node with value x
@@ -54,3 +57,12 @@ class tree:
             else:
                 # return since there the value is a duplicate
                 return
+    def inslist(self,l):
+        # don't insert if list is none, return
+        if(l == None):
+            return
+        # for loop that inserts each element from the list into the tree
+        for i in l:
+            # inserting each element from the list
+            self.insert(i)
+        
