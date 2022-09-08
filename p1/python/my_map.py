@@ -5,4 +5,6 @@
 # `map` function.
 
 def my_map(func, l):
-    pass
+    for i in range(len(l)):
+        l[i] = func(l[i])
+    return l
