@@ -36,9 +36,9 @@ class tree:
             self.root = node(x)
         # If there is a root, traverse through tree starting from root using recursion to insert x
         else:
-            # calling recursive helper function 
+            # calling recursive helper function to insert x into the tree starting from root
             self.insertHelper(x,self.root)
-    # recursive helper function that traverses through tree and inserts x as a node in the tree
+    # recursive ins helper function that traverses through tree and inserts x as a node in the tree
     def insHelper(self, x, current):
         # if current is None than we are at the spot where the node should be inserted
         if(current == None):
@@ -57,6 +57,7 @@ class tree:
             else:
                 # return since there the value is a duplicate
                 return
+    # tree inslist(l) method - inserts list into tree
     def inslist(self,l):
         # don't insert if list is none, return
         if(l == None):
@@ -65,4 +66,21 @@ class tree:
         for i in l:
             # inserting each element from the list
             self.insert(i)
+    # tree display() method - display the tree in preorder
+    def display(self):
+        # if root is None than there is nothing to display
+        if(self.root == None):
+            return
+        # calling recursive helper function starting from root
+        self.displayHelper(self.root)
+        pass
+    # recursive display helper function that displays the tree in pre order
+    def displayHelper(self, current):
+        # visit the node and print the current's value
+        print(current.value + " ")
+        # Traverse the left tree by recursive call on the left child
+        self.displayHelper(current.left)
+        # Traverse the right tree by recursive call on the right child
+        self.displayHelper(current.right)
+    
         
