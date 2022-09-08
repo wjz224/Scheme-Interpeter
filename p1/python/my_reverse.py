@@ -2,8 +2,9 @@
 
 def my_reverse(l):
     if (l == none):
-        
+        return none
     if (l.size() < 2):
-        
-    
+        return l
+    else: 
+        x = 
     pass
