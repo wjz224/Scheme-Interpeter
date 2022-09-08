@@ -10,5 +10,16 @@
 ;; local to `read-list`.
 
 (define (read-list)
-  #f ;; [CSE 262] Implement Me!
+   ;; define local variable p that takes the value of (read)
+  (let ((p (read)))
+        ;; conditional statement that checks if p is EOF
+        (if (eof-object? p)
+            ;; if p is EOF this is our end statement and the recursive function returns an empty list to append to the rest of the list
+            (list )
+            ;; if p is not an EOF it will be created as a list and we will do a recursival call that appends the user's next input to the list
+            (append (list p) (read-list) )
+        )
+      
   )
+)
+
