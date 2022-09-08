@@ -23,5 +23,3 @@ def read_list():
     except:
         # Once EOF is reached,the recursive calls finally stop and the functions start returning after the last element is added
         return list
-# test
-print(read_list())
