@@ -11,15 +11,17 @@ def read_list():
         list = []
         # Tell the user to enter an element to the list
         print("Enter to add element to list:")
-        # Append the users input into the list
-        list.append(input())
+        # Ask user for input and store it in variable x
+        x = input()
         # Extend the list with additional user inputs by recursive call on read_list function until EOF
         list.extend(read_list())
-        # return list for extension and returns entire list when all user inputs are added into list
+         # Append the users input into the list in reverse order from which they were entered
+        list.append(x)
+        # return list for extension and returns the reversed list of all the inputs the user entered
         return list
     # except catches EOF
     except:
-        # Once EOF is reached,the recursive function finally stops and the last element is added
+        # Once EOF is reached,the recursive calls finally stop and the functions start returning after the last element is added
         return list
 # test
-# print(read_list())
+print(read_list())
