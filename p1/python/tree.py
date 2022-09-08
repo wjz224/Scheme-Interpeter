@@ -72,15 +72,19 @@ class tree:
         if(self.root == None):
             return
         # calling recursive helper function starting from root
-        self.displayHelper(self.root)
-        pass
     # recursive display helper function that displays the tree in pre order
     def displayHelper(self, current):
-        # visit the node and print the current's value
-        print(current.value + " ")
-        # Traverse the left tree by recursive call on the left child
-        self.displayHelper(current.left)
-        # Traverse the right tree by recursive call on the right child
-        self.displayHelper(current.right)
-    
+        if (current != None):
+            # visit the node and print the current's value
+            print(current.value + " ")
+            # Traverse the left tree by recursive call on the left child
+            self.displayHelper(current.left)
+            # Traverse the right tree by recursive call on the right child
+            self.displayHelper(current.right)
+    def inorder(self):
+        # if root is None than there is nothing to traverse
+        if(self.root == None):
+            return
+        self.inorderHelper()
+    def inorderHelper(self,current):
         
