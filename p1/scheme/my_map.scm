@@ -10,12 +10,16 @@
       l
       ;;appending the func applied to the first element of the list ('car 1') and casting it as a list so we can use append
       ;;then recursively call my-map to list from the second element to the end of the list ('cdr 1')
-      (append (list(func (car l)))
-              (my-map func (cdr l)))))
+      (if (= 1 (length l))
+        (list (func(car l)))
+        (append (list (func (car l)))
+                (my-map func (cdr l))))))
+      
   
 ;;test
-;;(define a (list 1 2 3 4))
+;;(define a (list 1))
 ;;(define plusone
-;;    (lambda (x)
-;;  (+ x 1)))
+   ;;(lambda (x)
+;;(+ x 1)))
 ;;(display (my-map plusone a))
+
