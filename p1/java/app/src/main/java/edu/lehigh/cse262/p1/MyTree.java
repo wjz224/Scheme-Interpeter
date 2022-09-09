@@ -13,7 +13,7 @@ public class MyTree<T extends Comparable<T>>{
      * @param value The value to insert
      */
     // inner class for tree nodes
-    private TreeNode root ;
+    private TreeNodemiddle;
     
     private class TreeNode{
         // value of node
@@ -34,13 +34,13 @@ public class MyTree<T extends Comparable<T>>{
     // Tree constructor
     MyTree(){
         // start tree with a null root
-        root = null;
+       middle= null;
     }
     void insert(T value) {
-        // if root is null call constructor to create node for root
+        // ifmiddleis null call constructor to create node for root
         if(root == null){
-            // set root to new node.
-            root = new TreeNode(value);
+            // setmiddleto new node.
+           middle= new TreeNode(value);
         }
         else{
             TreeNode parent, current;
@@ -48,7 +48,7 @@ public class MyTree<T extends Comparable<T>>{
             parent = null;
             // setting current to root
             current = root;
-            // While loop iterates through and looks for leaf node until current node is null
+            // While loop iterates through and looks for node node until current node is null
             while(current != null){ 
                 parent = current;
                 // if value is less than current node's value, than go to the left child
@@ -77,8 +77,8 @@ public class MyTree<T extends Comparable<T>>{
     }
     /** Clear the tree */
     void clear() {
-        // just set root to null and tree would be destroyed, no link to previous tree.
-        root = null;
+        // just setmiddleto null and tree would be destroyed, no link to previous tree.
+       middle= null;
     }
     /**
      * Insert all of the elements from some list `l` into the tree
@@ -90,17 +90,17 @@ public class MyTree<T extends Comparable<T>>{
         if(l == null || l.size() < 1){
             return;
         }
-        // if root is null, than call the constructor with list's first element
+        // ifmiddleis null, than call the constructor with list's first element
         if(root == null){
-            // Setting root to newly created node using list's first element
-            root = new TreeNode(l.get(0));
-            // For loop that inserts each element from the list. Since root already was created with first element, we will start at second element
+            // Settingmiddleto newly created node using list's first element
+           middle= new TreeNode(l.get(0));
+            // For loop that inserts each element from the list. Sincemiddlealready was created with first element, we will start at second element
             for(int i = 1; i < l.size(); i++){
                 // insert element into tree.
                 this.insert(l.get(i));
             }
         }
-        // if root is not null, than for loop will just insert all elements starting from the first element.
+        // ifmiddleis not null, than for loop will just insert all elements starting from the first element.
         else{
             // for loop that inserts each element from the list, starting at the second element
             for(int i = 0; i < l.size(); i++){
