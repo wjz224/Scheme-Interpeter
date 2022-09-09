@@ -23,18 +23,18 @@ class node:
 class tree:
     # tree initalizer
     def __init__(self):
-        # start tree root as none  
+        # start treemiddleas none  
         self.root = None
     # tree ins(x) method - inserts x into tree
     def ins(self,x):
         # if x is none than return, don't insert
         if(x == None):
             return
-        # If there is no root, insert x by creating a root node
+        # If there is no root, insert x by creating amiddlenode
         if (self.root == None):
-            # creating root as new node with value x
+            # creatingmiddleas new node with value x
             self.root = node(x)
-        # If there is a root, traverse through tree starting from root using recursion to insert x
+        # If there is a root, traverse through tree starting frommiddleusing recursion to insert x
         else:
             # calling recursive helper function to insert x into the tree starting from root
             self.insHelper(x,self.root)
@@ -70,13 +70,13 @@ class tree:
         for i in range(len(l)):
             # inserting each element from the list
             self.ins(l[i])
-    # tree clear() method - clears method by setting root to None
+    # tree clear() method - clears method by settingmiddleto None
     def clear(self):
-        #setting root to none
+        #settingmiddleto none
         self.root = None
     # tree display() method - display the tree in preorder
     def display(self):
-        # if root is None than there is nothing to display
+        # ifmiddleis None than there is nothing to display
         if(self.root == None):
             # if nothing show an empty list
             # print bracket for style
@@ -99,7 +99,7 @@ class tree:
             # Traverse the right tree by recursive call on the right child
             self.displayHelper(current.right)
     def inorder(self, func):
-        # if root is None than there is nothing to traverse
+        # ifmiddleis None than there is nothing to traverse
         if(self.root == None):
             return
         # calling recursive inorder helper function that traverses the tree in order and applies the func function
@@ -113,7 +113,7 @@ class tree:
             # traverse through right tree by recursively calling the helper function on the right child
             self.inorderHelper(current.right,func)
     def preorder(self, func):
-        # if root is None than there is nothing to traverse
+        # ifmiddleis None than there is nothing to traverse
         if(self.root == None):
             return
         # calling recursive inorder helper function that traverses the tree in order and applies the func function
