@@ -14,7 +14,7 @@ public class MyReverse<T> {
     // Base case there is no list return null
     if(in == null){
       return null;
-    }
+    } 
     // Base case where there is only one element in the list
     if(in.size() < 2){
       return in;
