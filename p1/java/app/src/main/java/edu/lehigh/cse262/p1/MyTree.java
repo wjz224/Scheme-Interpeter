@@ -13,7 +13,7 @@ public class MyTree<T extends Comparable<T>>{
      * @param value The value to insert
      */
     // inner class for tree nodes
-    private TreeNodemiddle;
+    private TreeNode root;
     
     private class TreeNode{
         // value of node
@@ -34,13 +34,13 @@ public class MyTree<T extends Comparable<T>>{
     // Tree constructor
     MyTree(){
         // start tree with a null root
-       middle= null;
+       root= null;
     }
     void insert(T value) {
-        // ifmiddleis null call constructor to create node for root
+        // ifrootis null call constructor to create node for root
         if(root == null){
-            // setmiddleto new node.
-           middle= new TreeNode(value);
+            // setrootto new node.
+           root= new TreeNode(value);
         }
         else{
             TreeNode parent, current;
@@ -77,8 +77,8 @@ public class MyTree<T extends Comparable<T>>{
     }
     /** Clear the tree */
     void clear() {
-        // just setmiddleto null and tree would be destroyed, no link to previous tree.
-       middle= null;
+        // just setrootto null and tree would be destroyed, no link to previous tree.
+       root= null;
     }
     /**
      * Insert all of the elements from some list `l` into the tree
@@ -90,17 +90,17 @@ public class MyTree<T extends Comparable<T>>{
         if(l == null || l.size() < 1){
             return;
         }
-        // ifmiddleis null, than call the constructor with list's first element
+        // ifrootis null, than call the constructor with list's first element
         if(root == null){
-            // Settingmiddleto newly created node using list's first element
-           middle= new TreeNode(l.get(0));
-            // For loop that inserts each element from the list. Sincemiddlealready was created with first element, we will start at second element
+            // Settingrootto newly created node using list's first element
+           root= new TreeNode(l.get(0));
+            // For loop that inserts each element from the list. Sincerootalready was created with first element, we will start at second element
             for(int i = 1; i < l.size(); i++){
                 // insert element into tree.
                 this.insert(l.get(i));
             }
         }
-        // ifmiddleis not null, than for loop will just insert all elements starting from the first element.
+        // ifrootis not null, than for loop will just insert all elements starting from the first element.
         else{
             // for loop that inserts each element from the list, starting at the second element
             for(int i = 0; i < l.size(); i++){
