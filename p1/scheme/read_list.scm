@@ -17,9 +17,9 @@
             ;; if p is EOF this is our end statement and the recursive function returns an empty list to append to the rest of the list
             (list )
             ;; if p is not an EOF it will be created as a list and we will do a recursival call that appends the user's next input to the list
-            (append (list p) (read-list) )
-        )
-      
+            (append (read-list) (list p))
+        )  
   )
 )
 
+(display (read-list))
