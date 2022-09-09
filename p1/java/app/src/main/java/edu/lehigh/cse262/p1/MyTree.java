@@ -30,14 +30,12 @@ public class MyTree<T extends Comparable<T>>{
             // right node starts null
             right = null;
         }
-        
     }
     // Tree constructor
     MyTree(){
         // start tree with a null root
         root = null;
     }
-    
     void insert(T value) {
         // if root is null call constructor to create node for root
         if(root == null){
@@ -58,13 +56,10 @@ public class MyTree<T extends Comparable<T>>{
                     // setting current to left child
                     current = current.left;
                 }
-                else if(value.compareTo(current.value) > 0){
+                // if value is less than or equal to current node's value than go to the right child (accounting for duplicates)
+                else if(value.compareTo(current.value) >= 0){
                     // setting current to right child
                     current = current.right;
-                }
-                else{
-                    // if value is found in BST than return and do not do insert 
-                    return;
                 }
             }
             // when current node is null, its parent left and right childs are the potential spots for inserting the value
@@ -80,19 +75,16 @@ public class MyTree<T extends Comparable<T>>{
             }
         }
     }
-
     /** Clear the tree */
     void clear() {
         // just set root to null and tree would be destroyed, no link to previous tree.
         root = null;
     }
-
     /**
      * Insert all of the elements from some list `l` into the tree
      *
      * @param l The list of elements to insert into the tree
      */
-
     void inslist(List<T> l) {
         // if list is null or empty, than insert nothing and return from the function
         if(l == null || l.size() < 1){
@@ -117,8 +109,6 @@ public class MyTree<T extends Comparable<T>>{
             }
         }
     }
-    
-
     /**
      * Perform an in-order traversal, applying `func` to every element that is
      * visited
@@ -129,7 +119,6 @@ public class MyTree<T extends Comparable<T>>{
         // calls helper function for recursive call starting on root
         inorderHelper(root,func);
     }
-
     void inorderHelper(TreeNode node, Function<T,T> func){
         // if node is not null, than we are at end of recursive calls
         if(node != null){
@@ -142,7 +131,6 @@ public class MyTree<T extends Comparable<T>>{
         }
 
     }
-
     /**
      * Perform a pre-order traversal, applying `func` to every element that is
      * visited
@@ -154,7 +142,7 @@ public class MyTree<T extends Comparable<T>>{
         preorderHelper(root,func);
     }
     void preorderHelper(TreeNode node, Function <T,T> func){
-        if(node != null){
+        if(node != null){   
             // recursive call to the left child
             preorderHelper(node.left,func);
             // recursive call to the right child
