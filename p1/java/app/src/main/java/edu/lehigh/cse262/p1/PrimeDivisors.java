@@ -13,18 +13,24 @@ public class PrimeDivisors {
    */
   List<Integer> computeDivisors(int value) {
     // [CSE 262] Implement Me!
+    //Create an ArrayList of type List<Integer> called output
     List<Integer> list = new ArrayList<>();
     // iterates up to value and checks for prime divisors
     for(int i = 2; i < value; i++){
-      // 
+      //while: the prime number evenly divides into value
       while(value%i == 0){
+        //add the prime number to list
         list.add(i);
+        //divide value by i
         value = value/i;
       }
     }
+    //if value is > 2 and at this point has no more prime factors less than it, that means that value is a prime factor of the initial value given
     if(value > 2){
+      //add value to list
       list.add(value);
     }
+    //return list
     return list;
   }
 }
