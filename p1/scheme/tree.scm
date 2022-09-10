@@ -1,7 +1,7 @@
 ;; tree: A binary tree, implemented as a "closure"
 ;;
 ;; The tree should support the following methods:
-;; - 'ins x      - Insert the value x into the tree
+;; - 'ins bst      - Insert the value bst into the tree
 ;; - 'clear      - Reset the tree to empty
 ;; - 'inslist l  - Insert all the elements from list `l` into the tree
 ;; - 'display    - Use `display` to print the tree
@@ -15,13 +15,13 @@
 ;; should still require a parameter, but your code can ignore it.
 ;;
 ;; Note: You should implement the tree as a closure.  One of the simplest
-;; examples of a closure that acts like an object is the following:
+;; ebstamples of a closure that acts like an object is the following:
 ;;
 ;; (define (make-my-ds)
-;;   (let ((x '())) (lambda (msg arg)
-;;       (cond ((eq? msg 'set) (set! x arg) 'ok) ((eq? msg 'get) x) (else 'error)))))
+;;   (let ((bst '())) (lambda (msg arg)
+;;       (cond ((eq? msg 'set) (set! bst arg) 'ok) ((eq? msg 'get) bst) (else 'error)))))
 ;;
-;; In that example, I have intentionally *not* commented anything.  You will
+;; In that ebstample, I have intentionally *not* commented anything.  You will
 ;; need to figure out what is going on there.  If it helps, consider the
 ;; following sequence:
 ;;
@@ -32,20 +32,20 @@
 ;; (ds 'do 3)               ; returns 'error
 ;;
 ;; For full points, your implementation should be *clean*.  That is, the only
-;; global symbol exported by this file should be the `make-bst` function.
+;; global symbol ebstported by this file should be the `make-bst` function.
 
 ;; Questions:
 ;;   - How do you feel about closures versus objects?  Why?
 ;;   - How do you feel about defining a tree node as a generic triple?
-;;   - Contrast your experience solving this problem in Java, Python, and
+;;   - Contrast your ebstperience solving this problem in Java, Python, and
 ;;     Scheme.
 
 
-(define (make-bst msg bst arg)
+(define (make-bst)
   ;;takes in parameters
-  (lambda (msg bst arg)
+  (letrec ((bst '()))  (lambda (msg  arg)
         ;; make an empty bst by returning an empty list
-        (define make-empty-bst'())
+        (define make-empty-bst (list ) )
 
         ;;making bst with 
         (define (make-bst middle left right)  
@@ -101,34 +101,46 @@
           ;;else: just have bst
           (else bst)))
         ;;conditional statements to see argument entered
-       (cond  ( (eq? msg 'ins) 
-                ;; set x to the returned list from the insert-bst helper function
-                (set! x (insert-bst bst arg)) 'inserted) 
+       (cond    ((eq? msg 'get) 
+                ;; set bst to the returned list from the insert-bst helper function
+                (cond ((eq? arg 'empty)
+                      ;; set bst to empty list
+                      make-empty-bst '())
+                  )
+                )
+                ;; set bst to the returned list from the insert-bst helper function
+                ((eq? msg 'ins) 
+                (insert-bst bst arg))
+                 ;; set bst to an empty list '()
                 ((eq? msg 'clear) 
-                ;; set x to an empty list '()
-                (set! x '()) 'cleared)  
-                ;; set x to the returned list from the helper function (insert-bstList)
+                (set! bst '()) 'cleared)  
+                ;; set bst to the returned list from the helper function (insert-bstList)
                 ((eq? msg 'inslist) 
-                (set! x (insert-bstList bst arg)) 'insertedList)
-                ;; set x to the returned list from the helper function (bst-display ) 
+                (set! bst (insert-bstList bst arg)) 'insertedList)
+                ;; set bst to the returned list from the helper function (bst-display ) 
                 ((eq? msg 'display) 
-                 (set! x (bst-display bst))'bstdisplayed)
-                 ;; set x to the returned list from the helper function (bst-inorder)
+                 (set! bst (bst-display bst))'bstdisplayed)
+                 ;; set bst to the returned list from the helper function (bst-inorder)
                 ((eq? msg 'inorder)
-                  (set! x (bst-inorder bst arg))'bst-inorder-func-applied)
-                   ;; set x to the returned list from the helper function (bst-preorder)
+                  (set! bst (bst-inorder bst arg))'bst-inorder-func-applied)
+                   ;; set bst to the returned list from the helper function (bst-preorder)
                 ((eq? msg 'preorder) 
-                 (set! x (bst-preorder bst arg)) 'bst-preorder-func-applied)
+                 (set! bst (bst-preorder bst arg)) 'bst-preorder-func-applied)
                 (else 'error)))  
-       ;;making empty bst
-
-
+                ;;making empty bst
           )
-      
+)
 
 
 
 ;;test
-(display (make-bst 'ins (list ) 20))
+(define ds (make-bst))
+(display (ds 'ins 10))
+(newline )
+(display (ds 'get 'empty))
+
+
+
+
 ;;(display (make-bst 'clear (list ) 0)
 ;;(display (make-bst 'inslist (list ) (list 1 2 3 4)))
