@@ -30,7 +30,68 @@ import java.util.ArrayList;
  */
 public class Scanner {
     /** Construct a scanner */
+    enum STATE {
+        START, INSTR, STR, INSTR_PLUS, CLEANBREAK;
+        
+        public STATE start(char c){
+            STATE state = STATE.START;
+            if(c == '"'){
+                state = STATE.INSTR;
+            }
+            return state;
+        }
+        public STATE instr(char c){
+            STATE state = STATE.INSTR;
+            switch(c){
+                case '"':
+                    state = STR;
+                    break;
+                case '\\':
+                    state = INSTR_PLUS;
+                    break;
+                default:
+                    state = INSTR;
+                    break;
+            }
+            return state;
+        }
+        public STATE instr_plus(char c){
+            STATE state = STATE.INSTR_PLUS;
+            switch(c){
+                case '\"':
+                    state = INSTR;
+                    break;
+                case '\\':
+                    state = INSTR;
+                    break;
+                case 't':
+                    state = INSTR;
+                    break;
+                case 'n':
+                    state = INSTR;
+                    break;
+                default:
+                    state = CLEANBREAK;
+                    System.out.println("INSTR_PLUS error");
+                    break;
+            }
+            return state;
+        }
+        public STATE str(char c){
+            
+            STATE state = STATE.STR;
+            state = CLEANBREAK;
+            return state;
+        }
+        
+    }
+    
+
+
+    
+    
     public Scanner() {
+    
     }
 
     /**
