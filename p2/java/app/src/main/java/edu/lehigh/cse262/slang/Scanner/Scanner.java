@@ -29,69 +29,131 @@ import java.util.ArrayList;
  * You may also add imports.
  */
 public class Scanner {
-    /** Construct a scanner */
     enum STATE {
-        START, INSTR, STR, INSTR_PLUS, CLEANBREAK;
-        
-        public STATE start(char c){
-            STATE state = STATE.START;
-            if(c == '"'){
-                state = STATE.INSTR;
-            }
-            return state;
+        START, INSTR, STR, INSTR_PLUS, CLEANBREAK, ERROR;
+       private static String actualString = "";
+       private static String textLiteral = "";     
+       private static int row = 0;
+       private static int col = 0;
+        /***
+         * Get method for the STATE's row (line number)
+         * @return int
+         */
+        public static int getRow(){
+            return row;
         }
-        public STATE instr(char c){
-            STATE state = STATE.INSTR;
+        /***
+         * Get method for the STATE's col (char number in line)
+         * @return int
+         */
+        public static int getCol(){
+            return col;
+        }
+        /***
+         * Get method for the STATE's actualString
+         * @return String
+         */
+        public static String getString(){
+            return actualString;
+        }
+         /***
+         * Get method for the STATE's textLiteral
+         * @return String
+         */
+        public static String getLiteral(){
+            return textLiteral;
+        }
+        /***
+         * Setter method for STATE's actualString
+         */
+        public static void setString(String s){
+            actualString = s;
+        }
+        /***
+         * Setter method for STATE's textLiteral
+         */
+        public static void setLiteral(String s){
+            textLiteral = s;
+        }
+
+        /***
+         * start state method that keeps looping itself until a " is found indicating the start of the a string and transitions to STATE.INSTR by returning STATE.INSTR
+         * @param c
+         * @returns a state either STATE.INSTR or STATE.START
+         */
+        public static STATE start(char c){
+            STATE state = STATE.START;
+            // each time a function is called, increment col which represents the character
+            col++;
             switch(c){
                 case '"':
-                    state = STR;
-                    break;
-                case '\\':
-                    state = INSTR_PLUS;
+                    textLiteral += c;
+                    state = STATE.INSTR;
                     break;
                 default:
-                    state = INSTR;
+                    state = STATE.START;
                     break;
             }
             return state;
         }
-        public STATE instr_plus(char c){
+        /***
+         * 
+         * @param c
+         * @return
+         */
+        public static STATE instr(char c){
+            STATE state = STATE.INSTR;
+            col++;
+            switch(c){
+                case '"':
+                    System.out.println("621837812379821");
+                    state = STATE.STR;
+                    break;
+                case '\\':
+                    actualString+=c;
+                    state = STATE.INSTR_PLUS;
+                    break;
+                default:
+                    actualString+=c;
+                    state = STATE.INSTR;
+                    break;
+            }
+            textLiteral+=c;
+            return state;
+        }
+        public static STATE instr_plus(char c){
+            col++;
             STATE state = STATE.INSTR_PLUS;
             switch(c){
-                case '\"':
-                    state = INSTR;
+                case '"':
+                    state = STATE.INSTR;
                     break;
                 case '\\':
-                    state = INSTR;
+                    state = STATE.INSTR;
                     break;
                 case 't':
-                    state = INSTR;
+                    state = STATE.INSTR;
                     break;
                 case 'n':
-                    state = INSTR;
+                    state = STATE.INSTR;
                     break;
                 default:
-                    state = CLEANBREAK;
-                    System.out.println("INSTR_PLUS error");
+                    state = STATE.ERROR;
                     break;
             }
+            textLiteral+=c;
+            actualString+=c;
             return state;
         }
-        public STATE str(char c){
-            
-            STATE state = STATE.STR;
-            state = CLEANBREAK;
-            return state;
+        public static STATE str(){
+            // each time a string is found, that should be a line statement done thereofore move increment row which represents the line number
+            row++;
+            return STATE.STR;
         }
         
     }
-    
-
-
-    
-    
+    /** Construct a scanner */
     public Scanner() {
-    
     }
 
     /**
@@ -106,9 +168,55 @@ public class Scanner {
     public TokenStream scanTokens(String source) {
         // [CSE 262] Right now, this function is not implemented, so we are returning an
         // error token.
-        var error = new Tokens.Error("scanTokens is not implemented yet", -1, -1);
+        
         var tokens = new ArrayList<Tokens.BaseToken>();
-        tokens.add(error);
+        //tokens.add(error);
+
+        STATE state = STATE.START;
+        int index = 0; // first index of string from source
+         
+        for(int i = 0; i < source.length(); i++){
+            char c = source.charAt(i);
+            System.out.println("in for loop");
+            switch(state){
+                case START:
+                    System.out.println("in start");
+                    state = STATE.start(c);
+                    break;
+                case INSTR:
+                    System.out.println("in INSTR");
+                    state = STATE.instr(c);
+                    System.out.println("LITERAL:" + STATE.getLiteral());
+                    System.out.println("STRING:" + STATE.getString());
+                    System.out.println(state);
+                    break;
+                case INSTR_PLUS:
+                    System.out.println("in INSTR PLUS");
+                    state = STATE.instr_plus(c);
+                    break;
+            }
+            if(state == STATE.STR){
+                System.out.println("in STR");
+                state = STATE.str();
+                var tokStr = new Tokens.Str(STATE.getLiteral(), STATE.getRow(), STATE.getCol(), STATE.getString());
+                System.out.println("LITERAL:" + STATE.getLiteral());
+                System.out.println("STRING:" + STATE.getString());
+                tokens.add(tokStr);
+                state = STATE.CLEANBREAK;
+            }
+            else if(state != STATE.STR && i == source.length() - 1){
+                var error = new Tokens.Error("ERROR tokenLiteral: " + STATE.getLiteral(), STATE.getRow(), STATE.getCol());
+                tokens.add(error);
+                    return new TokenStream(tokens);
+            }
+            if(state == STATE.CLEANBREAK){
+                STATE.setString("");
+                STATE.setLiteral("");
+                state = STATE.START;
+            }
+        }
+        var EOF = new Tokens.Eof("End of file", STATE.getRow(), STATE.getCol());
+        tokens.add(EOF);
         return new TokenStream(tokens);
     }
 }
