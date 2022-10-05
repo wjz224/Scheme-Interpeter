@@ -91,7 +91,7 @@ public class Scanner {
                     state = STATE.INSTR;
                     break;
                 default:
-                    state = STATE.START;
+                    state = STATE.CLEANBREAK;
                     break;
             }
             return state;
@@ -106,7 +106,6 @@ public class Scanner {
             col++;
             switch(c){
                 case '"':
-                    System.out.println("621837812379821");
                     state = STATE.STR;
                     break;
                 case '\\':
@@ -177,42 +176,49 @@ public class Scanner {
          
         for(int i = 0; i < source.length(); i++){
             char c = source.charAt(i);
-            System.out.println("in for loop");
+            //System.out.println("in for loop");
             switch(state){
                 case START:
-                    System.out.println("in start");
+                    //System.out.println("in start");
                     state = STATE.start(c);
                     break;
                 case INSTR:
-                    System.out.println("in INSTR");
+                    //System.out.println("in INSTR");
                     state = STATE.instr(c);
-                    System.out.println("LITERAL:" + STATE.getLiteral());
-                    System.out.println("STRING:" + STATE.getString());
-                    System.out.println(state);
+                    //System.out.println("LITERAL:" + STATE.getLiteral());
+                    //System.out.println("STRING:" + STATE.getString());
+                    //System.out.println(state);
                     break;
                 case INSTR_PLUS:
-                    System.out.println("in INSTR PLUS");
+                    //System.out.println("in INSTR PLUS");
                     state = STATE.instr_plus(c);
                     break;
-            }
+                case CLEANBREAK:
+                    if(c != ' '){
+                        state = STATE.start(c);
+                    }
+                    break;
+            } 
+            //System.out.println(state);
             if(state == STATE.STR){
-                System.out.println("in STR");
+                //System.out.println("in STR");
                 state = STATE.str();
                 var tokStr = new Tokens.Str(STATE.getLiteral(), STATE.getRow(), STATE.getCol(), STATE.getString());
-                System.out.println("LITERAL:" + STATE.getLiteral());
-                System.out.println("STRING:" + STATE.getString());
+                //System.out.println("LITERAL:" + STATE.getLiteral());
+                //System.out.println("STRING:" + STATE.getString());
                 tokens.add(tokStr);
                 state = STATE.CLEANBREAK;
             }
-            else if(state != STATE.STR && i == source.length() - 1){
+            else if((state != STATE.STR && state != STATE.CLEANBREAK) && i == source.length() - 1 ){
+                //System.out.println(state);
                 var error = new Tokens.Error("ERROR tokenLiteral: " + STATE.getLiteral(), STATE.getRow(), STATE.getCol());
                 tokens.add(error);
-                    return new TokenStream(tokens);
+                //System.out.println("SOURCE LENGTH:" + source.length());
+                return new TokenStream(tokens);
             }
             if(state == STATE.CLEANBREAK){
                 STATE.setString("");
                 STATE.setLiteral("");
-                state = STATE.START;
             }
         }
         var EOF = new Tokens.Eof("End of file", STATE.getRow(), STATE.getCol());
