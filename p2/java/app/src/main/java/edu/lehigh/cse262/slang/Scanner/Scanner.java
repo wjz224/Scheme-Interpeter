@@ -81,7 +81,7 @@ public class Scanner {
         public static void setLiteral(String s){
             textLiteral = s;
         }
-
+        
         /***
          * start state method that keeps looping itself through cleanbreak until a " is found indicating the start of the a string and transitions to STATE.INSTR by returning STATE.INSTR
          * @param c
@@ -89,11 +89,8 @@ public class Scanner {
          */
         public static STATE start(char c){
             // current state is START
-            STATE state = STATE.START;
-            // each time a function is called, increment col since we are reading a new character
             col++;
-            STATE.setLiteral("");
-            STATE.setString("");
+            STATE state = STATE.START;
             // Switch statement that checks the char for a transition.
             switch(c){
                 case '"':
@@ -112,7 +109,8 @@ public class Scanner {
                     break;
                 default:
                     // Default go back to STATE.START and clear the text Literal. 
-                    System.out.println("In the start state");
+                    STATE.setLiteral("");
+                    STATE.setString("");
                     state = STATE.START;
                     break;
             }
@@ -141,7 +139,6 @@ public class Scanner {
                     break;
                 case '\\':
                     // add c to actualString, which is what the  String tokens value would store.
-                    actualString += c;
                     // Encountering a '\\' transitions the from INSTR to INSTR_PLUS
                     state = STATE.INSTR_PLUS;
                     break;
@@ -165,18 +162,25 @@ public class Scanner {
                 case '"':
                     // Encountering a '"' transitions the from INSTR_PLUS to INSTR
                     state = STATE.INSTR;
+                    textLiteral += '\"';
                     break;
                 case '\\':
                     // Encountering a '"' transitions the from INSTR_PLUS to INSTR
                     state = STATE.INSTR;
+                    actualString += '\\';
+                    textLiteral += '\\';
                     break;
                 case 't':
                     // Encountering a 't' transitions the from INSTR_PLUS to INSTR
                     state = STATE.INSTR;
+                    actualString += '\t';
+                    textLiteral += '\t';
                     break;
                 case 'n':
                      // Encountering a 'n' transitions the from INSTR_PLUS to INSTR
                     state = STATE.INSTR;
+                    actualString += '\n';
+                    textLiteral += '\n';
                     break;
                 default:
                     // any other character u are got an error and go to STATE.error which is a trapping state
@@ -184,8 +188,6 @@ public class Scanner {
                     break;
             }
             // add c to textLiteral and actualString
-
-            actualString+=c;
             return state;
         }
 
@@ -217,9 +219,6 @@ public class Scanner {
             col++;
             STATE state = STATE.PRECHAR;
             if(c == ' '){
-                state = STATE.ERROR;
-            }
-            else if(textLiteral.length() == 3){
                 state = STATE.ERROR;
             }
             else{
@@ -258,21 +257,24 @@ public class Scanner {
             // c stores the char at current index
             char c = source.charAt(i);
             //System.out.println("in for loop");
+            if((state == STATE.INSTR && (c == '\\')) || state == STATE.INSTR_PLUS ){
+            }
+            else{
+                System.out.println("char: " + c);
+                STATE.setLiteral(STATE.getLiteral() + c);
+                System.out.println(STATE.getLiteral());
+            }
+
             
             switch(state){
                 case START:  
                     // state is currently in STATE.START, call STATE.start(c) to get the state to transition to based on c.
                     state = STATE.start(c);
-                    System.out.println("" + c);
                     //System.out.println("in start");
                     break;
                 case INSTR:
                     // state is currently in STATE.INSTR, call STATE.instr(c) to get the state to transition to based on c.
                     state = STATE.instr(c);
-                    //System.out.println("in INSTR");
-                    //System.out.println("LITERAL:" + STATE.getLiteral());
-                    //System.out.println("STRING:" + STATE.getString());
-                    //System.out.println(state);
                     break;
                 case INSTR_PLUS:
                     // state is currently in STATE.INSTR_PLUS, call STATE.instr_plus(c) to get the state to transition to based on c.
@@ -296,18 +298,15 @@ public class Scanner {
                     }
                     break;
             } 
-            STATE.setLiteral(STATE.getLiteral() + c);
-            //System.out.println(state);
+
             // if state is ever in an accepting state, create and add the token of the respective type and add it to the tokens array.
             if(state == STATE.STR){
                 // state is currently in STATE.STR. This is an accepting state. 
                 // Create the token as a String by calling Tokens.Str() constructor with the textLiteral, row, col, and actualString stored in state.
+                System.out.println("LITERAL: " + STATE.getLiteral() + "TEST");
                 var tokStr = new Tokens.Str(STATE.getLiteral(), STATE.getRow(), STATE.getCol(), STATE.getString());
                 // add the token to the  tokens array.
                 tokens.add(tokStr);
-                //System.out.println("in STR");
-                //System.out.println("LITERAL:" + STATE.getLiteral());
-                //System.out.println("STRING:" + STATE.getString());
                 state = STATE.CLEANBREAK;
             }
             else if(state == STATE.VEC){
@@ -327,12 +326,6 @@ public class Scanner {
                 }
             
             }
-            else if(state == STATE.ERROR){
-                if((STATE.getLiteral().equals("\\newline") || (STATE.getLiteral().equals("\\space")) || (STATE.getLiteral().equals("\\tab")) ));
-                var tokChar = new Tokens.Char(STATE.getLiteral(), STATE.getRow(), STATE.getCol(), STATE.getLiteral().charAt(i));
-                state = STATE.CLEANBREAK;
-                tokens.add(tokChar);
-            }
             else if(state == STATE.BOOL){
                 System.out.println("IN BOOL");
                 if(STATE.getLiteral().charAt(i) == 't'){
@@ -345,22 +338,39 @@ public class Scanner {
                 }
                 state = STATE.CLEANBREAK;
             }
+            if(state == STATE.CLEANBREAK){
+                // each time a function is called, increment col since we are reading a new character
+                if(i != source.length() - 1 && source.charAt(i+1) != '\n' && source.charAt(i+1) != ' ' && source.charAt(i+1) != '(' && source.charAt(i+1) != ')'){
+                    state = STATE.ERROR;
+                }
+                else{
+                    // if we are in the CLEANBREAK state than clear the textLiteral and actualString and go to STATE.STARt
+                    STATE.setLiteral("");
+                    STATE.setString("");
+                    state = STATE.START;
+                }
+    
+            }
+            if (state == STATE.ERROR){
+                if((STATE.getLiteral().equals("\\newline") || (STATE.getLiteral().equals("\\space")) || (STATE.getLiteral().equals("\\tab")) )){
+                    var tokChar = new Tokens.Char(STATE.getLiteral(), STATE.getRow(), STATE.getCol(), STATE.getLiteral().charAt(i));
+                    state = STATE.CLEANBREAK;
+                    tokens.add(tokChar);
+                }
+                
+            }
             // if state is  not in an accepting state or at CLEANBREAK by the end, than it was trapped in a state, therefore throw an error.
             else if((state != STATE.STR && state != STATE.START && state != STATE.CHAR && state != STATE.BOOL) && i == source.length() - 1 ){
                 // create error token
                 var error = new Tokens.Error("ERROR tokenLiteral: " + STATE.getLiteral(), STATE.getRow(), STATE.getCol());
                 // add error token
                 tokens.add(error);
-                //System.out.println(state);
-                //System.out.println("SOURCE LENGTH:" + source.length());
                 // return TokenStream with the tokens array.
                 return new TokenStream(tokens);
             }
-            // if we are in the CLEANBREAK state than clear the textLiteral and actualString.
-            if(state == STATE.CLEANBREAK){
-                state = STATE.START;
-            }
+
         }
+        System.out.println(state +" ending state");
         var EOF = new Tokens.Eof("End of file", STATE.getRow(), STATE.getCol());
         tokens.add(EOF);
         return new TokenStream(tokens);
