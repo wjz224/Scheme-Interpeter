@@ -5,3 +5,6 @@
 (define (nand a b)
     (not (and a b)
 )
+;; testing
+;;(define a (nand #t #t))
+;;(display a)
