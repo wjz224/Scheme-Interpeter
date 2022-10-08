@@ -61,6 +61,9 @@ public class Scanner {
         public static int getCol(){
             return col;
         }
+        /***
+         * Setter method for STATE's col (char number in line)
+         */
         public static void setCol(int c){
             col = c;
         }
@@ -91,22 +94,25 @@ public class Scanner {
             textLiteral = s;
         }
 
+
         /***
          * start state method that keeps looping itself through cleanbreak until a " is found indicating the start of the a string and transitions to STATE.INSTR by returning STATE.INSTR
          * @param c
          * @returns a state either STATE.INSTR or STATE.START or STATE.VCB
          */
         public static STATE start(char c){
-            // current state is START
             STATE state = STATE.START;
-            // char[] validtoINID = {'!','$','%','&','*','/',':','<','=','>','?','~','_','^'};
+            //String to check for certain epsilon transitions
             String validToInid = "!$%&*/:<=>?~_^";
-            if(validToInid.contains("" + c)|| Character.isLetter(c)){
+            //inid transition
+            if(validToInid.contains("" + c) || Character.isLetter(c)){
                 state = STATE.INID;
             }
+            //innit transition
             else if(Character.isDigit(c)){
                 state = STATE.ININT;
             }
+            //all other state transitions
             else{
                 // Switch statement that checks the char for a transition.
                 switch(c){
@@ -115,7 +121,7 @@ public class Scanner {
                         state = STATE.INSTR;
                         break;
                     case '#':
-                        // Encountering a '#'' transitions the from START to INSTR
+                        // Encountering a '#' transitions the from START to INSTR
                         state = STATE.VCB;
                         break;
                     case '\n':
@@ -125,108 +131,227 @@ public class Scanner {
                         col = 0;
                         break;
                     case '+':
+                        // Encountering a '+' transitions the from START to PM
                         state = STATE.PM;
                         break; 
                     case '-':
+                        // Encountering a '-' transitions the from START to PM
                         state = STATE.PM;
                         break;
                     case '\'':
+                        // Encountering a ''' transitions the from START to PM
                         state = STATE.ABBREV;
                         break;
                     default:
+                        // Epsilon transitions from START to CLEANBREAK
                         String startc = " \t\n\r\0;()";
                         if(startc.contains("" + c)){
                             STATE.setLiteral("");
                             STATE.setString("");
                             state = STATE.cleanbreak(c);
                         }
+                        // Else sends to error state
                         else{
                             state = STATE.ERROR;
                         }
                         break;
                 } 
             }
-            // Add character c to textLiteral which is the literal that the token would be off of. 
-            // If the state is STATE.start than do not add literal because we did not get char that can transition
-
-            
             // return the state that we transitioned to from the char c.
             return state;
         }
+
+        /***
+         * cleanbreak state method that finds valid START epsilon transition,'(', ')', '\0', ';' indicating START/LPAREN/RPAREN/EOF/INCOMMENT state 
+         * @param c
+         * @returns a state either STATE.START or STATE.LPAREN or STATE.RPAREN or STATE.EOF or STATE.INCOMMENT
+         */
+        public static STATE cleanbreak(char c){
+            //set current state to CLEANBREAK
+            STATE state = STATE.CLEANBREAK;
+            String startCheck = " \t\n\r";
+            //String to check if c is a valid epsilon transition to STATE.START
+            if(startCheck.contains(""+ c)){
+                state = STATE.START;
+            }
+            else{
+                // Switch statement that checks the char for a transition.
+                switch(c){
+                    case '(':
+                        // Encountering a '(' transitions the from CLEANBREAK to LPAREN
+                        state = STATE.LPAREN;
+                        break;
+                    case ')':
+                        // Encountering a ')' transitions the from CLEANBREAK to RPAREN
+                        state = STATE.RPAREN;
+                        break;
+                    case '\0':
+                        // Encountering a '\0' transitions the from CLEANBREAK to EOF
+                        state = STATE.EOF;
+                        break;
+                    case ';':
+                        // Encountering a ';' transitions the from CLEANBREAK to INCOMMENT
+                        state = STATE.INCOMMENT;
+                        break;
+                }
+            }
+            //return the state that we transitioned to from c
+            return state;
+        }
+        
+        //BEGINNING OF THE SPECIAL DFA
+
+        /***
+         * incomment state method that finds valid epsilon transition indicating valid START, EOF, INCOMMENT STATE
+         * @param c
+         * @returns a state either STATE.START or STATE.EOF or STATE.INCOMMENT
+         */
+        public static STATE incomment(char c){
+            STATE state = STATE.INCOMMENT;
+            String stateC = "\n";
+            String eofC = "\0";
+            //String to check for valid '\n' char to send to START state
+            if(stateC.contains(""+c)){
+                state = STATE.START;
+                STATE.setLiteral("");
+                STATE.setLiteral("");
+            }
+            //String to check for valid '\0' char to send to EOF state
+            else if(eofC.contains(""+c)){
+                state = STATE.EOF;
+                STATE.setLiteral("");
+                STATE.setLiteral("");
+            }
+            //Else loop through STATE.INCOMMENT
+            else{
+                state = STATE.INCOMMENT;   
+            } 
+            //return the state that we transitioned to from c
+            return state;   
+        }
+                
+        //END OF THE SPECIAL DFA
+        //BEGINNING OF THE IDS_NUMS DFA
+
+        /***
+         * inid state method that keeps looping itself until a valid identifier/error is found indicating either an Identifier token or Error token
+         * @param c
+         * @returns a state either STATE.INID or STATE.IDENTIFIER or STATE.ERROR
+         */
         public static STATE inid(char c){
             String validToInid = "!$%&*/:<=>?~_^.-+";
-            System.out.println("");
-
             STATE state = STATE.INID;
             String inidc = " \t\n\r";
+            //String to check for certain epsilon transitions to identifier state
             if(inidc.contains("" + c)){
                 state = STATE.IDENTIFIER;
             }
+            //String to loop through inid state if valid inid character is passed through
             else if(validToInid.contains("" + c)|| Character.isLetter(c) || Character.isDigit(c)){
                 state = STATE.INID;
             }
+            //else send to STATE.ERROR
             else{
                 state = STATE.ERROR;
             }   
+            // return the state that we transitioned to from the char c.
             return state;
         }
+        /***
+         * pm state method that finds valid identifier/int, indicating either an Identifier token, Error token, or the INNIT state
+         * @param c
+         * @returns a state either STATE.IDENTIFIER or STATE.ININT or STATE.ERROR
+         */
         public static STATE pm(char c){
             STATE state = STATE.PM;
             String pmc = " \t\n\r\0";
+            //String to see if c is a valid +/- identifier token
             if(pmc.contains(""+c)){
                 state = STATE.IDENTIFIER;
             }
+            //Checks to see if there is an int to send to the ININT state
             else if(Character.isDigit(c)){
                 state = STATE.ININT;
             }
+            //else send to STATE.ERROR
             else{
                 state = STATE.ERROR;
             }
+            // return the state that we transitioned to from the char c.
             return state;
         }
+        /***
+         * inint state method that loops through ININT until epsilon transition, '.', or error state, indicating either an Int token, Error token, INNIT state, or PREDBL state
+         * @param c
+         * @returns a state either STATE.INT or STATE.ININT or STATE.PREDBL or STATE.ERROR
+         */
         public static STATE inint(char c){
             STATE state = STATE.ININT;
             String intc = " \t\r\n\0";
+            //String to see if there is certain epsilon transitions indicating an Int Token
             if(intc.contains(""+c)){
                 state = STATE.INT;
             }
+            //Checks if c is another int sending it back to the ININT state
             else if(Character.isDigit(c)){
                 state = STATE.ININT;
             }
+            //Checks to see if '.' is found indicating PREDBL state
             else if(c == '.'){
                 state = STATE.PREDBL;
             }
+            //else send to STATE.ERROR
             else{
                 state = STATE.ERROR;
             }
+            // return the state that we transitioned to from the char
             return state;
         }
+        /***
+         * predbl state method that finds valid indbl, indicating either a valid INDBL state or Error token
+         * @param c
+         * @returns a state either STATE.INDBL or STATE.ERROR
+         */
         public static STATE predbl(char c){
             STATE state = STATE.PREDBL;
+            //Check if c is an int thus indicating a INDBL state
             if(Character.isDigit(c)){
                 state = STATE.INDBL;
             }
+            //Else send to STATE.ERROR
             else{
                 state = STATE.ERROR;
             }
+            // return the state that we transitioned to from the char
             return state;
         }
+        /***
+         * indbl state method that finds valid dbl/indbl/error, indicating either an DBL token, Error token, or the INDBL state
+         * @param c
+         * @returns a state either STATE.DBL or STATE.INDBL or STATE.ERROR
+         */
         public static STATE indbl(char c){
             STATE state = STATE.INDBL;
             String doubleC = " \t\n\r\0";
+            //String to check if there is certain epsilon transitions indicatnig a DBL Token
             if(doubleC.contains(""+c)){
-                System.out.println("Hello there");
                 state = STATE.DBL;
             }
+            //Check to see if c is an int indicating a INDBL state
             else if(Character.isDigit(c)){
                 state = STATE.INDBL;
             }
+            //Else send to STATE.ERROR
             else{
                 state = STATE.ERROR;
             }
+            //return the state that we transitioned to from the char
             return state;
         }
             
+        //END OF THE IDS_NUMS DFA
+        //BEGINNING OF THE STRINGS DFA
+
         /***
          * instr state method that transitions to STR if c is '"' or INSTR_PLUS if c is '\\' and add c to the actualString. 
          * If it is any other character just transition back to STATE.INSTR  and add c to actualString.
@@ -236,14 +361,13 @@ public class Scanner {
         public static STATE instr(char c){
             // current state is INSTR
             STATE state = STATE.INSTR;
-            // increment col since we are reading ta new char.
+            // Switch statement that checks the char for a transition.
             switch(c){
                 case '"':
                      // Encountering a '"' transitions the from INSTR to STR indicating the end of a string
                     state = STATE.STR;
                     break;
                 case '\\':
-                    // add c to actualString, which is what the  String tokens value would store.
                     // Encountering a '\\' transitions the from INSTR to INSTR_PLUS
                     state = STATE.INSTR_PLUS;
                     break;
@@ -254,16 +378,17 @@ public class Scanner {
                     state = STATE.INSTR;
                     break;
             }
-            // add c to text literal.
-
+            //return the state that we transitioned to from the char
             return state;
         }
+        /***
+         * instr_plus state method that finds valid instr/error, indicating either an Error state or INSTR state
+         * @param c
+         * @returns a state either STATE.INSTR or STATE.ERROR
+         */
         public static STATE instr_plus(char c){
-            // increment col since we are reading ta new char.
-            
-            // current state is INSTR_PLUS
-
             STATE state = STATE.INSTR_PLUS;
+            // Switch statement that checks the char for a transition.
             switch(c){
                 case '"':
                     // Encountering a '"' transitions the from INSTR_PLUS to INSTR
@@ -289,7 +414,7 @@ public class Scanner {
                     textLiteral += '\n';
                     break;
                 default:
-                    // any other character u are got an error and go to STATE.error which is a trapping state
+                    // any other character go to STATE.ERROR
                     actualString += '\\';
                     actualString += c;
                     textLiteral += '\\';
@@ -297,90 +422,67 @@ public class Scanner {
                     state = STATE.ERROR;
                     break;
             }
-            // add c to textLiteral and actualString
+            //return the state that we transitioned to from the char
             return state;
         }
 
-        // END OF STRING FDA
-        
+        // END OF STRING DFA        
         // BEGINNING OF VEC_CHAR_BOOL FDA
+
+        /***
+         * vcb state method that finds valid '(', '\', 't', 'f' indicating valid VEC, PRECHAR, BOOL, or ERROR STATE
+         * @param c
+         * @returns a state either STATE.INSTR or STATE.ERROR
+         */
         public static STATE vcb(char c){
             STATE state = STATE.VCB;
-            System.out.println("IN VCB");
-            
+            //Switch statement that checks the char for a transition            
             switch(c){
                 case '(':
+                    // Encountering a '(' transitions the from VCB to VEC
                     state = STATE.VEC;
                     break;    
                 case '\\':
+                    // Encountering a '\' transitions the from VCB to PRECHAR
                     state = STATE.PRECHAR;
                     break;
                 case 't':
+                    // Encountering a 't' transitions the from VCB to BOOL
                     state = STATE.BOOL;
                     break;
                 case 'f':
+                    // Encountering a 'f' transitions the from VCB to BOOL
                     state = STATE.BOOL;
                     break;
+                default:
+                    // Default transition to STATE.ERROR
+                    state = STATE.ERROR;
+                    break;
             }
+            //return the state that we transitioned to from c
             return state;      
         }
-        public static STATE incomment(char c){
-            STATE state = STATE.INCOMMENT;
-            String stateC = "\n";
-            String eofC = "\0";
-            if(stateC.contains(""+c)){
-                state = STATE.START;
-                STATE.setLiteral("");
-                STATE.setLiteral("");
-            }
-            else if(eofC.contains(""+c)){
-                state = STATE.EOF;
-                STATE.setLiteral("");
-                STATE.setLiteral("");
-            }
-            else{
-                state = STATE.INCOMMENT;   
-            } 
-            
-            return state;   
-        }
+        /***
+         * prechar state method that keeps looping itself until valid char found indicating either an Identifier token or Error token
+         * @param c
+         * @returns a state either STATE.INID or STATE.IDENTIFIER or STATE.ERROR
+         */
         public static STATE prechar(char c){
             String charC = " \t\n\r\0";
             STATE state = STATE.PRECHAR;
+            //String to see if c is valid epsilon transition to send back to prechar state
             if(charC.contains("" + c)){
                 state = STATE.PRECHAR;
             }
+            //else valid char token
             else{
                 state = STATE.CHAR;
             }
+            //return the state that we transitioned to from c
             return state;
         }
-        
-        public static STATE cleanbreak(char c){
-            STATE state = STATE.CLEANBREAK;
-            String startCheck = " \t\n\r";
-            if(startCheck.contains(""+ c)){
-                state = STATE.START;
-            }
-            else{
-                switch(c){
-                    case '(':
-                        state = STATE.LPAREN;
-                        break;
-                    case ')':
-                        state = STATE.RPAREN;
-                        break;
-                    case '\0':
-                        state = STATE.EOF;
-                        break;
-                    case ';':
-                        state = STATE.INCOMMENT;
-                        break;
-                }
-            }
-            return state;
-        }
-        
+
+        //END OF VEC_CHAR_BOOL FDA 
 
     }
     /** Construct a scanner */
@@ -404,24 +506,28 @@ public class Scanner {
 
         STATE state = STATE.START;
         int charInt = 0;
-        // for loop that goes through the source string and creates tokens from the string.
+        // for loop that goes through the source string and transitions states based on each character read. When we are at an accepting state, create the token.
         for(int i = 0; i < source.length(); i++){
-            // c stores the char at current index
+            // c stores the character at current index
             char c = source.charAt(i);
+            // Increment col for each new character we read from the strict
             STATE.setCol(STATE.getCol() + 1);
-            //System.out.println("in for loop");
+            // If we are in a String DFA state and the character input is '\', than we cannot add the character literal until we know the specific character literal.
+            // This is because a String + '\' will result in "\\". Therefore we need to add the specific character literal EX. '\t'.
+            // Also if we are get '\n' or ' ', its just empty white space and new line so we just skip over it and dont add it to our text literal..
             if((state == STATE.INSTR && (c == '\\')) || state == STATE.INSTR_PLUS || c == '\n' || c == ' '){
             }
+            // All other characters are added to the text Literal
             else{
-                System.out.println("char: " + c);
                 STATE.setLiteral(STATE.getLiteral() + c);
-                System.out.println(STATE.getLiteral());
             }
             
-            
+            // switch statements that transitions given the current state based on the current character.
             switch(state){
                 case START:  
-                    // state is currently in STATE.START, call STATE.start(c) to get the state to transition to based on c.
+                    // If we are at START and the we find the start of a keyword is at the same index we are at, than create the keyword token. 
+                    // Increment i to get to the end index (so we don't read over the remaining redundant characters) and go to cleanbreak and add the token to tokens.
+                    // The keywords at "and", "begin", "cond", "define", "if" ,"lambda", "or", "quote","set!"
                     if(source.indexOf("and") == i){
                         i += 2;
                         var tokAnd = new Tokens.And(STATE.getLiteral(), STATE.getRow(), STATE.getCol());
@@ -482,7 +588,6 @@ public class Scanner {
                         state = STATE.start(c);
                      }
                
-                    //System.out.println("in start");
                     break;
                 case INSTR:
                     // state is currently in STATE.INSTR, call STATE.instr(c) to get the state to transition to based on c.
@@ -491,10 +596,14 @@ public class Scanner {
                 case INSTR_PLUS:
                     // state is currently in STATE.INSTR_PLUS, call STATE.instr_plus(c) to get the state to transition to based on c.
                     state = STATE.instr_plus(c);
-                    //System.out.println("in INSTR PLUS");
                     break;
                 case VCB:           
+                    // We are going to use charInt store the first char in the keyword to pass in as a value for when we create the CHAR token.
+                    // Store the current index + 1 in charInt.
                     charInt = i+1;
+                     // If we are in state VCB and if our current index is at the start of a specific keyword, than transition to STATE.char
+                     // increment i so that it is at the end index of the keyword so we don't read over the same remaining characters.
+                     // the keywords in VCB are  "\newline" "\space" "\tab"
                     if(source.indexOf("\\newline") == i){
                         i += 6;
                         state = STATE.CHAR;
@@ -507,124 +616,178 @@ public class Scanner {
                         i += 2;
                         state = STATE.CHAR;
                     }
+                    // If it not a keyword, call STATE.vcb(c) to get the state to transition to based on c from state vcb.
                     else{
                         state = STATE.vcb(c);
                     }
                     break;
                 case PRECHAR:
-                    if(source.indexOf("\\newline") == i || source.indexOf("\\space") == i || source.indexOf("\\tab") == i){
-                        state = STATE.CHAR;
-                    }
-                    else{
-                        state = STATE.prechar(c);
-                    }
+                    // state is currently in PRECHAR, call STATE.prechar(c) to get the state to transition to based on c.
+                    state = STATE.prechar(c);
                     break;
                 case INID:
+                    // state is currently in INID, call STATE.inid(c) to get the state to transition to based on c.
                     state = STATE.inid(c);
                     break;
                 case PM:
+                    // state is currently in PM, call STATE.pm(c) to get the state to transition to based on c.
                     state = STATE.pm(c);
                     break;
                 case ININT:
+                    // state is currently in ININT, call STATE.inint(c) to get the state to transition to based on c.
                     state = STATE.inint(c);
                     break;
                 case PREDBL:
+                    // state is currently in PM, call STATE.pm(c) to get the state to transition to based on c.
                     state = STATE.predbl(c);
                     break;
                 case INDBL:
+                    // state is currently in INDBL, call STATE.indbl(c) to get the state to transition to based on c.
                     state = STATE.indbl(c);
                     break;
                 case INCOMMENT:
+                    // state is currently in INCOMMENT, call STATE.incomment(c) to get the state to transition to based on c.
                     state = STATE.incomment(c);
                     break;
                 case CLEANBREAK:
+                    // state is currently in CLEANBREAK, call STATE.CLEANBREAK(c) to get the state to transition to based on c.
                     state = STATE.cleanbreak(c);
                     break;
             }  
-            System.out.println("the beginning state:" + state);
-            // if state is ever in an accepting state, create and add the token of the respective type and add it to the tokens array.
+            // These if and else if statements check if state is ever in an accepting state. 
+            // If we are in an accepting state than create and add the token of the respective type and add it to the tokens array.
             if(state == STATE.STR){
                 // state is currently in STATE.STR. This is an accepting state. 
                 // Create the token as a String by calling Tokens.Str() constructor with the textLiteral, row, col, and actualString stored in state.
-                System.out.println("LITERAL: " + STATE.getLiteral() + "TEST");
                 var tokStr = new Tokens.Str(STATE.getLiteral(), STATE.getRow(), STATE.getCol(), STATE.getString());
-                // add the token to the  tokens array.
+                // add the new string token to the tokens array.
                 tokens.add(tokStr);
+                // Transition to CLEANBREAK after creating String token
                 state = STATE.CLEANBREAK;
             }
             else if(state == STATE.VEC){
+                // state is currently in STATE.VEC. This is an accepting state. 
+                // Create the token as a Vec by calling Tokens.Vec() constructor with the textLiteral, row, and col stored in state.
                 var tokVec = new Tokens.Vec(STATE.getLiteral(), STATE.getRow(), STATE.getCol());
+                // add the new vec token to the tokens array
                 tokens.add(tokVec);
+                // since we don't go to clean break, our code needs to reset Literal and string here.
+                STATE.setLiteral("");
+                STATE.setString("");
+                // Transition to START after creating Vec token
                 state = STATE.START;
             }
             else if(state == STATE.CHAR && (STATE.getLiteral().length() > 2)){
+                // state is currently in STATE.CHAR. This is an accepting state.
+                // the length check is to make sure that length is atleast 3 because our PRECHAR function doesnt takes care of errors of chars with less than 3 in length. 
+                // Create the token as a Char by calling Tokens.Char() constructor with the textLiteral, row,col  stored in state and current character of source at charInt.
                 var tokChar = new Tokens.Char(STATE.getLiteral(), STATE.getRow(), STATE.getCol(), source.charAt(charInt));
+                // if charInt is  0, than that we means we did not encounter a keyword from PRECHAR, therefore use i to get the char.
                 if (charInt == 0){
                     tokChar = new Tokens.Char(STATE.getLiteral(), STATE.getRow(), STATE.getCol(), source.charAt(i));
                 }
+                // reset charInt after creating token
                 charInt = 0;
-                System.out.println("" + STATE.getLiteral().length());
+                // Transition to CLEANBREAK after creating CHAR token
                 state = STATE.CLEANBREAK;
+                // add the new vec token to the tokens array
                 tokens.add(tokChar);
             }
             else if(state == STATE.BOOL){
-                System.out.println("IN BOOL");
+                 // state is currently in STATE.BOOL. This is an accepting state.
+                 // if we are in state BOOL and our char is t than pass in true as the value
                 if(STATE.getLiteral().charAt(i) == 't'){
+                    // Create the token as a Bool by calling Tokens.Bool() constructor with the textLiteral, row, col stored in state and true.
                     var tokBool = new Tokens.Bool(STATE.getLiteral(), STATE.getRow(), STATE.getCol(), true);
+                    // add new token to tokens array.
                     tokens.add(tokBool);
                 }
+                // if we are in state BOOL and our char is not t than pass in false as value.
                 else{
+                    // Create the token as a Bool by calling Tokens.Bool() constructor with the textLiteral, row, col stored in state and true.
                     var tokBool = new Tokens.Bool(STATE.getLiteral(), STATE.getRow(), STATE.getCol(), false);
+                    // add new bool token to tokens array.
                     tokens.add(tokBool);
                 }
+                // Transition to CLEANBREAK after creating Bool token
                 state = STATE.CLEANBREAK;
             }
-            else if(state == STATE.IDENTIFIER || (state == STATE.INID  && i == source.length() - 1)){
+            // If the state is an identifier, or we are at EOF and in INID, or we are in INID and we are not at EOF and the next character is a white space of some kind, than it is an identifier token.
+            else if(state == STATE.IDENTIFIER || (state == STATE.INID && (i == source.length() - 1)) || (state == STATE.INID && i != source.length() -1 && " \t\n\r\0();".contains(""+ source.charAt(i+1)))){
+                 // Create the token as a Identifier by calling Tokens.Identifier() constructor with the textLiteral, row, and col stored in state.
                 var tokIden = new Tokens.Identifier(STATE.getLiteral(), STATE.getRow(), STATE.getCol());
+                 // Transition to CLEANBREAK after creating Identifier token
                 state = STATE.CLEANBREAK;
+                // add new identifier token to tokens array.
                 tokens.add(tokIden);
             }
-            else if(state == STATE.INT || (state == STATE.ININT && (i == source.length() - 1))){
+            // If the state is an INT, or we are at EOF and in ININT, or we are in ININT and we are not at EOF and the next character is a white space of some kind, than it is an INT token.
+            else if(state == STATE.INT || (state == STATE.ININT && (i == source.length() - 1)) || (state == STATE.ININT && i != source.length() -1 && " \t\n\r\0();".contains(""+ source.charAt(i+1)))){
+                // Create the token as an INT by calling Tokens.int() constructor with the textLiteral, row, and col stored in state.
                 var tokInt = new Tokens.Int(STATE.getLiteral(), STATE.getRow(), STATE.getCol(), Integer.parseInt(STATE.getLiteral()));
+                // Transition to CLEANBREAK after creating INT token
                 state = STATE.CLEANBREAK;
+                // add new int token to tokens array.
                 tokens.add(tokInt);
-            }
-            else if(state == STATE.DBL || (state == STATE.INDBL && (i == source.length() -1) )){
+            } 
+            // If the state is an DBL, or we are at EOF and in INDBL, or we are in INDBL and we are not at EOF and the next character is a white space of some kind, than it is an DBL token.
+            else if(state == STATE.DBL || (state == STATE.INDBL && (i == source.length() -1) || (state == STATE.INDBL && i != source.length() -1 && " \t\n\r\0();".contains(""+ source.charAt(i+1))) )){
+                // Create the token as an DBL by calling Tokens.dbl() constructor with the textLiteral, row, and col stored in state.
                 var tokDbl = new Tokens.Dbl(STATE.getLiteral(), STATE.getRow(), STATE.getCol(), Double.parseDouble(STATE.getLiteral()));
+                // Transition to CLEANBREAK after creating DBL token
                 state = STATE.CLEANBREAK;
+                 // add new dbl token to tokens array.
                 tokens.add(tokDbl);
             }
             else if(state == STATE.LPAREN){
+                // state is currently in STATE.LPAREN. This is an accepting state.
+                // Create the token as an LeftParen by calling Tokens.LeftParen() constructor with the textLiteral, row, and col stored in state.
                 var tokLparen = new Tokens.LeftParen(STATE.getLiteral(), STATE.getRow(), STATE.getCol());
+                // Transition to START after creating LeftParen token.
                 state = STATE.START;
+                // since we don't go to clean break, our code needs to reset Literal and string here.
                 STATE.setLiteral("");
                 STATE.setString("");
+                // add new LeftParen token to tokens array
                 tokens.add(tokLparen);
             }
             else if(state == STATE.RPAREN){
+                // state is currently in STATE.RPAREN. This is an accepting state.
+                // Create the token as an LeftParen by calling Tokens.RightParen() constructor with the textLiteral, row, and col stored in state.
                 var tokRparen = new Tokens.RightParen(STATE.getLiteral(), STATE.getRow(), STATE.getCol());
+                // Transition to START after creating RightParen token
                 state = STATE.START;
+                // since we don't go to clean break, our code needs to reset Literal and string here.
                 STATE.setLiteral("");
                 STATE.setString("");
+                // add new RightParen token to tokens array
                 tokens.add(tokRparen);
             }
             else if(state == STATE.ABBREV){
+                // state is currently in STATE.ABBREV. This is an accepting state.
+                // Create the token as an Abbrev by calling Tokens.Abbrev() constructor with the textLiteral, row, and col stored in state.
                 var tokAbbrev = new Tokens.Abbrev(STATE.getLiteral(), STATE.getRow(), STATE.getCol());
+                // Transition to START after creating ABBREV token
                 state = STATE.START;
+                // since we don't go to clean break, our code needs to reset Literal and string here.
                 STATE.setLiteral("");
                 STATE.setString("");
+                // add new Abbrev token to tokens array
                 tokens.add(tokAbbrev);
             }
             else if(state == STATE.EOF){
+                // state is currently in STATE.EOF. This is an accepting state.
+                // Create the token as an EOF by calling Tokens.EOF() constructor with the textLiteral, row, and col stored in state.
                 var EOF = new Tokens.Eof("End of file", STATE.getRow(), STATE.getCol());
+                // add new EOF token to tokens array.
                 tokens.add(EOF);
+                // Since we are add EOF, just return the TokenStream.
                 return new TokenStream(tokens);
             }
 
             if(state == STATE.CLEANBREAK){
                 // each time a function is called, increment col since we are reading a new character
                 if(i != source.length() - 1 && source.charAt(i+1) != '\n' && source.charAt(i+1) != ' ' && source.charAt(i+1) != '(' && source.charAt(i+1) != ')'){
-                    System.out.println("i value:" + i);
                     state = STATE.ERROR;
                 }
                 else{
@@ -633,17 +796,10 @@ public class Scanner {
                     STATE.setString("");
                     state = STATE.START;
                 }
-    
             }
-            // '(1 2 3)
-            //  ' (  
-                
-
-            // "1 " 1 2
-            // if state is  not in an accepting state or at CLEANBREAK by the end, than it was trapped in a state, therefore throw an error.
+            // if state is  not in an accepting state or at Error by the end, than it was trapped in a state, therefore throw an error.
             if(((state != STATE.STR && state != STATE.START && state != STATE.CHAR && state != STATE.BOOL && state != STATE.IDENTIFIER && state != STATE.INT && state != STATE.DBL && state != STATE.ABBREV && state != STATE.LPAREN && state != STATE.RPAREN && state != STATE.EOF) && i == source.length() - 1 ) || state == STATE.ERROR){
                 // create error token
-                System.out.println("Final state: " + state);
                 var error = new Tokens.Error("ERROR tokenLiteral: " + STATE.getLiteral(), STATE.getRow(), STATE.getCol());
                 // add error token
                 tokens.add(error);
@@ -652,12 +808,13 @@ public class Scanner {
                 // return TokenStream with the tokens array.
                 return new TokenStream(tokens);
             }
-            System.out.println(state);
         }
-        
-        System.out.println(state +" ending state");
+        // If we finish the String than we are EOF.
+        // Create EOF token using Tokens.Eof() constructor with the textLiteral, row, and col stored in state.
         var EOF = new Tokens.Eof("End of file", STATE.getRow(), STATE.getCol());
+        // Add new EOF token to tokens array after for loop
         tokens.add(EOF);
+        // return the TokenStream with the tokens array.
         return new TokenStream(tokens);
     }
 } 
