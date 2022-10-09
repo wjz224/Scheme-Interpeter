@@ -212,6 +212,8 @@ public class Scanner {
             String eofC = "\0";
             //String to check for valid '\n' char to send to START state
             if(stateC.contains(""+c)){
+                row++;
+                col = 0;
                 state = STATE.START;
                 STATE.setLiteral("");
                 STATE.setLiteral("");
@@ -798,8 +800,9 @@ public class Scanner {
                 }
             }
             // if state is  not in an accepting state or at Error by the end, than it was trapped in a state, therefore throw an error.
-            if(((state != STATE.STR && state != STATE.START && state != STATE.CHAR && state != STATE.BOOL && state != STATE.IDENTIFIER && state != STATE.INT && state != STATE.DBL && state != STATE.ABBREV && state != STATE.LPAREN && state != STATE.RPAREN && state != STATE.EOF) && i == source.length() - 1 ) || state == STATE.ERROR){
+            if(((state != STATE.STR && state != STATE.START && state != STATE.CHAR && state != STATE.BOOL && state != STATE.IDENTIFIER && state != STATE.INT && state != STATE.DBL && state != STATE.ABBREV && state != STATE.LPAREN && state != STATE.RPAREN && state != STATE.EOF && state != STATE.INCOMMENT) && i == source.length() - 1 ) || state == STATE.ERROR){
                 // create error token
+                System.out.println("END STATE" + state);
                 var error = new Tokens.Error("ERROR tokenLiteral: " + STATE.getLiteral(), STATE.getRow(), STATE.getCol());
                 // add error token
                 tokens.add(error);
