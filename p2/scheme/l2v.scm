@@ -20,5 +20,5 @@
 )
 
 ;; testing
-;;(define a (list2vector (list)))
+;;(define a (list2vector (list 1 2 3 4)))
 ;;(display a)
