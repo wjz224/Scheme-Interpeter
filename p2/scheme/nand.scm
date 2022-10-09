@@ -2,7 +2,8 @@
 ;;
 ;; nand should always return a boolean value
 
-(define (nand a b)
+(define (nand a b) 
+    ;; the not on the and of a b makes an equivalent nand gate.
     (not (and a b)
 )
 ;; testing
