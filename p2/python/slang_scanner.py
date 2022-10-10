@@ -71,7 +71,7 @@ class Scanner:
         global rowNum
         global colNum
         validToInid = "!$%&*/:<=>?~_^"
-        startC = " \t\n\r\0"
+        startC = " \t\n\r\0();"
         #Check if c is a valid IDENTIFIER transition by looking ahead
         if (c in validToInid or c.isalpha()) and ahead in startC:
             return "IDENTIFIER"
@@ -92,8 +92,9 @@ class Scanner:
             else:
                 return "ERROR"
         else:
-
+            #Match case for c to see valid state
             match c:
+                #Check if c == '"' 
                 case '"': 
                     if ahead in "\0\n":
                         return "ERROR"
