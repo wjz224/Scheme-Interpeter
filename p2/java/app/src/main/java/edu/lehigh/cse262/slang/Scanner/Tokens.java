@@ -385,7 +385,7 @@ public class Tokens {
 
     /** A fake token for expressing a scan error */
     public static class Error extends BaseToken {
-        public final String message;
+        public final String message; 
 
         /** Construct by forwarding to the Token constructor */
         public Error(String message, int line, int col) {

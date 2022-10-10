@@ -372,7 +372,7 @@ public class Scanner {
                 case '\\':
                     // Encountering a '\\' transitions the from INSTR to INSTR_PLUS
                     state = STATE.INSTR_PLUS;
-                    break;
+                    break;      
                 default:
                     // Any other character just loop back to INSTR and add the char.
                     actualString+=c;
@@ -505,7 +505,6 @@ public class Scanner {
         // error token.
         var tokens = new ArrayList<Tokens.BaseToken>();
         //tokens.add(error);
-
         STATE state = STATE.START;
         int charInt = 0;
         // for loop that goes through the source string and transitions states based on each character read. When we are at an accepting state, create the token.
@@ -790,6 +789,8 @@ public class Scanner {
             if(state == STATE.CLEANBREAK){
                 // each time a function is called, increment col since we are reading a new character
                 if(i != source.length() - 1 && source.charAt(i+1) != '\n' && source.charAt(i+1) != ' ' && source.charAt(i+1) != '(' && source.charAt(i+1) != ')'){
+                    System.out.println("Char AT I: " + source.charAt(i));
+                    System.out.println("CHAR AT I+1:" + source.charAt(i+1));
                     state = STATE.ERROR;
                 }
                 else{
