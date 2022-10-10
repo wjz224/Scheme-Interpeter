@@ -16,4 +16,17 @@
 ;;
 ;; Example: (three-zip '(1 2 3 4) '("hi" "bye" "hello") '(a b c))
 ;;          -> ('(1 "hi" a) '(2 "bye" b) '(3 "hello" c) '(4 "hello" c))
-(define (three-zip l1 l2 l3) '())
+(define (three-zip l1 l2 l3)
+    (letrec ((helper (lambda (list1 list2 list3 ziplist)
+    (let ((listCheck (not (<= (vector-length list1) 1))) (sameCheck (and (= (vector-length list1) (vector-length list2) (= (vector-length list1) (vector-length list2))))))
+    (cond 
+        (sameCheck 
+            (cond
+                (listCheck (list ))
+            )
+        )
+    )
+    )))))
+
+
+)
