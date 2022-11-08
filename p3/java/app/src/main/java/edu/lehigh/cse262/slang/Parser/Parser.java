@@ -32,7 +32,11 @@ public class Parser {
      *         top-level expressions.
      */
     public List<Nodes.BaseNode> program(TokenStream tokens){
-        return form(tokens);
+        List<Nodes.BaseNode> AST = new ArrayList<>();
+        while(tokens.hasNext()){
+            AST.add(form(tokens));
+        }
+        return AST;
     }
     public Nodes.BaseNode form(TokenStream tokens){
         Tokens.BaseToken cur = tokens.nextToken();
@@ -50,7 +54,7 @@ public class Parser {
         Tokens.BaseToken cur = tokens.nextToken();
      
         if(cur !instanceof Tokens.Identifier){
-            throw new Exception("yo this shit dont work");
+            throw new Exception("this dont work");
         }
         else{
             // pop the identifier token
@@ -65,15 +69,59 @@ public class Parser {
         Tokens.BaseToken cur = tokens.nextToken();
         Tokens.BaseToken ahead = tokens.nextNextToken();
         if(cur instanceof Tokens.LeftParen){
-            if(ahead instanceof Tokens.Define){
-                // can change later in definition
+            if(ahead instanceof Tokens.Quote){
                 tokens.popToken();
                 tokens.popToken();
-                return definition(tokens);
+                Nodes.Quote quote = new Quote(datum(tokens));
+                if(cur instanceof Tokens.RightParen){
+                    return quote;
+                }
+            } 
+            else if(ahead instanceof Tokens.Lambda){
+                tokens.popToken();
+                tokens.popToken();
+                Nodes.Lambda lambda = new Lambda(formal(tokens), body(tokens));
+                
+            }  
+            else if(ahead instanceof Tokens.If){
+                // figure out later
+                tokens.popToken();
+                tokens.popToken();
             }
-            else if(ahead instanceof Tokens.Quote || ahead instanceof Tokens.Lambda || ahead instanceof Tokens.If || ahead instanceof Tokens.Set || ahead instanceof Tokens.And || ahead instanceof Tokens.Or || ahead instanceof Tokens.Begin || ahead instanceof Tokens.Cond){
+            else if(ahead instanceof Tokens.Set){
+                tokens.popToken();
+                cur = tokens.nextToken();
+                ahead = tokens.nextNextToken();
+                if(ahead !instanceof Tokens.Identifer){
+                    throw new Exception("Error");
+                }
+                else{
+                    tokens.popToken();
+                    tokens.popToken();
+                    return expression(tokens);
+                }
+            }
+            else if(ahead instanceof Tokens.And){
+                tokens.popToken();
+                tokens.popToken();
                 return expression(tokens);
-            }   
+            }
+            else if(ahead instanceof Tokens.Or){
+                tokens.popToken();
+                tokens.popToken();
+                return expression(tokens);
+            }
+            else if(ahead instanceof Tokens.Begin){
+                tokens.popToken();
+                tokens.popToken();
+                return expression(tokens);
+            }
+            else if(ahead instanceof Tokens.Cond){
+                tokens.popToken();
+                tokens.popToken();
+                return expression(tokens);
+            }
+            
             else{
                 return application(tokens);
             }
