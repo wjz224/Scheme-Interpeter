@@ -1,0 +1,6 @@
+<Define>
+ <Identifier val='a' />
+ <Tick>
+  <Symbol val='a' />
+ </Tick>
+</Define>

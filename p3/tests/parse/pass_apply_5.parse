@@ -1,0 +1,10 @@
+<Apply>
+ <Identifier val='+' />
+ <Int val='1' />
+ <Int val='2' />
+ <Apply>
+  <Identifier val='+' />
+  <Int val='3' />
+  <Int val='4' />
+ </Apply>
+</Apply>

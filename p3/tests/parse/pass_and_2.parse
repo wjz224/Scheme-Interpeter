@@ -1,0 +1,7 @@
+<And>
+ <Apply>
+  <Identifier val='>' />
+  <Int val='1' />
+  <Int val='2' />
+ </Apply>
+</And>

@@ -1,0 +1,72 @@
+<Cond>
+ <Condition>
+  <Test>
+   <Apply>
+    <Identifier val='>' />
+    <Int val='1' />
+    <Int val='2' />
+   </Apply>
+  </Test>
+  <Actions>
+   <Apply>
+    <Identifier val='x' />
+   </Apply>
+   <Identifier val='a' />
+   <Int val='2' />
+   <Int val='3' />
+   <Tick>
+    <Cons>
+     <Int val='1' />
+     <Cons>
+      <Int val='2' />
+      <Cons>
+       <Int val='3' />
+       <Cons>
+        <Int val='4' />
+        <Cons>
+         <Int val='5' />
+         <Cons>
+          <Null />
+          <Null />
+         </Cons>
+        </Cons>
+       </Cons>
+      </Cons>
+     </Cons>
+    </Cons>
+   </Tick>
+   <Apply>
+    <Identifier val='+' />
+    <Int val='1' />
+    <Int val='2' />
+   </Apply>
+  </Actions>
+ </Condition>
+ <Condition>
+  <Test>
+   <Apply>
+    <Identifier val='<' />
+    <Int val='1' />
+    <Int val='2' />
+   </Apply>
+  </Test>
+  <Actions>
+   <Identifier val='x' />
+  </Actions>
+ </Condition>
+ <Condition>
+  <Test>
+   <Bool val='true' />
+  </Test>
+  <Actions>
+   <Bool val='true' />
+  </Actions>
+ </Condition>
+ <Condition>
+  <Test>
+   <Bool val='false' />
+  </Test>
+  <Actions>
+  </Actions>
+ </Condition>
+</Cond>
