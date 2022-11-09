@@ -58,11 +58,17 @@ public class Parser {
         }
         else{
             // pop the identifier token
-            Tokens.Identifer identifier = cur;
+            Tokens.Identifier identifier = (Tokens.Identifier) cur;
             Nodes.Identifier iden = new Identifier(identifier.tokenText);
             tokens.popToken();
-            Nodes.Define define = BaseNode(iden, expression(tokens));
-            return define;
+            Nodes.Define define = new Nodes.Define(iden, expression(tokens));
+            cur = tokens.nextToken();
+            if(cur instanceof Tokens.RightParen){
+                return define;
+            }
+            else{
+                throw new Exception("Invalid");
+            }
         }
     }
     public Nodes.BaseNode expression(TokenStream tokens){
@@ -72,54 +78,149 @@ public class Parser {
             if(ahead instanceof Tokens.Quote){
                 tokens.popToken();
                 tokens.popToken();
-                Nodes.Quote quote = new Quote(datum(tokens));
+                Nodes.Quote quote = new Nodes.Quote((IValue) datum(tokens));
+                cur = tokens.nextToken();
                 if(cur instanceof Tokens.RightParen){
+                    // pop the right paren
+                    tokens.popToken();
                     return quote;
                 }
             } 
             else if(ahead instanceof Tokens.Lambda){
                 tokens.popToken();
                 tokens.popToken();
-                Nodes.Lambda lambda = new Lambda(formal(tokens), body(tokens));
-                
+                Nodes.LambdaDef lambdaNode = new Nodes.LambdaDef(formal(tokens), body(tokens));
+                cur = tokens.nextToken();
+                if(cur instanceof Tokens.RightParen){
+                    // pop the right paren
+                    tokens.popToken();
+                    return lambdaNode;
+                }
+                else{
+                    throw new Exception("Invalid");
+                }
             }  
             else if(ahead instanceof Tokens.If){
                 // figure out later
                 tokens.popToken();
                 tokens.popToken();
+                Nodes.If ifNode = new Nodes.If(expression(tokens), expression(tokens), expression(tokens));
+                cur = tokens.nextToken();
+                if(cur instanceof Tokens.RightParen){
+                    // pop the right paren
+                    tokens.popToken();
+                    return ifNode;
+                }
+                else{
+                    throw new Exception("Invalid");
+                }
             }
             else if(ahead instanceof Tokens.Set){
                 tokens.popToken();
                 cur = tokens.nextToken();
                 ahead = tokens.nextNextToken();
-                if(ahead !instanceof Tokens.Identifer){
+                if(!(ahead instanceof Tokens.Identifier)){
                     throw new Exception("Error");
                 }
                 else{
                     tokens.popToken();
+                    Tokens.Identifier identifier = (Tokens.Identifier) tokens.nextToken();
+                    Nodes.Identifier iden = new Identifier(identifier.tokenText);
                     tokens.popToken();
-                    return expression(tokens);
+                    Nodes.Set setNode = new Nodes.Set(iden, expression(tokens));
+                    cur = tokens.nextToken();
+                    if(cur instanceof Tokens.RightParen){
+                        // pop the right paren
+                         tokens.popToken();
+                        return setNode;
+                    }
+                    else{
+                        throw new Exception("Invalid");
+                    }
                 }
             }
             else if(ahead instanceof Tokens.And){
                 tokens.popToken();
                 tokens.popToken();
-                return expression(tokens);
+                List<Nodes.BaseNode> andList = new ArrayList<>();
+                cur = tokens.nextToken();
+                if(cur instanceof Tokens.RightParen){
+                    throw new Exception("Invalid");
+                }
+                else{
+                    while(!(cur instanceof Tokens.RightParen)){
+                        andList.add(expression(tokens));
+                        cur = tokens.nextToken();
+                    }
+                }
+                // pop the right paren
+                tokens.popToken();
+                Nodes.And andNode = new Nodes.And(andList);
+                return andNode;
             }
             else if(ahead instanceof Tokens.Or){
                 tokens.popToken();
                 tokens.popToken();
-                return expression(tokens);
+                List<Nodes.BaseNode> orList = new ArrayList<>();
+                cur = tokens.nextToken();
+                if(cur instanceof Tokens.RightParen){
+                    throw new Exception("Invalid");
+                }
+                else{
+                    while(!(cur instanceof Tokens.RightParen)){
+                        orList.add(expression(tokens));
+                        cur = tokens.nextToken();
+                    }
+                }
+                // pop the right paren
+                tokens.popToken();
+                Nodes.Or orNode = new Nodes.Or(orList);
+                return orNode;
             }
             else if(ahead instanceof Tokens.Begin){
                 tokens.popToken();
                 tokens.popToken();
-                return expression(tokens);
+                List<Nodes.BaseNode> beginList = new ArrayList<>();
+                cur = tokens.nextToken();
+                if(cur instanceof Tokens.RightParen){
+                    throw new Exception("Invalid");
+                }
+                else{
+                    while(!(cur instanceof Tokens.RightParen)){
+                        beginList.add(expression(tokens));
+                        cur = tokens.nextToken();
+                    }
+                }
+                // pop the right paren
+                tokens.popToken();
+                Nodes.Begin beginNode = new Nodes.Begin(beginList);
+                return beginNode;
             }
             else if(ahead instanceof Tokens.Cond){
+                /** 
                 tokens.popToken();
                 tokens.popToken();
-                return expression(tokens);
+                // get first expression as the test case
+                Nodes.BaseNode test = expression(tokens);
+                // get remainder expressions for evaluation.
+                List<Nodes.BaseNode> condList = new ArrayList<>();
+                cur = tokens.nextToken();
+                if(cur instanceof Tokens.RightParen){
+                    throw new Exception("Invalid");
+                }
+                else{
+                    while(!(cur instanceof Tokens.RightParen)){
+                        condList.add(expression(tokens));
+                        cur = tokens.nextToken();
+                    }
+                }
+                // pop the right token
+                tokens.popToken();
+                
+                Nodes.Cond condNode = new Nodes.Cond(condList);
+                return condNode;
+                */
+                return null;
             }
             
             else{
@@ -127,7 +228,9 @@ public class Parser {
             }
         }
         else if(cur instanceof Tokens.Abbrev){
-            return TickNode(datum(tokens));
+            tokens.popToken();
+            Nodes.Tick tick = new Nodes.Tick((IValue) datum(tokens));
+            return tick;
         }
         else if(cur instanceof Tokens.Bool || cur instanceof Tokens.Int || cur instanceof Tokens.Dbl || cur instanceof Tokens.Char || cur instanceof Tokens.Str){
             return constant(tokens);
@@ -146,36 +249,30 @@ public class Parser {
         if(cur instanceof Tokens.Bool){
             Tokens.Bool boolTemp = (Tokens.Bool) cur;
             Nodes.Bool boolNode = new Nodes.Bool(boolTemp.literal);
-            Nodes.Tick tick = new Nodes.Tick(boolNode);
-            return tick;
+            return boolNode;
         }
         else if(cur instanceof Tokens.Int){
             Tokens.Int intTemp = (Tokens.Int) cur;
             Nodes.Int intNode = new Nodes.Int(intTemp.literal);
-            Nodes.Tick tick = new Nodes.Tick(intNode);
-            return tick;
+            return intNode;
         }
         else if(cur instanceof Tokens.Dbl){
             Tokens.Dbl dblTemp = (Tokens.Dbl) cur;
             Nodes.Dbl dblNode = new Nodes.Dbl(dblTemp.literal);
-            Nodes.Tick tick = new Nodes.Tick(dblNode);
-            return tick;
+            return dblNode;
         }
         else if(cur instanceof Tokens.Char){
             Tokens.Char charTemp = (Tokens.Char) cur;
             Nodes.Char charNode = new Nodes.Char(charTemp.literal);
-            Nodes.Tick tick = new Nodes.Tick(charNode);
-            return tick;
+            return charNode;
         }
         else if(cur instanceof Tokens.Str){
             Tokens.Str strTemp = (Tokens.Str) cur;
             Nodes.Str strNode = new Nodes.Str(strTemp.literal);
-            Nodes.Tick tick = new Nodes.Tick(strNode);
-            return tick;
+            return strNode;
         }
         else if(cur instanceof Tokens.Identifier){
-            Nodes.Tick tick = new Nodes.Tick((IValue) symbol(tokens));
-            return tick;
+            return symbol(tokens);
         }
         else if(cur instanceof Tokens.LeftParen){
             return list(tokens);
@@ -183,6 +280,7 @@ public class Parser {
         else if(cur instanceof Tokens.Vec){
             return vec(tokens);
         }
+        tokens.popToken();
     }
     public Nodes.BaseNode constant(TokenStream tokens){
         
@@ -190,8 +288,14 @@ public class Parser {
     public Nodes.BaseNode application(TokenStream tokens){
         
     }
+    public Nodes.BaseNode list(TokenStream tokens){
+
+    }
     public Nodes.BaseNode symbol(TokenStream tokens){
-    
+        Tokens.BaseToken cur = tokens.nextToken();
+        Tokens.Identifier identifierTemp = identifier(tokens)
+        Nodes.Symbol symbolNode = new Nodes.Symbol(identifierTemp.tokenText);
+        return symbolNode;
     }
     public Nodes.BaseNode identifier(TokenStream tokens){
         Nodes.Identifier identifier = new Identifier(tokens.nextToken().tokenText);
