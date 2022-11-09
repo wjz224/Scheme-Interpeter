@@ -33,8 +33,9 @@ public class Parser {
      *         top-level expressions.
      */
     public List<Nodes.BaseNode> program(TokenStream tokens){
+        List<Nodes.BaseNode> AST = new ArrayList<>();
         try{
-            List<Nodes.BaseNode> AST = new ArrayList<>();
+        AST = new ArrayList<>();
             while(!(tokens.nextToken() instanceof Tokens.Eof)){
                 AST.add(form(tokens));
             }
@@ -43,7 +44,7 @@ public class Parser {
         catch(Exception e){
             e.getMessage();
         }
-        return null;
+        return AST;
     }
     public Nodes.BaseNode form(TokenStream tokens){
         Tokens.BaseToken cur = tokens.nextToken();
@@ -82,7 +83,6 @@ public class Parser {
             e.getMessage();
         }
         return null;
-      
     }
     public Nodes.BaseNode expression(TokenStream tokens){
         Tokens.BaseToken cur = tokens.nextToken();
@@ -116,7 +116,6 @@ public class Parser {
                 }catch(Exception e){
                     e.getMessage();
                 }
-                return null;
             }  
             else if(ahead instanceof Tokens.If){
                 // figure out later
@@ -269,8 +268,8 @@ public class Parser {
             }
         }
         else if(cur instanceof Tokens.Abbrev){
-            tokens.popToken();
-            Nodes.Tick tick = new Nodes.Tick((IValue) datum(tokens));
+            Nodes.BaseNode temp = datum(tokens);
+            Nodes.Tick tick = new Nodes.Tick((IValue)temp);
             return tick;
         }
         else if(cur instanceof Tokens.Bool || cur instanceof Tokens.Int || cur instanceof Tokens.Dbl || cur instanceof Tokens.Char || cur instanceof Tokens.Str){
@@ -278,9 +277,6 @@ public class Parser {
         }
         else if(cur instanceof Tokens.Identifier){
             return identifier(tokens);
-        }
-        else{
-            return null;
         }
         return null;
     }
@@ -412,7 +408,6 @@ public class Parser {
     }
     public Nodes.BaseNode constant(TokenStream tokens){
         try{
-            tokens.popToken();
             Tokens.BaseToken cur = tokens.nextToken();
             if(cur instanceof Tokens.Bool){
                 Tokens.Bool boolTemp = (Tokens.Bool) cur;
@@ -445,13 +440,13 @@ public class Parser {
                 return strNode;
             }
             else{
-                return null;
+                return new Nodes.Identifier("You messed up");
             }
         }
         catch(Exception e){
             e.getMessage();
         }
-        return null;
+        return new Nodes.Identifier("You messed up");
     }
     public Nodes.BaseNode application(TokenStream tokens){
         try{
@@ -466,14 +461,16 @@ public class Parser {
                     expressionList.add(expression(tokens));
                     cur = tokens.nextToken();
                 }
+                // pop the right paren
+                tokens.popToken();
+                return new Nodes.Apply(expressionList);
             }
-            // pop the right paren
-            tokens.popToken();
+            
         }
         catch(Exception e){
             e.getMessage();
         }
-        return null;
+         return new Nodes.Identifier("You messed up");
     }
     public Nodes.BaseNode list(TokenStream tokens){
         //pop lparen
@@ -493,11 +490,11 @@ public class Parser {
         catch(Exception exception){
             System.out.println("Cannot construct Cons from empty list");
         }      
-        return null;
+        return new Nodes.Identifier("You messed up");
     }
     public Nodes.BaseNode symbol(TokenStream tokens){
-        Nodes.Identifier identifierTemp = new Identifier(tokens.nextToken().tokenText);
-        Nodes.Symbol symbolNode = new Nodes.Symbol(identifierTemp);
+        Tokens.Identifier iden = (Tokens.Identifier) tokens.nextToken();
+        Nodes.Symbol symbolNode = new Nodes.Symbol(iden.tokenText);
         tokens.popToken();
         return symbolNode;
     }
@@ -508,8 +505,7 @@ public class Parser {
     }
     public List<Nodes.BaseNode> parse(TokenStream tokens) throws Exception {
         //List<Nodes.BaseNode> AST = program(tokens);
-        List<Nodes.BaseNode> AST = new ArrayList<>();
-        AST.add(new Nodes.Bool(false));
+        List<Nodes.BaseNode> AST = program(tokens);
         
         return AST;
     }
