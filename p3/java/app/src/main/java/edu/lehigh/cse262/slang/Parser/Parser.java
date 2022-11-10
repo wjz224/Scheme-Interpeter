@@ -33,35 +33,23 @@ public class Parser {
      *         top-level expressions.
      *
      */
-    public List<Nodes.BaseNode> program(TokenStream tokens){
+    public List<Nodes.BaseNode> program(TokenStream tokens) throws Exception{
         // Create a List of Nodes.BaseNode that stores BaseNodes in the fashion of an AST
         List<Nodes.BaseNode> AST = new ArrayList<>();
         // try catch block
-        try{
         AST = new ArrayList<>();
-            // while loop that goes through all the tokens in the TokenStream and creates an AST
-            while(!(tokens.nextToken() instanceof Tokens.Eof)){
-                // pass the TokenStream into form to start parsing
-                Nodes.BaseNode input = form(tokens);
-                // if null is returned, than there was an error in the parsing.
-                if(input == null){
-                    // Throw an exception saying there was an error in parsing
-                    throw new Exception("Invalid tokens caused error in parsing");
-                }
-                else{
-                    // add the BaseNode to the List of BaseNodes
-                    AST.add(input);
-                }
-            }
-            // return the list of Nodes.BaseNode
-            return AST;
+        // while loop that goes through all the tokens in the TokenStream and creates an AST
+        while(!(tokens.nextToken() instanceof Tokens.Eof)){
+            // pass the TokenStream into form to start parsing
+            Nodes.BaseNode input = form(tokens);
+            // add the BaseNode to the List of BaseNodes
+            AST.add(input);
         }
-        // catch any errors and print the message.
-        catch(Exception e){
-            e.getMessage();
-        }
+        // return the list of Nodes.BaseNode
         return AST;
     }
+      
+    
     /**
      * Transform a stream of tokens into a Node
      *
@@ -70,7 +58,7 @@ public class Parser {
      * @return A AstNode, because a Scheme program may have multiple
      *         top-level expressions.
      */
-    public Nodes.BaseNode form(TokenStream tokens){
+    public Nodes.BaseNode form(TokenStream tokens) throws Exception{
         //Grabbing current token and the one ahead of it
         Tokens.BaseToken cur = tokens.nextToken();
         Tokens.BaseToken ahead = tokens.nextNextToken();
@@ -82,6 +70,8 @@ public class Parser {
         else{
             return expression(tokens);
         }
+      
+        
     }
     /**
      * Transform a stream of tokens into a Node
@@ -91,45 +81,41 @@ public class Parser {
      * @return A AstNode, because a Scheme program may have multiple
      *         top-level expressions.
      */
-    public Nodes.BaseNode definition(TokenStream tokens){
+    public Nodes.BaseNode definition(TokenStream tokens) throws Exception{
         //Pop off the first two tokens that indicate a definition
         tokens.popToken();
         tokens.popToken();
         //Grabbing the next token in the stream
         Tokens.BaseToken cur = tokens.nextToken();
-        try{
-            //Checking for valid order of tokens
-            if(!(cur instanceof Tokens.Identifier)){
+        //Checking for valid order of tokens
+        if(!(cur instanceof Tokens.Identifier)){
+            throw new Exception("Invalid definition");
+        }
+        else{
+            //Grab the identifier token and set it to a node
+            Tokens.Identifier identifier = (Tokens.Identifier) cur;
+            Nodes.Identifier iden = new Identifier(identifier.tokenText);
+            // pop the identifier token
+            tokens.popToken();
+            //Create a define node with the identifier node and also a node from calling expressions
+            Nodes.Define define = new Nodes.Define(iden, expression(tokens));
+            //Updating current token
+            cur = tokens.nextToken();
+            //Checking for valid definition order
+            if(cur instanceof Tokens.RightParen){
+                //Popping off the right paren
+                tokens.popToken();
+                //returning a definition Node
+                return define;
+            }
+            // throwing an exception for invalid definition form
+            else{
                 throw new Exception("Invalid definition");
             }
-            else{
-                //Grab the identifier token and set it to a node
-                Tokens.Identifier identifier = (Tokens.Identifier) cur;
-                Nodes.Identifier iden = new Identifier(identifier.tokenText);
-                // pop the identifier token
-                tokens.popToken();
-                //Create a define node with the identifier node and also a node from calling expressions
-                Nodes.Define define = new Nodes.Define(iden, expression(tokens));
-                //Updating current token
-                cur = tokens.nextToken();
-                //Checking for valid definition order
-                if(cur instanceof Tokens.RightParen){
-                    //Popping off the right paren
-                    tokens.popToken();
-                    //returning a definition Node
-                    return define;
-                }
-                // throwing an exception for invalid definition form
-                else{
-                    throw new Exception("Invalid definition");
-                }
-            }
         }
-        catch(Exception e){
-            e.getMessage();
-        }
-        return null;
     }
+
+    
     /**
      * Transform a stream of tokens into a Node
      *
@@ -138,7 +124,7 @@ public class Parser {
      * @return A AstNode, because a Scheme program may have multiple
      *         top-level expressions.
      */
-    public Nodes.BaseNode expression(TokenStream tokens){
+    public Nodes.BaseNode expression(TokenStream tokens) throws Exception{
         //Grabbing the next token and the nextnext token
         Tokens.BaseToken cur = tokens.nextToken();
         Tokens.BaseToken ahead = tokens.nextNextToken();
@@ -160,6 +146,10 @@ public class Parser {
                     //returning the quote node
                     return quote;
                 }
+                // if its not a right paren then its an invalid Quote Form.
+                else{
+                    throw new Exception("Invalid Expression");
+                }
             } 
             //Checking for valid Lambda order
             else if(ahead instanceof Tokens.Lambda){
@@ -170,21 +160,18 @@ public class Parser {
                 Nodes.LambdaDef lambdaNode = new Nodes.LambdaDef(formals(tokens), body(tokens));
                 //updating cur after calls to formals and body
                 cur = tokens.nextToken();
-                try{
-                    //Checking for valid Lambda order
-                    if(cur instanceof Tokens.RightParen){
-                        // pop the right paren
-                        tokens.popToken();
-                        //returning the lambda node
-                        return lambdaNode;
-                    }
-                    //Else throw invalid order
-                    else{
-                        throw new Exception("Invalid Lambda");
-                    }
-                }catch(Exception e){
-                    e.getMessage();
+                //Checking for valid Lambda order
+                if(cur instanceof Tokens.RightParen){
+                    // pop the right paren
+                    tokens.popToken();
+                    //returning the lambda node
+                    return lambdaNode;
                 }
+                //Else throw invalid order
+                else{
+                    throw new Exception("Invalid Lambda");
+                }
+              
             }  
             //Checking for valid If order
             else if(ahead instanceof Tokens.If){
@@ -195,22 +182,18 @@ public class Parser {
                 Nodes.If ifNode = new Nodes.If(expression(tokens), expression(tokens), expression(tokens));
                 //Updating cur after calling expression(tokens), expression(tokens), expression(tokens)
                 cur = tokens.nextToken();
-                try{
-                    //Checking for valid if order
-                    if(cur instanceof Tokens.RightParen){
-                        // pop the right paren
-                        tokens.popToken();
-                        //Returning if node
-                        return ifNode;
-                    }
-                    //Else throw invalid order
-                    else{
-                        throw new Exception("Invalid If");
-                    }
-                } catch(Exception e){
-                   e.getMessage();
+                //Checking for valid if order
+                if(cur instanceof Tokens.RightParen){
+                    // pop the right paren
+                    tokens.popToken();
+                    //Returning if node
+                    return ifNode;
                 }
-                return null;
+                //Else throw invalid order
+                else{
+                    throw new Exception("Invalid If");
+                }
+    
                 
             }
             //Checking for valid Set order
@@ -220,40 +203,35 @@ public class Parser {
                 //Updating cur and ahead
                 cur = tokens.nextToken();
                 ahead = tokens.nextNextToken();
-                try{
+                //Checking for valid Set order, need 1 identifier
+                if(!(ahead instanceof Tokens.Identifier)){
+                    throw new Exception("Invalid Set");
+                }
+                else{
+                    //Popping off token that indicate set
+                    tokens.popToken();
+                    //Setting new identifier token
+                    Tokens.Identifier identifier = (Tokens.Identifier) tokens.nextToken();
+                    //Setting new idenntifier node with the identifier token
+                    Nodes.Identifier iden = new Identifier(identifier.tokenText);
+                    //Popping off the indicator token
+                    tokens.popToken();
+                    //Setting new Set node with Identifier Node and a call to expressions(tokens)
+                    Nodes.Set setNode = new Nodes.Set(iden, expression(tokens));
+                    //Updating cur
+                    cur = tokens.nextToken();
                     //Checking for valid Set order
-                    if(!(ahead instanceof Tokens.Identifier)){
+                    if(cur instanceof Tokens.RightParen){
+                        // pop the right paren
+                            tokens.popToken();
+                            //Returning Set Node
+                        return setNode;
+                    }
+                    //Else throw invalid Set because invalid Set form
+                    else{
                         throw new Exception("Invalid Set");
                     }
-                    else{
-                        //Popping off token that indicate set
-                        tokens.popToken();
-                        //Setting new identifier token
-                        Tokens.Identifier identifier = (Tokens.Identifier) tokens.nextToken();
-                        //Setting new idenntifier node with the identifier token
-                        Nodes.Identifier iden = new Identifier(identifier.tokenText);
-                        //Popping off the indicator token
-                        tokens.popToken();
-                        //Setting new Set node with Identifier Node and a call to expressions(tokens)
-                        Nodes.Set setNode = new Nodes.Set(iden, expression(tokens));
-                        //Updating cur
-                        cur = tokens.nextToken();
-                        //Checking for valid Set order
-                        if(cur instanceof Tokens.RightParen){
-                            // pop the right paren
-                             tokens.popToken();
-                             //Returning Set Node
-                            return setNode;
-                        }
-                        //Else throw invalid Set
-                        else{
-                            throw new Exception("Invalid Set");
-                        }
-                    }
-                } catch(Exception e){
-                    e.getMessage();
                 }
-                return null;
             }
             //Checking for valid And order
             else if(ahead instanceof Tokens.And){
@@ -264,22 +242,18 @@ public class Parser {
                 List<Nodes.BaseNode> andList = new ArrayList<>();
                 //updating cur
                 cur = tokens.nextToken();
-                try{
+                //Checking for valid And order
+                if(cur instanceof Tokens.RightParen){
+                    throw new Exception("Invalid And");
+                }
+                else{
                     //Checking for valid And order
-                    if(cur instanceof Tokens.RightParen){
-                        throw new Exception("Invalid And");
+                    while(!(cur instanceof Tokens.RightParen)){
+                        //Adding expressions(tokens) to the andList
+                        andList.add(expression(tokens));
+                        //Updating cur
+                        cur = tokens.nextToken();
                     }
-                    else{
-                        //Checking for valid And order
-                        while(!(cur instanceof Tokens.RightParen)){
-                            //Adding expressions(tokens) to the andList
-                            andList.add(expression(tokens));
-                            //Updating cur
-                            cur = tokens.nextToken();
-                        }
-                    }
-                }catch(Exception e){
-                    e.getMessage();
                 }
                 // pop the right paren
                 tokens.popToken();
@@ -295,24 +269,20 @@ public class Parser {
                 tokens.popToken();
                 //Creating orList to hold nodes
                 List<Nodes.BaseNode> orList = new ArrayList<>();
-                try{
-                    //updating cur
-                    cur = tokens.nextToken();
+                //updating cur
+                cur = tokens.nextToken();
+                //Checking for valid Or order
+                if(cur instanceof Tokens.RightParen){
+                    throw new Exception("Invalid Or");
+                }
+                else{
                     //Checking for valid Or order
-                    if(cur instanceof Tokens.RightParen){
-                        throw new Exception("Invalid Or");
+                    while(!(cur instanceof Tokens.RightParen)){
+                        //Adding expression(tokens) to orList
+                        orList.add(expression(tokens));
+                        //Updating cur
+                        cur = tokens.nextToken();
                     }
-                    else{
-                        //Checking for valid Or order
-                        while(!(cur instanceof Tokens.RightParen)){
-                            //Adding expression(tokens) to orList
-                            orList.add(expression(tokens));
-                            //Updating cur
-                            cur = tokens.nextToken();
-                        }
-                    }
-                } catch(Exception e){
-                    e.getMessage();
                 }
                 // pop the right paren
                 tokens.popToken();
@@ -328,22 +298,18 @@ public class Parser {
                 tokens.popToken();
                 //Creating new beginList to hold nodes
                 List<Nodes.BaseNode> beginList = new ArrayList<>();
-                try{
+                //Checking for valid Begin order
+                if(cur instanceof Tokens.RightParen){
+                    throw new Exception("Invalid Begin");
+                }
+                else{
                     //Checking for valid Begin order
-                    if(cur instanceof Tokens.RightParen){
-                        throw new Exception("Invalid");
+                    while(!(cur instanceof Tokens.RightParen)){
+                        //Adding expression(tokens) to beginList
+                        beginList.add(expression(tokens));
+                        //updating cur
+                        cur = tokens.nextToken();
                     }
-                    else{
-                        //Checking for valid Begin order
-                        while(!(cur instanceof Tokens.RightParen)){
-                            //Adding expression(tokens) to beginList
-                            beginList.add(expression(tokens));
-                            //updating cur
-                            cur = tokens.nextToken();
-                        }
-                    }
-                }catch(Exception e){
-                    e.getMessage();
                 }
                 // pop the right paren
                 tokens.popToken();
@@ -361,22 +327,18 @@ public class Parser {
                 List<Nodes.Cond.Condition> condList = new ArrayList<>();
                 //updating cur
                 cur = tokens.nextToken();
-                try{
+                //Checking for valid Cond order
+                if(cur instanceof Tokens.RightParen){
+                    throw new Exception("Invalid Cond");
+                }
+                else{
                     //Checking for valid Cond order
-                    if(cur instanceof Tokens.RightParen){
-                        throw new Exception("Invalid Cond");
+                    while(!(cur instanceof Tokens.RightParen)){
+                        //Adding condition(tokens) to the condList
+                        condList.add(condition(tokens));
+                        //updating cur
+                        cur = tokens.nextToken();
                     }
-                    else{
-                        //Checking for valid Cond order
-                        while(!(cur instanceof Tokens.RightParen)){
-                            //Adding condition(tokens) to the condList
-                            condList.add(condition(tokens));
-                            //updating cur
-                            cur = tokens.nextToken();
-                        }
-                    }
-                }catch(Exception e){
-                    e.getMessage();
                 }
                 // pop the right paren token
                 tokens.popToken();
@@ -411,8 +373,9 @@ public class Parser {
             //return identifier(tokens)
             return identifier(tokens);
         }
-        //Else null
-        return null;
+        else{
+            throw new Exception("Invalid Expression");
+        }
     }
     /**
      * Transform a stream of tokens into a Condition Node
@@ -422,43 +385,37 @@ public class Parser {
      * @return A AstNode, because a Scheme program may have multiple
      *         top-level expressions.
      */
-    public Nodes.Cond.Condition condition(TokenStream tokens){  
+    public Nodes.Cond.Condition condition(TokenStream tokens) throws Exception{  
         //Create a list of base nodes
         List<Nodes.BaseNode> listExp = new ArrayList<>();
-        try{
-            //Check for valid Condition order
-            if(tokens.nextToken() instanceof Tokens.LeftParen){
-                // pop the left paren
-                tokens.popToken();
-                //Update the cur
-                Tokens.BaseToken cur = tokens.nextToken();
-                //Create test base node with expression(tokens)
-                Nodes.BaseNode test = expression(tokens);
-                //Update the cur
+        //Check for valid Condition order
+        if(tokens.nextToken() instanceof Tokens.LeftParen){
+            // pop the left paren
+            tokens.popToken();
+            //Update the cur
+            Tokens.BaseToken cur = tokens.nextToken();
+            //Create test base node with expression(tokens)
+            Nodes.BaseNode test = expression(tokens);
+            //Update the cur
+            cur = tokens.nextToken();
+            //Checking for valid conditions
+            while(!(cur instanceof Tokens.RightParen)){
+                //add expression(tokens) to listExp
+                listExp.add(expression(tokens));
+                //update cur
                 cur = tokens.nextToken();
-                //Checking for valid conditions
-                while(!(cur instanceof Tokens.RightParen)){
-                    //add expression(tokens) to listExp
-                    listExp.add(expression(tokens));
-                    //update cur
-                    cur = tokens.nextToken();
-                }
-                // pop right paren
-                tokens.popToken();
-                //Create Condition Node with values test and listExp
-                Nodes.Cond.Condition condition = new Nodes.Cond.Condition(test,listExp);
-                //return condition
-                return condition;
             }
-            //else throw invalid condition
-            else{
-                throw new Exception ("Invalid Condition");
-            }
-        }catch(Exception e){
-            e.getMessage();
+            // pop right paren
+            tokens.popToken();
+            //Create Condition Node with values test and listExp
+            Nodes.Cond.Condition condition = new Nodes.Cond.Condition(test,listExp);
+            //return condition
+            return condition;
         }
-    
-        return null;
+        //else throw invalid condition
+        else{
+            throw new Exception ("Invalid Condition");
+        }
     }
     /**
      * Transform a stream of tokens into a Node
@@ -468,7 +425,7 @@ public class Parser {
      * @return A AstNode, because a Scheme program may have multiple
      *         top-level expressions.
      */
-    public Nodes.BaseNode datum(TokenStream tokens){
+    public Nodes.BaseNode datum(TokenStream tokens) throws Exception{
         //Create cur node that keeps track of next token
         Tokens.BaseToken cur = tokens.nextToken();
         //Checks for valid Bool order
@@ -545,7 +502,7 @@ public class Parser {
         }
         //Else return null
         else{
-            return null;
+            throw new Exception("Invalid Datum");
         }
     }
     /**
@@ -556,237 +513,206 @@ public class Parser {
      * @return A AstNode, because a Scheme program may have multiple
      *         top-level expressions.
      */
-    public Nodes.BaseNode vec(TokenStream tokens){
-        try{
-            //Set cur to next token
-            Tokens.BaseToken cur = tokens.nextToken();
-            //Create a list of IValues
-            List<IValue> list = new ArrayList<>();
-            //Checks for valid Vec
-            while(!(cur instanceof Tokens.RightParen)){
-                //Add datum(tokens) casted to IValue to list
-                list.add((IValue) datum(tokens));
-                //update cur
-                cur = tokens.nextToken();
-            }
-            //Pop the right paren
-            tokens.popToken();
-            //Create Vec Node with values from list
-            Nodes.Vec vec = new Nodes.Vec(list);
-            //return vec
-            return vec;
+    public Nodes.BaseNode vec(TokenStream tokens) throws Exception{
+        //Set cur to next token
+        Tokens.BaseToken cur = tokens.nextToken();
+        //Create a list of IValues
+        List<IValue> list = new ArrayList<>();
+        //Checks for valid Vec
+        while(!(cur instanceof Tokens.RightParen)){
+            //Add datum(tokens) casted to IValue to list
+            list.add((IValue) datum(tokens));
+            //update cur
+            cur = tokens.nextToken();
         }
-        catch(Exception e){
-             e.getMessage();
-        }
-        return null;
+        //Pop the right paren
+        tokens.popToken();
+        //Create Vec Node with values from list
+        Nodes.Vec vec = new Nodes.Vec(list);
+        //return vec
+        return vec;
     }
+        
     /**
      * Formals function for the production of a formal
      * @param tokens for the TokenStream
      * @return List<Nodes.Identifier>
      */
-    public List<Nodes.Identifier> formals(TokenStream tokens){
-        // try-catch block for the formal production form
-        try{
-            // Store the current Token
-            Tokens.BaseToken cur = tokens.nextToken();
-             // List of Node.Identifiers that contains the Nodes.Identifier returned from 
-            List<Nodes.Identifier> iden = new ArrayList<>();
-            // Check if cur is LeftParen, if it is not then its the incorrect form for formals
-            if(cur instanceof Tokens.LeftParen){
-                //Pop the left paren
+    public List<Nodes.Identifier> formals(TokenStream tokens) throws Exception{
+        // Store the current Token
+        Tokens.BaseToken cur = tokens.nextToken();
+        // List of Node.Identifiers that contains the Nodes.Identifier returned from 
+        List<Nodes.Identifier> iden = new ArrayList<>();
+        // Check if cur is LeftParen, if it is not then its the incorrect form for formals
+        if(cur instanceof Tokens.LeftParen){
+            //Pop the left paren
+            tokens.popToken();
+            //update cur to next token
+            cur = tokens.nextToken();
+            //Checks for valid identifiers
+            while(cur instanceof Tokens.Identifier){
+                //Create Identifier node with the current identifier
+                Nodes.Identifier identifier = new Identifier(cur.tokenText);
+                //Add the identifier node to iden
+                iden.add(identifier);
+                //Pop the identifier
                 tokens.popToken();
-                //update cur to next token
+                //Update cur to next token
                 cur = tokens.nextToken();
-                //Checks for valid identifiers
-                while(cur instanceof Tokens.Identifier){
-                    //Create Identifier node with the current identifier
-                    Nodes.Identifier identifier = new Identifier(cur.tokenText);
-                    //Add the identifier node to iden
-                    iden.add(identifier);
-                    //Pop the identifier
-                    tokens.popToken();
-                    //Update cur to next token
-                    cur = tokens.nextToken();
-                }
-                // check if there is a right parent token, if it is not then its the incorrect form for formals
-                if(cur instanceof Tokens.RightParen){
-                    // pop the right paren token
-                    tokens.popToken();
-                    // return the List of Node Identifiers.
-                    return iden;
-                }
-                else{
-                    throw new Exception("Invalid Formals");
-                }
+            }
+            // check if there is a right parent token, if it is not then its the incorrect form for formals
+            if(cur instanceof Tokens.RightParen){
+                // pop the right paren token
+                tokens.popToken();
+                // return the List of Node Identifiers.
+                return iden;
             }
             else{
                 throw new Exception("Invalid Formals");
             }
-         
         }
-        catch(Exception e){
-            e.getMessage();
+        else{
+            throw new Exception("Invalid Formals");
         }
-        return null;
+        
     }
+       
+    
     /**
      * Body function for the production of a body
      * @param tokens for the TokenStream
      * @return List<Nodes.BaseNode>
      */
-    public List<Nodes.BaseNode> body(TokenStream tokens){
-        // try-catch block for the body production form
-        try{
-            // Store the current token
-            Tokens.BaseToken cur = tokens.nextToken();
-            // Store the token ahead
-            Tokens.BaseToken ahead = tokens.nextNextToken();
-             // List of Node.BaseNodes that contains the BaseNodes for the expressions returned from expression() and definitions returned from definition().
-            List<Nodes.BaseNode> nodes = new ArrayList<>();
-            // While loop that checks if the current token is leftparen and ahead is define. This is repeated because body contains 0 or more definitions
-            // If it is than add the Node returned from the definition function
-            while(cur instanceof Tokens.LeftParen && ahead instanceof Tokens.Define){
-                nodes.add(definition(tokens));
-                // Update cur since the definition() method pops tokens
-                cur = tokens.nextToken();
-                // Update ahead since the definition() method pops tokens
-                ahead = tokens.nextNextToken();
-            }
-            // After 0 or more definitions, the next has to be an expression
-            nodes.add(expression(tokens));
-            // Return the list of base nodes for the lambda.
-            return nodes;
+    public List<Nodes.BaseNode> body(TokenStream tokens) throws Exception{
+        // Store the current token
+        Tokens.BaseToken cur = tokens.nextToken();
+        // Store the token ahead
+        Tokens.BaseToken ahead = tokens.nextNextToken();
+            // List of Node.BaseNodes that contains the BaseNodes for the expressions returned from expression() and definitions returned from definition().
+        List<Nodes.BaseNode> nodes = new ArrayList<>();
+        // While loop that checks if the current token is leftparen and ahead is define. This is repeated because body contains 0 or more definitions
+        // If it is than add the Node returned from the definition function
+        while(cur instanceof Tokens.LeftParen && ahead instanceof Tokens.Define){
+            nodes.add(definition(tokens));
+            // Update cur since the definition() method pops tokens
+            cur = tokens.nextToken();
+            // Update ahead since the definition() method pops tokens
+            ahead = tokens.nextNextToken();
         }
-        catch(Exception e){
-            e.getMessage();
-        }
-        return null;
+        // After 0 or more definitions, the next has to be an expression
+        nodes.add(expression(tokens));
+        // Return the list of base nodes for the lambda.
+        return nodes;
     }
+    
     /**
      * Constant function for the production of a constant
      * @param tokens for the TokenStream
      * @return Nodes.BaseNode (Nodes.Bool, Nodes.Int, Nodes.Dbl, Nodes.Char, Nodes.Str) 
      */
-    public Nodes.BaseNode constant(TokenStream tokens){
-        // Try-catch block for the constant production form
-        try{
-            // check current token
-            Tokens.BaseToken cur = tokens.nextToken();
-            // (If we check the instanceOf the token then we can cast it to that type to access its fields and literals)
-            // if the current token is a bool then return a Bool Node.
-            if(cur instanceof Tokens.Bool){
-                // Cast the BaseToken to a Tokens.Bool to get the token's boolean literal. 
-                Tokens.Bool boolTemp = (Tokens.Bool) cur;
-                // Create a Nodes.bool from the token's boolean literal
-                Nodes.Bool boolNode = new Nodes.Bool(boolTemp.literal);
-                // Pop the boolean token after using it.
-                tokens.popToken();
-                // return the Boolean node
-                return boolNode;
-            }
-            // if the current token is an int, then return a Int Node
-            else if(cur instanceof Tokens.Int){
-                // Cast the Basetoken to a Tokens.Int to get the token's int literal
-                Tokens.Int intTemp = (Tokens.Int) cur;
-                // Create an Nodes.Int from the token's int literal
-                Nodes.Int intNode = new Nodes.Int(intTemp.literal);
-                // Pop the the int token after using it
-                tokens.popToken();
-                // return the Int Node
-                return intNode;
-            }
-            // if the current token is a double, then return a Double node
-            else if(cur instanceof Tokens.Dbl){
-                // Cast the BaseToken to a Tokens.Dbl to get the token's dbl literal
-                Tokens.Dbl dblTemp = (Tokens.Dbl) cur;
-                // Create a Nodes.dbl from the token's double literal
-                Nodes.Dbl dblNode = new Nodes.Dbl(dblTemp.literal);
-                // Pop the double token after using it
-                tokens.popToken();
-                // return the double node.
-                return dblNode;
-            }
-            // if the current token is a char, then return a Char node
-            else if(cur instanceof Tokens.Char){
-                // Cast the BaseToken to a Tokens.Char to get the token's char literal
-                Tokens.Char charTemp = (Tokens.Char) cur;
-                // Create a Nodes.char from the token's char literal
-                Nodes.Char charNode = new Nodes.Char(charTemp.literal);
-                // pop the char token after using it
-                tokens.popToken();
-                // return the char node.
-                return charNode;
-            }
-            // if the current token is a string, then return a String node
-            else if(cur instanceof Tokens.Str){
-                // Cast the BaseToken to a Tokens.Str to get the token's string literal
-                Tokens.Str strTemp = (Tokens.Str) cur;
-                // Create a Nodes.str from the token's string literal
-                Nodes.Str strNode = new Nodes.Str(strTemp.literal);
-                // pop the string token after using it
-                tokens.popToken();
-                // return the string node.
-                return strNode;
-            }
-            else{
-                // if the token is an instance of none of the above, than it is an invalid token for the constant form
-                // return null which we recognize as an error in the method programs()
-                return null;
-            }
+    public Nodes.BaseNode constant(TokenStream tokens) throws Exception{
+        // check current token
+        Tokens.BaseToken cur = tokens.nextToken();
+        // (If we check the instanceOf the token then we can cast it to that type to access its fields and literals)
+        // if the current token is a bool then return a Bool Node.
+        if(cur instanceof Tokens.Bool){
+            // Cast the BaseToken to a Tokens.Bool to get the token's boolean literal. 
+            Tokens.Bool boolTemp = (Tokens.Bool) cur;
+            // Create a Nodes.bool from the token's boolean literal
+            Nodes.Bool boolNode = new Nodes.Bool(boolTemp.literal);
+            // Pop the boolean token after using it.
+            tokens.popToken();
+            // return the Boolean node
+            return boolNode;
         }
-        catch(Exception e){
-            e.getMessage();
+        // if the current token is an int, then return a Int Node
+        else if(cur instanceof Tokens.Int){
+            // Cast the Basetoken to a Tokens.Int to get the token's int literal
+            Tokens.Int intTemp = (Tokens.Int) cur;
+            // Create an Nodes.Int from the token's int literal
+            Nodes.Int intNode = new Nodes.Int(intTemp.literal);
+            // Pop the the int token after using it
+            tokens.popToken();
+            // return the Int Node
+            return intNode;
         }
-        // if the try block fails, than we return null which we recognize as an error in the method programs()
-        return null;
+        // if the current token is a double, then return a Double node
+        else if(cur instanceof Tokens.Dbl){
+            // Cast the BaseToken to a Tokens.Dbl to get the token's dbl literal
+            Tokens.Dbl dblTemp = (Tokens.Dbl) cur;
+            // Create a Nodes.dbl from the token's double literal
+            Nodes.Dbl dblNode = new Nodes.Dbl(dblTemp.literal);
+            // Pop the double token after using it
+            tokens.popToken();
+            // return the double node.
+            return dblNode;
+        }
+        // if the current token is a char, then return a Char node
+        else if(cur instanceof Tokens.Char){
+            // Cast the BaseToken to a Tokens.Char to get the token's char literal
+            Tokens.Char charTemp = (Tokens.Char) cur;
+            // Create a Nodes.char from the token's char literal
+            Nodes.Char charNode = new Nodes.Char(charTemp.literal);
+            // pop the char token after using it
+            tokens.popToken();
+            // return the char node.
+            return charNode;
+        }
+        // if the current token is a string, then return a String node
+        else if(cur instanceof Tokens.Str){
+            // Cast the BaseToken to a Tokens.Str to get the token's string literal
+            Tokens.Str strTemp = (Tokens.Str) cur;
+            // Create a Nodes.str from the token's string literal
+            Nodes.Str strNode = new Nodes.Str(strTemp.literal);
+            // pop the string token after using it
+            tokens.popToken();
+            // return the string node.
+            return strNode;
+        }
+        else{
+            // if the token is an instance of none of the above, than it is an invalid token for the constant form
+            // return null which we recognize as an error in the method programs()
+            throw new Exception ("Invalid Constant");
+        }
     }
     /**
      * Application function for the production of a apply
      * @param tokens for the TokenStream
      * @return Nodes.BaseNode (Nodes.Apply) 
      */
-    public Nodes.BaseNode application(TokenStream tokens){
-        // try catch block for the apply production form
-        try{
-            // pop the lparen
+    public Nodes.BaseNode application(TokenStream tokens) throws Exception{
+
+        // pop the lparen
+        tokens.popToken();
+        // List of Node.BaseNodes that contains the BaseNodes for the expressions returned from expression().
+        List<Nodes.BaseNode> expressionList = new ArrayList<>();
+        // check the current token after popping the token
+        Tokens.BaseToken cur = tokens.nextToken();
+        // check if current is a RightParen token
+        if(cur instanceof Tokens.RightParen){
+            // if it is, throw an error because application needs 1 or more expressions
+            throw new Exception("Invalid Apply");
+        }
+        else{
+            // while loop that creates and adds all the expressions for apply to the expressionList
+            while(!(cur instanceof Tokens.RightParen)){
+                expressionList.add(expression(tokens));
+                // check new current token after expression, since the expression function pops tokens
+                cur = tokens.nextToken();
+            }
+            // pop the right paren
             tokens.popToken();
-            // List of Node.BaseNodes that contains the BaseNodes for the expressions returned from expression().
-            List<Nodes.BaseNode> expressionList = new ArrayList<>();
-            // check the current token after popping the token
-            Tokens.BaseToken cur = tokens.nextToken();
-            // check if current is a RightParen token
-            if(cur instanceof Tokens.RightParen){
-                // if it is, throw an error because application needs 1 or more expressions
-                throw new Exception("Invalid");
-            }
-            else{
-                // while loop that creates and adds all the expressions for apply to the expressionList
-                while(!(cur instanceof Tokens.RightParen)){
-                    expressionList.add(expression(tokens));
-                    // check new current token after expression, since the expression function pops tokens
-                    cur = tokens.nextToken();
-                }
-                // pop the right paren
-                tokens.popToken();
-                // return the ApplyNode created from the expressionList
-                return new Nodes.Apply(expressionList);
-            }
+            // return the ApplyNode created from the expressionList
+            return new Nodes.Apply(expressionList);
         }
-        // 
-        catch(Exception e){
-            e.getMessage();
-        }
-        // return null when there is an error.
-         return null;
     }
+
     /**
      * Symbol function for the production of a symbol
      * @param tokens for the TokenStream
      * @return Nodes.BaseNode (Nodes.Cons) 
      */
-    public Nodes.BaseNode list(TokenStream tokens){
+    public Nodes.BaseNode list(TokenStream tokens) throws Exception{
         //pop Lparen of a list
         tokens.popToken();
         // Get the new Current token after Lparen
@@ -802,26 +728,20 @@ public class Parser {
             cur = tokens.nextToken();
         }
         // try catch block for the list production form
-        try{
-            // Pop the Right Paren
-            tokens.popToken();
-            // If the list is empty, return a empty Cons as the list.
-            if(list.size() == 0){
-                return this._empty;
-            }
-            else{
-                // If the list is not empty, return a Cons constructed with the list and an empty cons.
-                Nodes.Cons consNode = new Nodes.Cons(list,this._empty);
-                // return the Cons Node 
-                return consNode;
-            }
-        } 
-        catch(Exception e){
-            e.getMessage();
-        }      
-        // return null when there is an error.
-        return null;
-    }
+        // Pop the Right Paren
+        tokens.popToken();
+        // If the list is empty, return a empty Cons as the list.
+        if(list.size() == 0){
+            return this._empty;
+        }
+        else{
+            // If the list is not empty, return a Cons constructed with the list and an empty cons.
+            Nodes.Cons consNode = new Nodes.Cons(list,this._empty);
+            // return the Cons Node 
+            return consNode;
+        }
+    } 
+
     /**
      * Symbol function for the production of a symbol
      * @param tokens to get the TokenStream
@@ -862,12 +782,7 @@ public class Parser {
     public List<Nodes.BaseNode> parse(TokenStream tokens) throws Exception {
         List<Nodes.BaseNode> AST = new ArrayList<>();
         // Try catch block to parse the TokenStream of tokens
-        try{
-            // Call the program production on the stream of tokens (Function)
-            AST = program(tokens); 
-        }catch(Exception e){
-            e.getMessage();
-        }
+        AST = program(tokens); 
         return AST;
     }
 }
