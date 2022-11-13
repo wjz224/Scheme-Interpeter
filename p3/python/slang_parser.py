@@ -5,7 +5,7 @@ import slang_evaluator
 # be a hash table.  In that case, you could have a function for "constructing"
 # each "type", by putting some values into a hash table.
 
-AND, APPLY, BEGIN, BOOL, BUILTIN, CHAR, COND, CONS, DBL, DEFINE, IDENTIFIER, IF, INT, LAMBDADEF, LAMBDAVAL, OR, QUOTE, SET, STR, SYMBOL, TICK, VEC, LET = range(
+ANDNODE, APPLYNODE, BEGINNODE, BOOLNODE, BUILTINNODE, CHARNODE, CONDNODE, CONSNODE, DBLNODE, DEFINENODE, IDENTIFIERNODE, IFNODE, INTNODE, LAMBDADEFNODE, LAMBDAVALNODE, ORNODE, QUOTENODE, SETNODE, STRNODE, SYMBOLNODE, TICKNODE, VECNODE, LETNODE = range(
     0, 23)
 
 # A poor-man's enum: each of our token types is just a number
@@ -39,49 +39,51 @@ VecNode = {'type': "vec",'items': None}
 """
 
 def AndNode(expressions):
-    return {'type': AND, 'expressions': expressions}
+    return {'type': ANDNODE, 'expressions': expressions}
 def ApplyNode(expressions):
-    return {'type': APPLY, 'expressions': expressions}
+    return {'type': APPLYNODE, 'expressions': expressions}
 def BeginNode(expressions):
-    return {'type': BEGIN, 'expressions': expressions}
+    return {'type': BEGINNODE, 'expressions': expressions}
 def BoolNode(val):
-    return {'type': BOOL, 'val': val}
+    return {'type': BOOLNODE, 'val': val}
 def BuiltInFuncNode(name, func):
-    return {'type': BUILTIN, 'name': name, 'func': func}
+    return {'type': BUILTINNODE, 'name': name, 'func': func}
 def CharNode(val):
-    return {'type': CHAR, 'val': val}
+    return {'type': CHARNODE, 'val': val}
+def Condition(test, conditions):
+    return {'type': CONDNODE, 'tests': test, 'conditions': conditions}
 def CondNode(conditions):
-    return {'type': COND, 'conditions': conditions} 
+    return {'type': CONDNODE, 'conditions': conditions} 
 def ConsNode(car, cdr):
-    return {'type': CONS, 'car': car, 'cdr':cdr}
+    return {'type': CONSNODE, 'car': car, 'cdr':cdr}
 def DblNode(val):
-    return {'type': DBL, 'val': val}
+    return {'type': DBLNODE, 'val': val}
 def DefineNode(identifier, expression):
-    return {'type': DEFINE, 'identifier': identifier, 'expression': expression}
+    return {'type': DEFINENODE, 'identifier': identifier, 'expression': expression}
 def IdentifierNode(name):
-    return {'type': IDENTIFIER, 'name': name}
+    return {'type': IDENTIFIERNODE, 'name': name}
 def IfNode(cond, iftrue, iffalse):
-    return {'type': IF, 'cond': cond, 'iftrue': iftrue, 'iffalse': iffalse}
+    return {'type': IFNODE, 'cond': cond, 'iftrue': iftrue, 'iffalse': iffalse}
 def IntNode(val):
-     return {'type': INT, 'val': val}
+     return {'type': INTNODE, 'val': val}
 def LambdaDefNode(formals, body):
-    return{'type': LAMBDADEF, 'formals': formals, 'body': body}
+    return{'type': LAMBDADEFNODE, 'formals': formals, 'body': body}
 def LambdaValNode(env, lambdaDef):
-    return{'type': LAMBDAVAL, 'env': env, 'lambdaDef': lambdaDef}
+    return{'type': LAMBDAVALNODE, 'env': env, 'lambdaDef': lambdaDef}
 def OrNode(expressions):
-    return {'type': OR, 'expressions': expressions}
+    return {'type': ORNODE, 'expressions': expressions}
 def QuoteNode(datum):
-    return {'type': QUOTE, 'datum': datum}
+    return {'type': QUOTENODE, 'datum': datum}
 def SetNode(identifier, expression):
-    return {'type': SET, 'identifier': identifier, 'expression': expression}
+    return {'type': SETNODE, 'identifier': identifier, 'expression': expression}
 def StrNode(value):
-    return {'type': STR, 'value': value}
+    return {'type': STRNODE, 'value': value}
 def SymbolNode(name):
-    return {'type': SYMBOL, 'name': name}
+    return {'type': SYMBOLNODE, 'name': name}
 def TickNode( datum):
-    return {'type': TICK, 'datum': datum}
+    return {'type': TICKNODE, 'datum': datum}
 def VecNode(items):
-    return {'type': VEC, 'items': items}
+    return {'type': VECNODE, 'items': items}
 
     
 class Parser:
@@ -92,7 +94,7 @@ class Parser:
         # Create a List of Nodes.BaseNode that stores BaseNodes in the fashion of an AST
         AST = []
         # while loop that goes through all the tokens in the TokenStream and creates an AST
-        while(tokens.nextToken().type == EOFTOKEN):
+        while(tokens.nextToken().type != EOFTOKEN):
             #pass the TokenStream into form to start parsing
             input = self.form(tokens)
             #add the BaseNode to the List of BaseNodes
@@ -125,14 +127,14 @@ class Parser:
         cur = tokens.nextToken()
         # Checking for valid order of tokens
         if(not(cur.type == IDENTIFIER)):
-            raise Exception("Invalid definition");
+            raise SyntaxError("Invalid definition")
         else:
             #Grab the identifier token and set it to a node
             iden = cur.tokenText
             # pop the identifier token
             tokens.popToken()
             #Create a define node with the identifier node and also a node from calling expressions
-            define = DefineNode(iden, self.expression(tokens));
+            define = DefineNode(iden, self.expression(tokens))
             #Updating current token
             cur = tokens.nextToken()
             #Checking for valid definition order
@@ -141,9 +143,9 @@ class Parser:
                 tokens.popToken()
                 #returning a definition Node
                 return define
-            # throwing an exception for invalid definition form
+            # throwing an SyntaxError for invalid definition form
             else:
-                raise Exception("Invalid definition")
+                raise SyntaxError("Invalid definition")
     def expression(self, tokens):
         #Grabbing the next token and the nextnext token
         cur = tokens.nextToken()
@@ -167,7 +169,7 @@ class Parser:
                     return quote
                 # if its not a right paren then its an invalid Quote Form.
                 else:
-                    raise Exception("Invalid Expression")
+                    raise SyntaxError("Invalid Expression")
             #Checking for valid Lambda order
             elif(ahead.type == LAMBDA):
                 #Popping off the two tokens that indicate a lambda node
@@ -185,7 +187,7 @@ class Parser:
                     return lambdaNode
                 #Else throw invalid order
                 else:
-                    raise Exception("Invalid Lambda")
+                    raise SyntaxError("Invalid Lambda")
             #Checking for valid If order
             elif(ahead.type == IF):
                 #Popping off the two tokens that indicate an if node
@@ -200,10 +202,10 @@ class Parser:
                     # pop the right paren
                     tokens.popToken()
                     #Returning if node
-                    return ifNode;                
+                    return ifNode
                 #Else throw invalid order
                 else:
-                    raise Exception("Invalid If")
+                    raise SyntaxError("Invalid If")
             #Checking for valid Set order
             elif(ahead.type == SET):
                 #popping off token that indicate set
@@ -213,7 +215,7 @@ class Parser:
                 ahead = tokens.nextNextToken()
                 #Checking for valid Set order, need 1 identifier
                 if(not(ahead.type == IDENTIFIER)):
-                    raise Exception("Invalid Set")
+                    raise SyntaxError("Invalid Set")
                 else:
                     #Popping off token that indicate set
                     tokens.popToken()
@@ -235,7 +237,7 @@ class Parser:
                         return setNode
                     #Else throw invalid Set because invalid Set form
                     else:
-                        raise Exception("Invalid Set")
+                        raise SyntaxError("Invalid Set")
 
             #Checking for valid And order
             elif(ahead.type == AND):
@@ -248,7 +250,7 @@ class Parser:
                 cur = tokens.nextToken()
                 #Checking for valid And order
                 if(cur.type == RIGHT_PAREN):
-                    raise Exception("Invalid And")
+                    raise SyntaxError("Invalid And")
                 else:
                     #Checking for valid And order
                     while(not(cur.type == RIGHT_PAREN)):
@@ -273,7 +275,7 @@ class Parser:
                 cur = tokens.nextToken()
                 #Checking for valid Or order
                 if(cur.type == RIGHT_PAREN):
-                    raise Exception("Invalid Or")
+                    raise SyntaxError("Invalid Or")
                 else:
                     #Checking for valid Or order
                     while(not(cur.type == RIGHT_PAREN)):
@@ -290,13 +292,13 @@ class Parser:
             #Checking for valid Begin token
             elif(ahead.type == BEGIN):
                 #Popping off the tokens 
-                tokens.popToken();
-                tokens.popToken();
+                tokens.popToken()
+                tokens.popToken()
                 #Creating new beginList to hold nodes
                 beginList = []
                 #Checking for valid Begin order
                 if(cur.type == RIGHT_PAREN):
-                    raise Exception("Invalid Begin")
+                    raise SyntaxError("Invalid Begin")
                 else:
                     #Checking for valid Begin order
                     while(not(cur.type == RIGHT_PAREN)):
@@ -322,7 +324,7 @@ class Parser:
                 cur = tokens.nextToken()
                 #Checking for valid Cond order
                 if(cur.type == RIGHT_PAREN):
-                    raise Exception("Invalid Cond")
+                    raise SyntaxError("Invalid Cond")
                 else:
                     #Checking for valid Cond order
                     while(not(cur.type == RIGHT_PAREN)):
@@ -350,15 +352,15 @@ class Parser:
             #Return tick node
             return tick
         #Check for constant order
-        elif(cur.tyoe == BOOL or cur.type == INT or cur.type == DBL or cur.type == CHAR or cur.type == STR):
+        elif(cur.type == BOOL or cur.type == INT or cur.type == DBL or cur.type == CHAR or cur.type == STR):
             #Return constant(tokens)
             return self.constant(tokens)
         #Check for Identifier order
         elif(cur.type == IDENTIFIER):
             #return identifier(tokens)
-            return self.identifier(tokens);
+            return self.identifier(tokens)
         else:
-            raise Exception("Invalid Expression")
+            raise SyntaxError("Invalid Expression")
             
     # solve later
     def condition(self,tokens):
@@ -384,12 +386,12 @@ class Parser:
             # pop right paren
             tokens.popToken()
             #Create Condition Node with values test and listExp
-            conditionList = []
+            conditionList = Condition(test,listExp)
             #return condition
             return conditionList
         #else throw invalid condition
         else:
-            raise Exception ("Invalid Condition")
+            raise SyntaxError ("Invalid Condition")
         
     def datum(self, tokens):
         #Create cur node that keeps track of next token
@@ -401,7 +403,7 @@ class Parser:
             #Create a Bool Node with value from boolTemp
             boolNode = BoolNode(boolTemp.literal)
             #Pop the bool token
-            tokens.popToken();
+            tokens.popToken()
             #return the bool Node
             return boolNode
         #Checks for valid Int order
@@ -409,7 +411,7 @@ class Parser:
             #Create a temp Int token, intTemp
             intTemp = cur
             #Create a Int Node with value from intTemp
-            intNode = IntNode(intTemp.literal);
+            intNode = IntNode(intTemp.literal)
             #Pop the int token
             tokens.popToken()
             #return the int Node
@@ -453,19 +455,19 @@ class Parser:
             #return list(tokens)
             return self.list(tokens)
         #Checks for valid Vec order
-        elif(cur.type == VEC):
+        elif(cur.type == VECTOR):
             #Pop the vec token
             tokens.popToken()
             #Return vec(tokens)
             return self.vec(tokens)
         #Else return null
         else:
-            raise Exception("Invalid Datum")
+            raise SyntaxError("Invalid Datum")
     def vec(self,tokens):
         #Set cur to next token
         cur = tokens.nextToken()
         #Create a list of IValues
-        list = [];
+        list = []
         #Checks for valid Vec
         while(not(cur.type == RIGHT_PAREN)):
             #Add datum(tokens) casted to IValue to list
@@ -485,7 +487,7 @@ class Parser:
     """
     def formals(self, tokens):
         #Store the current Token
-        cur = tokens.nextToken();
+        cur = tokens.nextToken()
         #List of Node.Identifiers that contains the Nodes.Identifier returned from 
         iden = []
         #Check if cur is LeftParen, if it is not then its the incorrect form for formals
@@ -497,11 +499,9 @@ class Parser:
             #Checks for valid identifiers
             while(cur.type == IDENTIFIER):
                 #Create Identifier node with the current identifier
-                identifier = self.identifier(cur.tokenText)
+                identifier = self.identifier(tokens)
                 #Add the identifier node to iden
                 iden.append(identifier)
-                #Pop the identifier
-                tokens.popToken()
                 #Update cur to next token
                 cur = tokens.nextToken()
             # check if there is a right parent token, if it is not then its the incorrect form for formals
@@ -511,9 +511,9 @@ class Parser:
                 # return the List of Node Identifiers.
                 return iden
             else:
-                raise Exception("Invalid Formals")
+                raise SyntaxError("Invalid Formals 1 ")
         else:
-            raise Exception("Invalid Formals")
+            raise SyntaxError("Invalid Formals 2 ")
     """
     Body function for the production of a body
     @param tokens for the TokenStream
@@ -600,7 +600,7 @@ class Parser:
         else:
             # if the token is an instance of none of the above, than it is an invalid token for the constant form
             # return null which we recognize as an error in the method programs()
-            raise Exception ("Invalid Constant")
+            raise SyntaxError ("Invalid Constant")
     """
     Application function for the production of a apply
     @param tokens for the TokenStream
@@ -612,15 +612,15 @@ class Parser:
         #List of Node.BaseNodes that contains the BaseNodes for the expressions returned from expression().
         expressionList = []
         # check the current token after popping the token
-        cur = tokens.nextToken();
+        cur = tokens.nextToken()
         # check if current is a RightParen token
         if(cur.type == RIGHT_PAREN):
             # if it is, throw an error because application needs 1 or more expressions
-            raise Exception("Invalid Apply")
+            raise SyntaxError("Invalid Apply")
         else:
             # while loop that creates and adds all the expressions for apply to the expressionList
             while(not(cur.type == RIGHT_PAREN)):
-                expressionList.add(self.expression(tokens))
+                expressionList.append(self.expression(tokens))
                 # check new current token after expression, since the expression function pops tokens
                 cur = tokens.nextToken()
             # pop the right paren
@@ -639,6 +639,8 @@ class Parser:
         cur = tokens.nextToken()
         # Create a List<IValue> to store the <IValues> from datum
         list = []
+        # If the list is empty, return a empty Cons as the list.
+        eval = slang_evaluator.makeDefaultEnv()
         # Since datum is 0 or more (* symbol), we will just keep adding the Nodes returned from the datum until we hit a RightParen token. 
         # If the while loop doesn't execute than the list will be just empty.
         while(not(cur.type == RIGHT_PAREN)):
@@ -649,8 +651,6 @@ class Parser:
         # try catch block for the list production form
         # Pop the Right Paren
         tokens.popToken()
-        # If the list is empty, return a empty Cons as the list.
-        eval = slang_evaluator.makeDefaultEnv()
         if(len(list) == 0):
             return eval.empty
         else:
@@ -663,11 +663,11 @@ class Parser:
      * @param tokens to get the TokenStream
      * @return Nodes.BaseNode (Nodes.Symbol)
     """
-    def symbol(self, tokens):
+    def symbol(self,tokens):
         # Cast the Tokens.BaseToken to Tokens.Identifier 
         iden = tokens.nextToken()
         # Create the SymbolNode from the Token's tokenText
-        symbolNode = self.symbol(iden.tokenText)
+        symbolNode = SymbolNode(iden.tokenText)
         #  Pop the Identifier token.
         tokens.popToken()
         # return the Symbol Node
@@ -681,11 +681,12 @@ class Parser:
      """
     def identifier(self, tokens):
         #Create the identifier node from the Token's TokenText
-        identifier = tokens.nextToken().tokenText
+        identifier = tokens.nextToken()
+        identifierNode = IdentifierNode(identifier.tokenText)
         #Pop the identifier token after creating the node.
         tokens.popToken()
         #Return the Identifier Node
-        return identifier 
+        return identifierNode
 
     def __init__(self, true, false, empty):
         """Construct a parser by caching the environmental constants true,
@@ -697,7 +698,6 @@ class Parser:
     def parse(self, tokens):
         """parse() is the main routine of the parser.  It parses the token
         stream into an AST."""
-
         AST = []
         AST = self.program(tokens)
         return AST
