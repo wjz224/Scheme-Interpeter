@@ -134,7 +134,7 @@ class Parser:
             # pop the identifier token
             tokens.popToken()
             #Create a define node with the identifier node and also a node from calling expressions
-            define = DefineNode(iden, self.expression(tokens))
+            define = DefineNode(IdentifierNode(iden), self.expression(tokens))
             #Updating current token
             cur = tokens.nextToken()
             #Checking for valid definition order
@@ -417,7 +417,7 @@ class Parser:
             #return the int Node
             return intNode
         #Checks for valid Dbl order
-        elif(cur == DBL):
+        elif(cur.type == DBL):
             #Create a temp Dbl token, dblTemp
             dblTemp = cur
             #Create a Dbl Node with value from dblTemp
@@ -511,9 +511,9 @@ class Parser:
                 # return the List of Node Identifiers.
                 return iden
             else:
-                raise SyntaxError("Invalid Formals 1 ")
+                raise SyntaxError("Invalid Formals")
         else:
-            raise SyntaxError("Invalid Formals 2 ")
+            raise SyntaxError("Invalid Formals")
     """
     Body function for the production of a body
     @param tokens for the TokenStream
@@ -652,7 +652,7 @@ class Parser:
         # Pop the Right Paren
         tokens.popToken()
         if(len(list) == 0):
-            return eval.empty
+            return ConsNode(list, eval.empty)
         else:
             # If the list is not empty, return a Cons constructed with the list and an empty cons.
             consNode = ConsNode(list,eval.empty)
