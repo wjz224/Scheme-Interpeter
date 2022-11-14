@@ -12,15 +12,15 @@
 ;; You should implement this on your own, by comparing one character at a time,
 ;; and should not use any string comparison functions that are provided by gsi.
 
-;; string-contains function that checks if substring is in str
+;; string-contains function that checks if substring is in source
 (define (contains-substring source pattern)
   (let ((n (- (string-length source) 1)) (n2 (string-length pattern))) 
     (and 
-        ;;loop that keeps track of index of str and sub, i is for the character index of sub and count is for the character of str
+        ;;loop that keeps track of index of source and pattern, i is for the character index of pattern and count is for the character of source
          (let loop ((i 0) (count 0))
-            ;;conditional that evaulates to true when i is equal to length of sub (that means we found all characters of sub in a row in str)
+            ;;conditional that evaulates to true when i is equal to length of pattern (that means we found all characters of pattern consecutively in source)
             (cond ((= i n2) #t) 
-                  ;; if char at index count matches character at index sub than recursively call loop with incremented i and count
+                  ;; if char at index count matches character at index i in patternthan recursively call loop with incremented i and count
                   ((char=? (string-ref source count) (string-ref pattern i)) (loop (+ i 1) (+ count 1)))
                   ;;when count is not at the end of the string, but the characters at count and i doesn't match, recursively call the loop with a resetted i.
                   ((not (= count n)) 
@@ -29,7 +29,7 @@
                           ;;conditional when substring index is == 0 so we keep the substring index and increment the string index
                           ((= i 0) (loop 0 (+ count 1)))
                     ))
-                  ;;return false when count is equal to str length and i is not equal to the length of the substring sub
+                  ;;return false when count is equal to source length and i is not equal to the length of the substring pattern
                   ((= count n) #f)
             )   
          )
