@@ -31,4 +31,4 @@
 
 
 ;; TODO: implement this function
-(define (make-hash size) '())
+(define (make-hash size) #t)
