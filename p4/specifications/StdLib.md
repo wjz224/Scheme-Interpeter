@@ -35,6 +35,9 @@ For example, `(- 10 3 4)` should return `3`, and `(> 1 2)` should return `#f`.
 * `(string-length str)`
 * `(substring str fromInc toExc)` (fromInc and toExc are integers; first is inclusive, second is exclusive)
 * `(string? val)`
+* `(string-ref str int)`
+* `(string-equal? str str)`
+* `(string chars...)` (zero or more characters)
 
 ## Math Functions
 
