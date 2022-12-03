@@ -24,6 +24,22 @@ public class LibMath {
         // how.
         // built in func for addition
 
+
+        // constants populated in the map.
+        var pi = new Nodes.Dbl(Math.PI);
+        map.put("pi", pi);
+        var e = new Nodes.Dbl(Math.E);
+        map.put("e", e);
+        var tau = new Nodes.Dbl(Math.PI * 2);
+        map.put("tau", tau);
+        var infplus = new Nodes.Dbl(Double.POSITIVE_INFINITY);
+        map.put("inf+", infplus);
+        var infneg = new Nodes.Dbl(Double.NEGATIVE_INFINITY);
+        map.put("inf-", infneg);
+        var nan = new Nodes.Dbl(Double.POSITIVE_INFINITY - Double.NEGATIVE_INFINITY);
+        map.put("nan", nan);
+        
+        // Addition bulilt in func
         var add = new Nodes.BuiltInFunc("+", (List<IValue> args) -> { // (+ 1 2 3 4)
             // Type checking: make sure we only have int and dbl arguments. We also will use
             // this to know if we should be returning an Int or a Dbl
@@ -291,6 +307,154 @@ public class LibMath {
         });
         map.put(equals.name, equals);
         
+        var greater = new Nodes.BuiltInFunc(">", (List<IValue> args) -> { 
+            double ab = 0;
+            if(args.size() == 0){
+                throw new Exception ("Wrong number of arguments passed into procedure abs");
+            }
+            double first = 0;
+            if(args.get(0) instanceof Nodes.Int){
+                first = ((Nodes.Int) args.get(0)).val;
+            }
+            else if(args.get(0) instanceof Nodes.Dbl){
+                first = ((Nodes.Dbl) args.get(0)).val;
+            }
+            else{
+                throw new Exception ("> can only handle Int and Dbl arguments");
+            }
+            for(int i = 1; i < args.size(); i++){
+                if(args.get(i) instanceof Nodes.Int){
+                    ab = ((Nodes.Int) args.get(i)).val;
+                }
+                else if(args.get(0) instanceof Nodes.Dbl){
+                    ab = ((Nodes.Dbl) args.get(i)).val;
+                }
+                else{
+                    throw new Exception ("> can only handle Int and Dbl arguments");
+                }
+
+                if(ab > first){
+                    return poundF;
+                }
+                else{
+                    first = ab;
+                }
+            }
+            return poundT;
+        });
+        map.put(greater.name, greater);
+        
+        var greaterequal = new Nodes.BuiltInFunc(">=", (List<IValue> args) -> { 
+            double ab = 0;
+            if(args.size() == 0){
+                throw new Exception ("Wrong number of arguments passed into procedure abs");
+            }
+            double first = 0;
+            if(args.get(0) instanceof Nodes.Int){
+                first = ((Nodes.Int) args.get(0)).val;
+            }
+            else if(args.get(0) instanceof Nodes.Dbl){
+                first = ((Nodes.Dbl) args.get(0)).val;
+            }
+            else{
+                throw new Exception (">= can only handle Int and Dbl arguments");
+            }
+            for(int i = 1; i < args.size(); i++){
+                if(args.get(i) instanceof Nodes.Int){
+                    ab = ((Nodes.Int) args.get(i)).val;
+                }
+                else if(args.get(0) instanceof Nodes.Dbl){
+                    ab = ((Nodes.Dbl) args.get(i)).val;
+                }
+                else{
+                    throw new Exception (">= can only handle Int and Dbl arguments");
+                }
+
+                if(ab >= first){
+                    return poundF;
+                }
+                else{
+                    first = ab;
+                }
+            }
+            return poundT;
+        });
+        map.put(greaterequal.name, greaterequal);
+
+
+        var less = new Nodes.BuiltInFunc("<", (List<IValue> args) -> { 
+            double ab = 0;
+            if(args.size() == 0){
+                throw new Exception ("Wrong number of arguments passed into procedure abs");
+            }
+            double first = 0;
+            if(args.get(0) instanceof Nodes.Int){
+                first = ((Nodes.Int) args.get(0)).val;
+            }
+            else if(args.get(0) instanceof Nodes.Dbl){
+                first = ((Nodes.Dbl) args.get(0)).val;
+            }
+            else{
+                throw new Exception ("< can only handle Int and Dbl arguments");
+            }
+            for(int i = 1; i < args.size(); i++){
+                if(args.get(i) instanceof Nodes.Int){
+                    ab = ((Nodes.Int) args.get(i)).val;
+                }
+                else if(args.get(0) instanceof Nodes.Dbl){
+                    ab = ((Nodes.Dbl) args.get(i)).val;
+                }
+                else{
+                    throw new Exception ("< can only handle Int and Dbl arguments");
+                }
+                if(ab < first){
+                    return poundF;
+                }
+                else{
+                    first = ab;
+                }
+            }
+            return poundT;
+        });
+        map.put(less.name, less);
+
+        var lessequal = new Nodes.BuiltInFunc("<=", (List<IValue> args) -> { 
+            double ab = 0;
+            if(args.size() == 0){
+                throw new Exception ("Wrong number of arguments passed into procedure abs");
+            }
+            double first = 0;
+            if(args.get(0) instanceof Nodes.Int){
+                first = ((Nodes.Int) args.get(0)).val;
+            }
+            else if(args.get(0) instanceof Nodes.Dbl){
+                first = ((Nodes.Dbl) args.get(0)).val;
+            }
+            else{
+                throw new Exception ("<= can only handle Int and Dbl arguments");
+            }
+            for(int i = 1; i < args.size(); i++){
+                if(args.get(i) instanceof Nodes.Int){
+                    ab = ((Nodes.Int) args.get(i)).val;
+                }
+                else if(args.get(0) instanceof Nodes.Dbl){
+                    ab = ((Nodes.Dbl) args.get(i)).val;
+                }
+                else{
+                    throw new Exception ("<= can only handle Int and Dbl arguments");
+                }
+                if(ab <= first){
+                    return poundF;
+                }
+                else{
+                    first = ab;
+                }
+            }
+            return poundT;
+        });
+        map.put(lessequal.name, lessequal);
+        
+        
         var abs = new Nodes.BuiltInFunc("abs", (List<IValue> args) -> { 
             double ab = 0;
             if(args.size() != 1){
@@ -310,7 +474,7 @@ public class LibMath {
         var sqrt = new Nodes.BuiltInFunc("sqrt", (List<IValue> args) -> { 
             double sqrt1 = 0;
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure abs");
+                throw new Exception ("Wrong number of arguments passed into procedure sqrt");
             }
            
             if(args.get(0) instanceof Nodes.Int){
@@ -326,7 +490,7 @@ public class LibMath {
         var acos = new Nodes.BuiltInFunc("acos", (List<IValue> args) -> { 
             double acos1 = 0;
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure abs");
+                throw new Exception ("Wrong number of arguments passed into procedure acos");
             }
            
             if(args.get(0) instanceof Nodes.Int){
@@ -343,7 +507,7 @@ public class LibMath {
         var asin = new Nodes.BuiltInFunc("asin", (List<IValue> args) -> { 
             double asin1 = 0;
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure abs");
+                throw new Exception ("Wrong number of arguments passed into procedure asin");
             }
            
             if(args.get(0) instanceof Nodes.Int){
@@ -360,7 +524,7 @@ public class LibMath {
         var atan = new Nodes.BuiltInFunc("atan", (List<IValue> args) -> { 
             double atan1 = 0;
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure abs");
+                throw new Exception ("Wrong number of arguments passed into procedure atan");
             }
            
             if(args.get(0) instanceof Nodes.Int){
@@ -377,7 +541,7 @@ public class LibMath {
         var cos = new Nodes.BuiltInFunc("cos", (List<IValue> args) -> { 
             double cos1 = 0;
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure abs");
+                throw new Exception ("Wrong number of arguments passed into procedure cos");
             }
            
             if(args.get(0) instanceof Nodes.Int){
@@ -393,7 +557,7 @@ public class LibMath {
         var cosh = new Nodes.BuiltInFunc("cosh", (List<IValue> args) -> { 
             double cosh1 = 0;
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure abs");
+                throw new Exception ("Wrong number of arguments passed into procedure cosh");
             }
            
             if(args.get(0) instanceof Nodes.Int){
@@ -409,7 +573,7 @@ public class LibMath {
         var sin = new Nodes.BuiltInFunc("sin", (List<IValue> args) -> { 
             double sin1 = 0;
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure abs");
+                throw new Exception ("Wrong number of arguments passed into procedure sin");
             }
            
             if(args.get(0) instanceof Nodes.Int){
@@ -425,7 +589,7 @@ public class LibMath {
         var sinh = new Nodes.BuiltInFunc("sinh", (List<IValue> args) -> { 
             double sinh1 = 0;
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure abs");
+                throw new Exception ("Wrong number of arguments passed into procedure sinh");
             }  
             if(args.get(0) instanceof Nodes.Int){
                 sinh1 = ((Nodes.Int) args.get(0)).val;
@@ -440,7 +604,7 @@ public class LibMath {
         var tan = new Nodes.BuiltInFunc("tan", (List<IValue> args) -> { 
             double tan1 = 0;
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure abs");
+                throw new Exception ("Wrong number of arguments passed into procedure tan");
             }
            
             if(args.get(0) instanceof Nodes.Int){
@@ -456,7 +620,7 @@ public class LibMath {
         var tanh = new Nodes.BuiltInFunc("tanh", (List<IValue> args) -> { 
             double tanh1 = 0;
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure abs");
+                throw new Exception ("Wrong number of arguments passed into procedure tanh");
             }
            
             if(args.get(0) instanceof Nodes.Int){
@@ -523,7 +687,7 @@ public class LibMath {
 
         var procedure = new Nodes.BuiltInFunc("procedure?", (List<IValue> args) -> { 
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure symbol");
+                throw new Exception ("Wrong number of arguments passed into procedure procedure?");
             }
             if(args.get(0) instanceof Nodes.BuiltInFunc ||  args.get(0) instanceof Nodes.LambdaVal) {
                 return poundT;
@@ -537,7 +701,7 @@ public class LibMath {
         var log10 = new Nodes.BuiltInFunc("log10", (List<IValue> args) -> { 
             double log1 = 0;
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure symbol");
+                throw new Exception ("Wrong number of arguments passed into procedure log10");
             }
             if(args.get(0) instanceof Nodes.Int){
                 log1 = ((Nodes.Int) args.get(0)).val;
@@ -552,7 +716,7 @@ public class LibMath {
         var loge = new Nodes.BuiltInFunc("loge", (List<IValue> args) -> { 
             double loge1 = 0;
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure symbol");
+                throw new Exception ("Wrong number of arguments passed into procedure loge");
             }
             if(args.get(0) instanceof Nodes.Int){
                 loge1 = ((Nodes.Int) args.get(0)).val;
@@ -568,7 +732,7 @@ public class LibMath {
             double baseNum = 0;
             double expNum = 0;
             if(args.size() != 2){
-                throw new Exception ("Wrong number of arguments passed into procedure symbol");
+                throw new Exception ("Wrong number of arguments passed into procedure pow");
             }
             if(args.get(0) instanceof Nodes.Int){
                 baseNum = ((Nodes.Int) args.get(0)).val;
@@ -607,7 +771,8 @@ public class LibMath {
             if(!(args.get(0) instanceof Nodes.Int)){
                 throw new Exception("integer->double can only handle Int arguments");
             }
-            double output = (double) ((Nodes.Int) args).val;
+            double output = (double) ((Nodes.Int) args.get(0)).val;
+        
             return new Nodes.Dbl(output);
             
         });
@@ -620,7 +785,7 @@ public class LibMath {
             if(!(args.get(0) instanceof Nodes.Dbl)){
                 throw new Exception("integer->double can only handle Dbl arguments");
             }
-            int output = (int) ((Nodes.Dbl) args).val;
+            int output = (int) ((Nodes.Dbl) args.get(0)).val;
             return new Nodes.Int(output);
             
         });
@@ -644,18 +809,33 @@ public class LibMath {
             if(args.get(0) == null){
                 return poundT;
             }
-            return poundF;
+            for (var arg : args) {
+                if (arg instanceof Nodes.Bool){
+                    if(((Nodes.Bool) arg).val == false){
+                        return poundF;
+                    }
+                }
+            }
+            return poundT;
         });
         map.put(andVals.name, andVals);
 
         var orVals = new Nodes.BuiltInFunc("or", (List<IValue> args) ->{
             if(args.size() < 1){
-                throw new Exception ("Wrong number of arguments passed into procedure not");
+                throw new Exception ("Wrong number of arguments passed into procedure or");
             } 
-            
-            
+            if(args.get(0) == null){
+                return poundT;
+            }
+            for (var arg : args) {
+                if (arg instanceof Nodes.Bool){
+                    if(((Nodes.Bool) arg).val != false){
+                        return poundT;
+                    }
+                }
+            }
+            return poundF;
         });
-        map.put(orVals.name, orVals);
-        
+        map.put(orVals.name, orVals);       
     }
 }

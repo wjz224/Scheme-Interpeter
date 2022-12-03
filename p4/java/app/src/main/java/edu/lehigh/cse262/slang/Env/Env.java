@@ -60,7 +60,7 @@ public class Env {
     public void put(String key, IValue expr) {
         map.put(key, expr);
     }
-
+    
     private IValue outerGet(String key) throws Exception {
         if (outer == null)
             throw new Exception(key + " not defined at outermost scope");
