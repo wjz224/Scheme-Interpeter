@@ -69,9 +69,16 @@ public class LibString {
                 throw new Exception("index argument must be a Str, second and third arguments but Ints.");
             }
             String str = ((Nodes.Str) args.get(0)).val;
+            
             int index = ((Nodes.Int) args.get(1)).val;
-            int second = ((Nodes.Int) args.get(2)).val;
-            String output = str.substring(index, second);
+            if(index >=  str.length() || index < 0){
+                throw new Exception ("substring Argument 2 out of range");
+            }
+            int index2 = ((Nodes.Int) args.get(2)).val;
+            if(index2 >=  str.length() || index2< 0){
+                throw new Exception ("substring Argument 3 out of range");
+            }
+            String output = str.substring(index,index2);
             return new Nodes.Str(output);
         });
         map.put(substring.name, substring);
@@ -103,6 +110,9 @@ public class LibString {
             }
             String str = ((Nodes.Str) args.get(0)).val;
             int index = ((Nodes.Int) args.get(1)).val;
+            if(index >=  str.length() || index < 0){
+                throw new Exception ("string-ref Argument 2 out of range");
+            }
             char output = str.charAt(index);
             return new Nodes.Char(output);
         });

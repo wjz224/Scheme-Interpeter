@@ -105,7 +105,7 @@ public class Env {
         var poundT = new Nodes.Bool(true);
         var empty = new Nodes.Cons((IValue) null, (IValue) null);
         var e = new Env(poundF, poundT, empty);
-        LibMath.populate(e.map, e.poundT, e.poundF);
+        LibMath.populate(e.map, e.poundT, e.poundF, empty);
         LibLists.populate(e.map, e.poundT, e.poundF, empty);
         LibString.populate(e.map, poundT, poundF);
         LibVector.populate(e.map, poundT, poundF);

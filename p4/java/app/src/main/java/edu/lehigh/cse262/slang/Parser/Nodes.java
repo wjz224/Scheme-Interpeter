@@ -405,7 +405,7 @@ public class Nodes {
         public String visitString(IAstVisitor<String> visitor) throws Exception {
             return visitor.visitLambdaDef(this);
         }
-
+ 
         @Override
         public IValue visitValue(IAstVisitor<IValue> visitor) throws Exception {
             return visitor.visitLambdaDef(this);

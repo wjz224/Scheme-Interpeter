@@ -1,5 +1,8 @@
 package edu.lehigh.cse262.slang.Interpreter;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import edu.lehigh.cse262.slang.Env.Env;
 import edu.lehigh.cse262.slang.Parser.IAstVisitor;
 import edu.lehigh.cse262.slang.Parser.IValue;
@@ -38,7 +41,8 @@ public class ExprEvaluator implements IAstVisitor<IValue> {
     @Override
     public IValue visitDefine(Nodes.Define expr) throws Exception {
         if(env.get(expr.identifier.name) != null){
-            return env.get(expr.identifier.name);
+            env.put(expr.identifier.name, expr.expression.visitValue(this));
+            return null;
         }
         else{
             throw new Exception ("Null value for identifier error");
@@ -81,7 +85,10 @@ public class ExprEvaluator implements IAstVisitor<IValue> {
     /** Interpret an If expression */
     @Override
     public IValue visitIf(Nodes.If expr) throws Exception {
-        throw new Exception("visitIf is not yet implemented");
+        if(expr.cond.visitValue(this) == env.poundF){
+            return expr.ifFalse.visitValue(this);
+        }
+        return expr.ifTrue.visitValue(this);
     }
 
     /**
@@ -90,21 +97,35 @@ public class ExprEvaluator implements IAstVisitor<IValue> {
      */
     @Override
     public IValue visitSet(Nodes.Set expr) throws Exception {
-        throw new Exception("visitSet is not yet implemented");
+        if(expr.identifier.name != null){
+            env.update(expr.identifier.name, expr.expression.visitValue(this));
+        }
+        else{
+            throw new Exception("Invalid identifier name");
+        }
+        return null;
     }
 
     /** Interpret an And expression */
     @Override
     public IValue visitAnd(Nodes.And expr) throws Exception {
-        
-        throw new Exception("visitAnd is not yet implemented");
+        for(int i = 0; i < expr.expressions.size(); i++){
+            if(expr.expressions.get(i).visitValue(this) == env.poundF){
+                return env.poundF;
+            }
+        }
+        return env.poundT;        
     }
 
     /** Interpret an Or expression */
     @Override
     public IValue visitOr(Nodes.Or expr) throws Exception {
-        
-        throw new Exception("visitOr is not yet implemented");
+        for(int i = 0; i < expr.expressions.size(); i++){
+            if(expr.expressions.get(i).visitValue(this) == env.poundT){
+                return env.poundT;
+            }
+        }
+        return env.poundF;
     }
 
     /** Interpret a Begin expression */
@@ -119,7 +140,27 @@ public class ExprEvaluator implements IAstVisitor<IValue> {
     /** Interpret a "not special form" expression */
     @Override
     public IValue visitApply(Nodes.Apply expr) throws Exception {
-        throw new Exception("visitApply is not yet implemented");
+        List<IValue> args = new ArrayList<>();
+        IValue firstValue = expr.expressions.get(0).visitValue(this);
+        if(firstValue instanceof Nodes.BuiltInFunc){
+            for(int i = 1; i < expr.expressions.size()-1; i++){
+                args.add(expr.expressions.get(i).visitValue(this));
+            }
+            return ((Nodes.BuiltInFunc)firstValue).func.execute(args);
+        }
+        else if(firstValue instanceof Nodes.LambdaVal){
+            if(((Nodes.LambdaVal) expr.expressions.get(0)).lambda.formals.size() + 1 == expr.expressions.size()){
+                
+               Env tempEnv = Env.makeInner(((Nodes.LambdaVal) firstValue).env);
+               
+            }
+            else{
+                throw new Exception("Number of Formals does not Equal arguments");
+            }
+        }
+        
+
+        return null;
     }
 
     /** Interpret a Cons value */
@@ -143,13 +184,13 @@ public class ExprEvaluator implements IAstVisitor<IValue> {
     /** Interpret a Quote expression */
     @Override
     public IValue visitQuote(Nodes.Quote expr) throws Exception {
-        throw new Exception("visitQuote is not yet implemented");
+        return expr.datum;
     }
-
+    
     /** Interpret a quoted datum expression */
     @Override
     public IValue visitTick(Nodes.Tick expr) throws Exception {
-        throw new Exception("visitTick is not yet implemented");
+        return expr.datum;
     }
 
     /** Interpret a Char value */

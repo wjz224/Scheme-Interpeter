@@ -14,7 +14,10 @@ public class LibMath {
     /**
      * Populate the provided `map` with a standard set of mathematical functions
      */
-    public static void populate(HashMap<String, IValue> map, Nodes.Bool poundT, Nodes.Bool poundF) {
+
+ 
+   
+    public static void populate(HashMap<String, IValue> map, Nodes.Bool poundT, Nodes.Bool poundF, Nodes.Cons empty) {
         // As a starting point, let's go ahead and put the addition function
         // into the map. This will make it **much** easier to test `apply`, and
         // should provide some useful guidance for making other functions.
@@ -23,8 +26,7 @@ public class LibMath {
         // functions would probably be wise, but it's up to you to figure out
         // how.
         // built in func for addition
-
-
+       
         // constants populated in the map.
         var pi = new Nodes.Dbl(Math.PI);
         map.put("pi", pi);
@@ -795,12 +797,12 @@ public class LibMath {
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure ?");
             } 
-            if(args.get(0) == null){
-                return poundT;
+            if(args.get(0) == empty){
+               return poundT;
             }
             return poundF;
         });
-        map.put(nullCheck.name, nullCheck);
+        map.put(nullCheck.name, nullCheck); 
 
         var andVals = new Nodes.BuiltInFunc("and", (List<IValue> args) ->{
             if(args.size() < 1){
