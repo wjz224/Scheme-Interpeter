@@ -395,7 +395,7 @@ public class Nodes {
         /** The body of the function */
         public final List<BaseNode> body;
 
-        /** Construct a `lambda` node from its formals and body */
+        /** Construct a `z`da` node from its formals and body */
         public LambdaDef(List<Identifier> formals, List<BaseNode> body) {
             this.formals = formals;
             this.body = body;

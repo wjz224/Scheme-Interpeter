@@ -38,11 +38,11 @@ public class LibMath {
         map.put("inf+", infplus);
         var infneg = new Nodes.Dbl(Double.NEGATIVE_INFINITY);
         map.put("inf-", infneg);
-        var nan = new Nodes.Dbl(Double.POSITIVE_INFINITY - Double.NEGATIVE_INFINITY);
+        var nan = new Nodes.Dbl(Double.NaN);
         map.put("nan", nan);
         
         // Addition bulilt in func
-        var add = new Nodes.BuiltInFunc("+", (List<IValue> args) -> { // (+ 1 2 3 4)
+        var add = new Nodes.BuiltInFunc("+", (List<IValue> args) -> { 
             // Type checking: make sure we only have int and dbl arguments. We also will use
             // this to know if we should be returning an Int or a Dbl
             int intCount = 0;
@@ -78,7 +78,7 @@ public class LibMath {
             }
         });
         map.put(add.name, add);
-        var subtract = new Nodes.BuiltInFunc("-", (List<IValue> args) -> { // (+ 1 2 3 4)
+        var subtract = new Nodes.BuiltInFunc("-", (List<IValue> args) -> { 
             // Type checking: make sure we only have int and dbl arguments. We also will use
             // this to know if we should be returning an Int or a Dbl
             int intCount = 0;
@@ -125,7 +125,7 @@ public class LibMath {
 
         map.put(subtract.name, subtract);
         
-        var multiplication = new Nodes.BuiltInFunc("*", (List<IValue> args) -> { // (+ 1 2 3 4)
+        var multiplication = new Nodes.BuiltInFunc("*", (List<IValue> args) -> {
             // Type checking: make sure we only have int and dbl arguments. We also will use
             // this to know if we should be returning an Int or a Dbl
             int intCount = 0;
@@ -163,7 +163,7 @@ public class LibMath {
         map.put(multiplication.name, multiplication);
         
         // built in func for divison
-        var division = new Nodes.BuiltInFunc("/", (List<IValue> args) -> { // (+ 1 2 3 4)
+        var division = new Nodes.BuiltInFunc("/", (List<IValue> args) -> { 
             // Type checking: make sure we only have int and dbl arguments. We also will use
             // this to know if we should be returning an Int or a Dbl
             int intCount = 0;
@@ -210,7 +210,7 @@ public class LibMath {
         map.put(division.name, division);
     
         // built in func for divison
-        var modulo = new Nodes.BuiltInFunc("%", (List<IValue> args) -> { // (+ 1 2 3 4)
+        var modulo = new Nodes.BuiltInFunc("%", (List<IValue> args) -> {
         // Type checking: make sure we only have int arguments. We also will use
         // this to know if we should be returning an Int or an error
         // modulo procedure should only have 2 arguments and cannot have less.
@@ -238,8 +238,7 @@ public class LibMath {
         
         var equals = new Nodes.BuiltInFunc("==", (List<IValue> args) -> { 
             // (+ 1 2 3 4)
-            // Type checking: make sure we only have int and dbl arguments. We also will use
-            // this to know if we should be returning an Int or a Dbl
+            // Type checking: make sure we only have int, dbl and bool arguments.
             if(args.size() != 2){
                 throw new Exception ("Wrong number of arguments passed into procedure ==");
             }
@@ -254,6 +253,7 @@ public class LibMath {
                 if (arg instanceof Nodes.Bool)
                     boolCount++;
             }
+            //Checking for only int, dbl, and bool args
             if (args.size() > (intCount + dblCount + boolCount))
                 throw new Exception("== can only handle Int, Dbl, and Bool arguments");
             // Semantic analysis: make sure there are arguments!
@@ -311,10 +311,12 @@ public class LibMath {
         
         var greater = new Nodes.BuiltInFunc(">", (List<IValue> args) -> { 
             double ab = 0;
+            //checking for arguments
             if(args.size() == 0){
-                throw new Exception ("Wrong number of arguments passed into procedure abs");
+                throw new Exception ("Wrong number of arguments passed into procedure >");
             }
             double first = 0;
+            //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 first = ((Nodes.Int) args.get(0)).val;
             }
@@ -324,6 +326,7 @@ public class LibMath {
             else{
                 throw new Exception ("> can only handle Int and Dbl arguments");
             }
+            //Computing the return bool
             for(int i = 1; i < args.size(); i++){
                 if(args.get(i) instanceof Nodes.Int){
                     ab = ((Nodes.Int) args.get(i)).val;
@@ -348,10 +351,12 @@ public class LibMath {
         
         var greaterequal = new Nodes.BuiltInFunc(">=", (List<IValue> args) -> { 
             double ab = 0;
+            //Checking for arguments
             if(args.size() == 0){
-                throw new Exception ("Wrong number of arguments passed into procedure abs");
+                throw new Exception ("Wrong number of arguments passed into procedure >=");
             }
             double first = 0;
+            //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 first = ((Nodes.Int) args.get(0)).val;
             }
@@ -361,6 +366,7 @@ public class LibMath {
             else{
                 throw new Exception (">= can only handle Int and Dbl arguments");
             }
+            //Computing the return bool
             for(int i = 1; i < args.size(); i++){
                 if(args.get(i) instanceof Nodes.Int){
                     ab = ((Nodes.Int) args.get(i)).val;
@@ -386,10 +392,12 @@ public class LibMath {
 
         var less = new Nodes.BuiltInFunc("<", (List<IValue> args) -> { 
             double ab = 0;
+            //Checking for arguments
             if(args.size() == 0){
-                throw new Exception ("Wrong number of arguments passed into procedure abs");
+                throw new Exception ("Wrong number of arguments passed into procedure <");
             }
             double first = 0;
+            //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 first = ((Nodes.Int) args.get(0)).val;
             }
@@ -399,6 +407,7 @@ public class LibMath {
             else{
                 throw new Exception ("< can only handle Int and Dbl arguments");
             }
+            //Computing the return bool
             for(int i = 1; i < args.size(); i++){
                 if(args.get(i) instanceof Nodes.Int){
                     ab = ((Nodes.Int) args.get(i)).val;
@@ -422,10 +431,12 @@ public class LibMath {
 
         var lessequal = new Nodes.BuiltInFunc("<=", (List<IValue> args) -> { 
             double ab = 0;
+            //Checking for args
             if(args.size() == 0){
                 throw new Exception ("Wrong number of arguments passed into procedure abs");
             }
             double first = 0;
+            //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 first = ((Nodes.Int) args.get(0)).val;
             }
@@ -435,6 +446,7 @@ public class LibMath {
             else{
                 throw new Exception ("<= can only handle Int and Dbl arguments");
             }
+            //Computing the return bool
             for(int i = 1; i < args.size(); i++){
                 if(args.get(i) instanceof Nodes.Int){
                     ab = ((Nodes.Int) args.get(i)).val;
@@ -459,186 +471,208 @@ public class LibMath {
         
         var abs = new Nodes.BuiltInFunc("abs", (List<IValue> args) -> { 
             double ab = 0;
+            //Checking for arguments
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure abs");
             }
-           
+            //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 ab = ((Nodes.Int) args.get(0)).val;
             }
             else{
                 ab = ((Nodes.Dbl) args.get(0)).val;
             }
+            //Computing the return dbl 
             return new Nodes.Dbl(Math.abs(ab));
         });
         map.put(abs.name, abs);
 
         var sqrt = new Nodes.BuiltInFunc("sqrt", (List<IValue> args) -> { 
             double sqrt1 = 0;
+            //Checking the arguments
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure sqrt");
             }
-           
+           //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 sqrt1 = ((Nodes.Int) args.get(0)).val;
             }
             else{
                 sqrt1 = ((Nodes.Dbl) args.get(0)).val;
             }
+            //Computing the return dbl
             return new Nodes.Dbl(Math.sqrt(sqrt1));
         });
         map.put(sqrt.name, sqrt);
 
         var acos = new Nodes.BuiltInFunc("acos", (List<IValue> args) -> { 
             double acos1 = 0;
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure acos");
             }
-           
+            //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 acos1 = ((Nodes.Int) args.get(0)).val;
             }
             else{
                 acos1 = ((Nodes.Dbl) args.get(0)).val;
             }
+            //Computing the return dbl
             return new Nodes.Dbl(Math.acos(acos1));
         });
         map.put(acos.name, acos);
         
-
         var asin = new Nodes.BuiltInFunc("asin", (List<IValue> args) -> { 
             double asin1 = 0;
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure asin");
             }
-           
+            //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 asin1 = ((Nodes.Int) args.get(0)).val;
             }
             else{
                 asin1 = ((Nodes.Dbl) args.get(0)).val;
             }
+            //Computing the return dbl
             return new Nodes.Dbl(Math.asin(asin1));
         });
         map.put(asin.name, asin);
 
-        
         var atan = new Nodes.BuiltInFunc("atan", (List<IValue> args) -> { 
             double atan1 = 0;
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure atan");
             }
-           
+            //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 atan1 = ((Nodes.Int) args.get(0)).val;
             }
             else{
                 atan1 = ((Nodes.Dbl) args.get(0)).val;
             }
+            //Computing the return dbl
             return new Nodes.Dbl(Math.asin(atan1));
         });
         map.put(atan.name, atan);
     
-        
         var cos = new Nodes.BuiltInFunc("cos", (List<IValue> args) -> { 
             double cos1 = 0;
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure cos");
             }
-           
+            //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 cos1 = ((Nodes.Int) args.get(0)).val;
             }
             else{
                 cos1 = ((Nodes.Dbl) args.get(0)).val;
             }
+            //Computing the return dbl
             return new Nodes.Dbl(Math.asin(cos1));
         });
         map.put(cos.name, cos);
 
         var cosh = new Nodes.BuiltInFunc("cosh", (List<IValue> args) -> { 
             double cosh1 = 0;
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure cosh");
             }
-           
+            //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 cosh1 = ((Nodes.Int) args.get(0)).val;
             }
             else{
                 cosh1 = ((Nodes.Dbl) args.get(0)).val;
             }
+            //Computing the return dbl
             return new Nodes.Dbl(Math.cosh(cosh1));
         });
         map.put(cosh.name, cosh);
         
         var sin = new Nodes.BuiltInFunc("sin", (List<IValue> args) -> { 
             double sin1 = 0;
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure sin");
             }
-           
+            //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 sin1 = ((Nodes.Int) args.get(0)).val;
             }
             else{
                 sin1 = ((Nodes.Dbl) args.get(0)).val;
             }
+            //Computing the return dbl
             return new Nodes.Dbl(Math.sin(sin1));
         });
         map.put(sin.name, sin);
 
         var sinh = new Nodes.BuiltInFunc("sinh", (List<IValue> args) -> { 
             double sinh1 = 0;
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure sinh");
             }  
+            //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 sinh1 = ((Nodes.Int) args.get(0)).val;
             }
             else{
                 sinh1 = ((Nodes.Dbl) args.get(0)).val;
             }
+            //Computing the return dbl
             return new Nodes.Dbl(Math.sinh(sinh1));
         });
         map.put(sinh.name, sinh);
 
         var tan = new Nodes.BuiltInFunc("tan", (List<IValue> args) -> { 
             double tan1 = 0;
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure tan");
             }
-           
+            //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 tan1 = ((Nodes.Int) args.get(0)).val;
             }
             else{
                 tan1 = ((Nodes.Dbl) args.get(0)).val;
             }
+            //Computing the return dbl
             return new Nodes.Dbl(Math.tan(tan1));
         });
         map.put(tan.name, tan);
 
         var tanh = new Nodes.BuiltInFunc("tanh", (List<IValue> args) -> { 
             double tanh1 = 0;
+            //Checking for args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure tanh");
             }
-           
+            //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 tanh1 = ((Nodes.Int) args.get(0)).val;
             }
             else{
                 tanh1 = ((Nodes.Dbl) args.get(0)).val;
             }
+            //Computing the return dbl
             return new Nodes.Dbl(Math.tanh(tanh1));
         });
         map.put(tanh.name, tanh);
 
         var integerFunc = new Nodes.BuiltInFunc("integer?", (List<IValue> args) -> { 
+            //Checking for args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure integer?");
             }
+            //Type checking: make sure we only have int args and computing the return bool
             if( args.get(0) instanceof Nodes.Int){
                 return poundT;
             }
@@ -649,9 +683,11 @@ public class LibMath {
         map.put(integerFunc.name, integerFunc);
 
         var doubleFunc = new Nodes.BuiltInFunc("double?", (List<IValue> args) -> { 
+            //Checking for args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure double?");
             }
+            //Type checking: make sure we only have dbl args and computing the return bool
             if( args.get(0) instanceof Nodes.Dbl){
                 return poundT;
             }
@@ -662,9 +698,11 @@ public class LibMath {
         map.put(doubleFunc.name, doubleFunc);
         
         var numberFunc = new Nodes.BuiltInFunc("number?", (List<IValue> args) -> { 
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure number?");
             }
+            //Type checking: making sure we only have int and dbl args and computing the return bool
             if( args.get(0) instanceof Nodes.Int || args.get(0) instanceof Nodes.Dbl){
                 return poundT;
             }
@@ -675,9 +713,11 @@ public class LibMath {
         map.put(numberFunc.name, numberFunc);
         
         var symbol = new Nodes.BuiltInFunc("symbol?", (List<IValue> args) -> { 
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure symbol?");
             }
+            //Type checking: making sure we only have symbol args and computing the return bool
             if(args.get(0) instanceof Nodes.Symbol) {
                 return poundT;
             }
@@ -688,9 +728,11 @@ public class LibMath {
         map.put(symbol.name, symbol);
 
         var procedure = new Nodes.BuiltInFunc("procedure?", (List<IValue> args) -> { 
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure procedure?");
             }
+            //Type checking: making sure we only have BuiltInFunc and LambdaVal args and computing the return bool
             if(args.get(0) instanceof Nodes.BuiltInFunc ||  args.get(0) instanceof Nodes.LambdaVal) {
                 return poundT;
             }
@@ -702,30 +744,36 @@ public class LibMath {
 
         var log10 = new Nodes.BuiltInFunc("log10", (List<IValue> args) -> { 
             double log1 = 0;
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure log10");
             }
+            //Type checking: making sure we only have int and dbl args
             if(args.get(0) instanceof Nodes.Int){
                 log1 = ((Nodes.Int) args.get(0)).val;
             }
             else{
                 log1 = ((Nodes.Dbl) args.get(0)).val;
             }
+            //Computing the return dbl
             return new Nodes.Dbl(Math.log10(log1));
         });
         map.put(log10.name, log10);
         
         var loge = new Nodes.BuiltInFunc("loge", (List<IValue> args) -> { 
             double loge1 = 0;
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure loge");
             }
+            //Type checking: making sure we only have int and dbl args
             if(args.get(0) instanceof Nodes.Int){
                 loge1 = ((Nodes.Int) args.get(0)).val;
             }
             else{
                 loge1 = ((Nodes.Dbl) args.get(0)).val;
             }
+            //Computing the return dbl
             return new Nodes.Dbl(Math.log(loge1));
         });
         map.put(loge.name, loge);
@@ -733,9 +781,11 @@ public class LibMath {
         var pow = new Nodes.BuiltInFunc("pow", (List<IValue> args) -> { 
             double baseNum = 0;
             double expNum = 0;
+            //Checking the args
             if(args.size() != 2){
                 throw new Exception ("Wrong number of arguments passed into procedure pow");
             }
+            //Type checking: making sure we only have int and dbl args
             if(args.get(0) instanceof Nodes.Int){
                 baseNum = ((Nodes.Int) args.get(0)).val;
             }
@@ -748,14 +798,17 @@ public class LibMath {
             else{
                 expNum = ((Nodes.Dbl) args.get(1)).val;
             }
+            //Computing the return dbl
             return new Nodes.Dbl(Math.pow(baseNum, expNum));
         });
         map.put(pow.name, pow);
 
         var not = new Nodes.BuiltInFunc("not", (List<IValue> args) -> { 
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure not");
             }
+            //Type checking: making sure we only have bool args and computing the return bool
             if(!(args.get(0) instanceof Nodes.Bool)){
                 return poundF;
             }
@@ -767,12 +820,15 @@ public class LibMath {
         map.put(not.name, not);
 
         var intToDouble = new Nodes.BuiltInFunc("integer->double", (List<IValue> args) -> { 
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure int->double");
             }
+            //Type checking: making sure we only have int args 
             if(!(args.get(0) instanceof Nodes.Int)){
                 throw new Exception("integer->double can only handle Int arguments");
             }
+            //Computing the return dbl
             double output = (double) ((Nodes.Int) args.get(0)).val;
         
             return new Nodes.Dbl(output);
@@ -781,12 +837,15 @@ public class LibMath {
         map.put(intToDouble.name, intToDouble);
 
         var doubleToInt = new Nodes.BuiltInFunc("double->integer", (List<IValue> args) -> { 
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure double->int");
             }
+            //Type checking: making sure we only have dbl args
             if(!(args.get(0) instanceof Nodes.Dbl)){
                 throw new Exception("integer->double can only handle Dbl arguments");
             }
+            //Computing the return int
             int output = (int) ((Nodes.Dbl) args.get(0)).val;
             return new Nodes.Int(output);
             
@@ -794,9 +853,11 @@ public class LibMath {
         map.put(doubleToInt.name, doubleToInt);
 
         var nullCheck = new Nodes.BuiltInFunc("null?", (List<IValue> args) ->{
+            //Checking the args
             if(args.size() != 1){
                 throw new Exception ("Wrong number of arguments passed into procedure ?");
             } 
+            //Computing the return bool
             if(args.get(0) == empty){
                return poundT;
             }
@@ -805,12 +866,15 @@ public class LibMath {
         map.put(nullCheck.name, nullCheck); 
 
         var andVals = new Nodes.BuiltInFunc("and", (List<IValue> args) ->{
+            //Checking the args
             if(args.size() < 1){
                 throw new Exception ("Wrong number of arguments passed into procedure and");
             } 
+            //Checking for empty case
             if(args.get(0) == null){
                 return poundT;
             }
+            //Type checking: making sure we have bool args and computing if we need to return a bool
             for (var arg : args) {
                 if (arg instanceof Nodes.Bool){
                     if(((Nodes.Bool) arg).val == false){
@@ -823,12 +887,15 @@ public class LibMath {
         map.put(andVals.name, andVals);
 
         var orVals = new Nodes.BuiltInFunc("or", (List<IValue> args) ->{
+            //Checking the args
             if(args.size() < 1){
                 throw new Exception ("Wrong number of arguments passed into procedure or");
             } 
+            //Checking for empty case
             if(args.get(0) == null){
                 return poundT;
             }
+            //Type checking: making sure we have bool args and computing if we need to return a bool
             for (var arg : args) {
                 if (arg instanceof Nodes.Bool){
                     if(((Nodes.Bool) arg).val != false){

@@ -40,13 +40,8 @@ public class ExprEvaluator implements IAstVisitor<IValue> {
      */
     @Override
     public IValue visitDefine(Nodes.Define expr) throws Exception {
-        if(env.get(expr.identifier.name) != null){
-            env.put(expr.identifier.name, expr.expression.visitValue(this));
-            return null;
-        }
-        else{
-            throw new Exception ("Null value for identifier error");
-        }
+        env.put(expr.identifier.name, expr.expression.visitValue(this));
+        return null;
     }
 
     /** Interpret a Bool value */
@@ -70,7 +65,7 @@ public class ExprEvaluator implements IAstVisitor<IValue> {
     /** Interpret a Lambda value */
     @Override
     public IValue visitLambdaVal(Nodes.LambdaVal expr) throws Exception {
-        throw new Exception("visitLambdaVal is not yet implemented");
+       return expr;
     }
 
     /**
@@ -79,7 +74,7 @@ public class ExprEvaluator implements IAstVisitor<IValue> {
      */
     @Override
     public IValue visitLambdaDef(Nodes.LambdaDef expr) throws Exception {
-        throw new Exception("visitLambdaDef is not yet implemented");
+        return new Nodes.LambdaVal(env, expr);
     }
 
     /** Interpret an If expression */
@@ -149,10 +144,17 @@ public class ExprEvaluator implements IAstVisitor<IValue> {
             return ((Nodes.BuiltInFunc)firstValue).func.execute(args);
         }
         else if(firstValue instanceof Nodes.LambdaVal){
-            if(((Nodes.LambdaVal) expr.expressions.get(0)).lambda.formals.size() + 1 == expr.expressions.size()){
-                
-               Env tempEnv = Env.makeInner(((Nodes.LambdaVal) firstValue).env);
-               
+            if(((Nodes.LambdaVal) firstValue).lambda.formals.size() + 1 == expr.expressions.size()){
+               Nodes.LambdaVal lv = (Nodes.LambdaVal) firstValue;
+               Env tempEnv = Env.makeInner(lv.env);
+               var lambda_visitor = new ExprEvaluator(tempEnv);
+               for(int i = 1; i < expr.expressions.size(); i++){
+                    env.put(lv.lambda.formals.get(i - 1).name, expr.expressions.get(i).visitValue(this));
+                }
+                for(int i = 0; i < lv.lambda.body.size() - 1; i++){
+                    lv.lambda.body.get(i).visitValue(lambda_visitor);
+                }
+                return lv.lambda.body.get(lv.lambda.body.size() - 1).visitValue(lambda_visitor);
             }
             else{
                 throw new Exception("Number of Formals does not Equal arguments");
@@ -208,12 +210,17 @@ public class ExprEvaluator implements IAstVisitor<IValue> {
     /** Interpret a Built-In Function value */
     @Override
     public IValue visitBuiltInFunc(Nodes.BuiltInFunc expr) throws Exception {
-        throw new Exception("visitBuiltInFunc is not yet implemented");
+        return expr;
     }
 
     /** Interpret a Cons expression */
     @Override
     public IValue visitCond(Nodes.Cond expr) throws Exception {
-        throw new Exception("visitCond is not yet implemented");
+        for(int i = 0; i < expr.conditions.size(); i++){
+            if(expr.conditions.get(i).test.visitValue(this) == env.poundT){
+                return (new Nodes.Begin(expr.conditions.get(i).expressions).visitValue(this));
+            }
+        }
+        return env.poundF;
     }
 }
