@@ -116,7 +116,7 @@ public class ExprEvaluator implements IAstVisitor<IValue> {
     @Override
     public IValue visitOr(Nodes.Or expr) throws Exception {
         for(int i = 0; i < expr.expressions.size(); i++){
-            if(expr.expressions.get(i).visitValue(this) == env.poundT){
+            if(expr.expressions.get(i).visitValue(this) == env.poundT || !(expr.expressions.get(i).visitValue(this) instanceof Nodes.Bool)){
                 return env.poundT;
             }
         }
@@ -138,23 +138,24 @@ public class ExprEvaluator implements IAstVisitor<IValue> {
         List<IValue> args = new ArrayList<>();
         IValue firstValue = expr.expressions.get(0).visitValue(this);
         if(firstValue instanceof Nodes.BuiltInFunc){
-            for(int i = 1; i < expr.expressions.size()-1; i++){
+            for(int i = 1; i <= expr.expressions.size()-1; i++){
                 args.add(expr.expressions.get(i).visitValue(this));
             }
             return ((Nodes.BuiltInFunc)firstValue).func.execute(args);
         }
         else if(firstValue instanceof Nodes.LambdaVal){
             if(((Nodes.LambdaVal) firstValue).lambda.formals.size() + 1 == expr.expressions.size()){
-               Nodes.LambdaVal lv = (Nodes.LambdaVal) firstValue;
-               Env tempEnv = Env.makeInner(lv.env);
-               var lambda_visitor = new ExprEvaluator(tempEnv);
-               for(int i = 1; i < expr.expressions.size(); i++){
-                    env.put(lv.lambda.formals.get(i - 1).name, expr.expressions.get(i).visitValue(this));
+                Nodes.LambdaVal lv = (Nodes.LambdaVal) firstValue;
+                Env tempEnv = Env.makeInner(lv.env);
+                for(int i = 1; i < expr.expressions.size(); i++){
+                    tempEnv.put(lv.lambda.formals.get(i - 1).name, expr.expressions.get(i).visitValue(this));
                 }
+                var lambda_visitor = new ExprEvaluator(tempEnv);
                 for(int i = 0; i < lv.lambda.body.size() - 1; i++){
                     lv.lambda.body.get(i).visitValue(lambda_visitor);
                 }
                 return lv.lambda.body.get(lv.lambda.body.size() - 1).visitValue(lambda_visitor);
+           
             }
             else{
                 throw new Exception("Number of Formals does not Equal arguments");
@@ -216,8 +217,8 @@ public class ExprEvaluator implements IAstVisitor<IValue> {
     /** Interpret a Cons expression */
     @Override
     public IValue visitCond(Nodes.Cond expr) throws Exception {
-        for(int i = 0; i < expr.conditions.size(); i++){
-            if(expr.conditions.get(i).test.visitValue(this) == env.poundT){
+        for(int i = 0; i <= expr.conditions.size()-1; i++){
+            if(expr.conditions.get(i).test.visitValue(this) == env.poundT || !(expr.conditions.get(i).test.visitValue(this) instanceof Nodes.Bool)){
                 return (new Nodes.Begin(expr.conditions.get(i).expressions).visitValue(this));
             }
         }

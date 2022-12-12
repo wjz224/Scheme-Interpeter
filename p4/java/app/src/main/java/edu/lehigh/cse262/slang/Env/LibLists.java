@@ -24,7 +24,6 @@ public class LibLists {
             for (var arg : args) {
                 if (arg instanceof Nodes.Cons)
                     consCount++;
-                
             }
             // if arg.size() > ConsCount there are arguments that are not Cons Nodes. Throw error
             if (args.size() > (consCount))

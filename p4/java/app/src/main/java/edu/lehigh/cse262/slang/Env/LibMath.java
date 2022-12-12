@@ -479,8 +479,11 @@ public class LibMath {
             if(args.get(0) instanceof Nodes.Int){
                 ab = ((Nodes.Int) args.get(0)).val;
             }
+            else if (args.get(0) instanceof Nodes.Dbl){
+                ab= ((Nodes.Dbl) args.get(0)).val;
+            }
             else{
-                ab = ((Nodes.Dbl) args.get(0)).val;
+                throw new Exception ("ab can only handle int and dbl arguments");
             }
             //Computing the return dbl 
             return new Nodes.Dbl(Math.abs(ab));
@@ -497,8 +500,11 @@ public class LibMath {
             if(args.get(0) instanceof Nodes.Int){
                 sqrt1 = ((Nodes.Int) args.get(0)).val;
             }
-            else{
+            else if (args.get(0) instanceof Nodes.Dbl){
                 sqrt1 = ((Nodes.Dbl) args.get(0)).val;
+            }
+            else{
+                throw new Exception ("sqrt can only handle int and dbl arguments");
             }
             //Computing the return dbl
             return new Nodes.Dbl(Math.sqrt(sqrt1));
@@ -509,14 +515,17 @@ public class LibMath {
             double acos1 = 0;
             //Checking the args
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure acos");
+                throw new Exception ("Wrong number of arguments passed into procedure acos1");
             }
             //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 acos1 = ((Nodes.Int) args.get(0)).val;
             }
-            else{
+            else if (args.get(0) instanceof Nodes.Dbl){
                 acos1 = ((Nodes.Dbl) args.get(0)).val;
+            }
+            else{
+                throw new Exception ("acos1 can only handle int and dbl arguments");
             }
             //Computing the return dbl
             return new Nodes.Dbl(Math.acos(acos1));
@@ -533,8 +542,11 @@ public class LibMath {
             if(args.get(0) instanceof Nodes.Int){
                 asin1 = ((Nodes.Int) args.get(0)).val;
             }
-            else{
+            else if (args.get(0) instanceof Nodes.Dbl){
                 asin1 = ((Nodes.Dbl) args.get(0)).val;
+            }
+            else{
+                throw new Exception ("asin can only handle int and dbl arguments");
             }
             //Computing the return dbl
             return new Nodes.Dbl(Math.asin(asin1));
@@ -545,14 +557,17 @@ public class LibMath {
             double atan1 = 0;
             //Checking the args
             if(args.size() != 1){
-                throw new Exception ("Wrong number of arguments passed into procedure atan");
+                throw new Exception ("Wrong number of arguments passed into procedure asin");
             }
             //Type checking: make sure we only have int and dbl arguments
             if(args.get(0) instanceof Nodes.Int){
                 atan1 = ((Nodes.Int) args.get(0)).val;
             }
-            else{
+            else if (args.get(0) instanceof Nodes.Dbl){
                 atan1 = ((Nodes.Dbl) args.get(0)).val;
+            }
+            else{
+                throw new Exception ("asin can only handle int and dbl arguments");
             }
             //Computing the return dbl
             return new Nodes.Dbl(Math.asin(atan1));
@@ -569,8 +584,11 @@ public class LibMath {
             if(args.get(0) instanceof Nodes.Int){
                 cos1 = ((Nodes.Int) args.get(0)).val;
             }
-            else{
+            else if (args.get(0) instanceof Nodes.Dbl){
                 cos1 = ((Nodes.Dbl) args.get(0)).val;
+            }
+            else{
+                throw new Exception ("cos can only handle int and dbl arguments");
             }
             //Computing the return dbl
             return new Nodes.Dbl(Math.asin(cos1));
@@ -587,8 +605,11 @@ public class LibMath {
             if(args.get(0) instanceof Nodes.Int){
                 cosh1 = ((Nodes.Int) args.get(0)).val;
             }
-            else{
+            else if (args.get(0) instanceof Nodes.Dbl){
                 cosh1 = ((Nodes.Dbl) args.get(0)).val;
+            }
+            else{
+                throw new Exception ("cosh can only handle int and dbl arguments");
             }
             //Computing the return dbl
             return new Nodes.Dbl(Math.cosh(cosh1));
@@ -605,8 +626,11 @@ public class LibMath {
             if(args.get(0) instanceof Nodes.Int){
                 sin1 = ((Nodes.Int) args.get(0)).val;
             }
-            else{
+            else if (args.get(0) instanceof Nodes.Dbl){
                 sin1 = ((Nodes.Dbl) args.get(0)).val;
+            }
+            else{
+                throw new Exception ("sin can only handle int and dbl arguments");
             }
             //Computing the return dbl
             return new Nodes.Dbl(Math.sin(sin1));
@@ -623,8 +647,11 @@ public class LibMath {
             if(args.get(0) instanceof Nodes.Int){
                 sinh1 = ((Nodes.Int) args.get(0)).val;
             }
-            else{
+            else if (args.get(0) instanceof Nodes.Dbl){
                 sinh1 = ((Nodes.Dbl) args.get(0)).val;
+            }
+            else{
+                throw new Exception ("sinh can only handle int and dbl arguments");
             }
             //Computing the return dbl
             return new Nodes.Dbl(Math.sinh(sinh1));
@@ -641,8 +668,11 @@ public class LibMath {
             if(args.get(0) instanceof Nodes.Int){
                 tan1 = ((Nodes.Int) args.get(0)).val;
             }
-            else{
+            else if (args.get(0) instanceof Nodes.Dbl){
                 tan1 = ((Nodes.Dbl) args.get(0)).val;
+            }
+            else{
+                throw new Exception ("tan can only handle int and dbl arguments");
             }
             //Computing the return dbl
             return new Nodes.Dbl(Math.tan(tan1));
@@ -659,8 +689,11 @@ public class LibMath {
             if(args.get(0) instanceof Nodes.Int){
                 tanh1 = ((Nodes.Int) args.get(0)).val;
             }
-            else{
+            else if (args.get(0) instanceof Nodes.Dbl){
                 tanh1 = ((Nodes.Dbl) args.get(0)).val;
+            }
+            else{
+                throw new Exception ("tanh can only handle int and dbl arguments");
             }
             //Computing the return dbl
             return new Nodes.Dbl(Math.tanh(tanh1));
@@ -673,7 +706,7 @@ public class LibMath {
                 throw new Exception ("Wrong number of arguments passed into procedure integer?");
             }
             //Type checking: make sure we only have int args and computing the return bool
-            if( args.get(0) instanceof Nodes.Int){
+            if(args.get(0) instanceof Nodes.Int){
                 return poundT;
             }
             else{
@@ -901,6 +934,10 @@ public class LibMath {
                     if(((Nodes.Bool) arg).val != false){
                         return poundT;
                     }
+                }
+                // returns true if we get any argument that is not a poundF because of how scheme works.
+                else{
+                    return poundT;
                 }
             }
             return poundF;

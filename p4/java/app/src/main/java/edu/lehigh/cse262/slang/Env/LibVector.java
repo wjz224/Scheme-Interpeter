@@ -85,7 +85,7 @@ public class LibVector {
             List<IValue> newVector = new ArrayList<>();
             // computing the vector from the given args
             for(int i = 0; i < args.size(); i++){
-                newVector.set(i, args.get(i));
+                newVector.add(args.get(i));
             }
             return new Nodes.Vec(newVector);
         });
@@ -120,7 +120,7 @@ public class LibVector {
             List<IValue> newVector = new ArrayList<>();
 
             for(int i = 0; i < size; i++){
-                newVector.set(i, poundF);
+                newVector.add(poundF);
             }
             return new Nodes.Vec(newVector);
         });
