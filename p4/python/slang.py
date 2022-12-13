@@ -82,11 +82,11 @@ def main(args):
 
             # INTERPRET mode
             if mode == "-interpret":
-                expressions = slang_parser.XmlToAst(codeToRun)
+                expressions = slang_parser.XmlToAst(codeToRun, defaultEnv)
                 for expr in expressions:
                     result = slang_evaluator.evaluate(expr, defaultEnv)
-                    if result != None:
-                        print(";" + slang_parser.AstToScheme(result,
+                    if result is not None:
+                        print("; " + slang_parser.AstToScheme(result,
                               0, False, defaultEnv.empty))
 
             # FULL mode

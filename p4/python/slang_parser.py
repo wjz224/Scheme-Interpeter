@@ -44,7 +44,7 @@ def __unescape(s):
     return s.replace("'", "\\'").replace("\n", "\\n").replace("\t", "\\t").replace("\\", "\\\\")
 
 
-def XmlToAst(xml):
+def XmlToAst(xml, env):
     """
     Given a string that is assumed to represent the output of astToXML,
     re-create the AST.
@@ -70,8 +70,9 @@ def XmlToAst(xml):
             val = __unescape(lines[next][valStart + 5: valEnd - 1])
             next += 1
             return SymbolNode(val)
+        valStart = lines[next].find("val=")
+        valEnd = len(lines[next]) - 3
         if lines[next].find("<Identifier") > -1:
-            valStart = lines[next].find("val=")
             val = __unescape(lines[next][valStart + 5: valEnd - 1])
             next += 1
             return IdentifierNode(val)
@@ -84,7 +85,7 @@ def XmlToAst(xml):
         if lines[next].find("<Bool") > -1:
             val = lines[next][valStart + 5: valEnd - 1]
             next += 1
-            return BoolNode(val == "true")
+            return env.poundT if val == "true" else env.poundF
         if lines[next].find("<Int") > -1:
             val = lines[next][valStart + 5: valEnd - 1]
             next += 1
@@ -158,7 +159,7 @@ def XmlToAst(xml):
             else:
                 next += 1
             next += 1
-            return ConsNode(car, cdr)
+            return ConsNode(car, cdr) if car is not None else env.empty
         if lines[next].find("<Vector") > -1:
             next += 1
             exprs = []
@@ -226,10 +227,7 @@ def AstToScheme(expr, indentation, inList, empty):
     """Print an AST as nicely-formatted Scheme code"""
     def __indent():
         """Helper function for indentation"""
-        res = ""
-        for i in range(0, indentation):
-            res += ""
-        return res
+        return " " * indentation
 
     # for each of the AST Node types, print it as if it were scheme code
     #
@@ -250,7 +248,7 @@ def AstToScheme(expr, indentation, inList, empty):
         return __indent() + str(expr["val"])
     if expr["type"] == LAMBDADEF:
         res = __indent() + "(lambda ("
-        indentation += 1
+        
         for f in expr[1]:
             res += "\n" + AstToScheme(f, indentation+1, inList, empty)
         res += ")"
@@ -292,7 +290,7 @@ def AstToScheme(expr, indentation, inList, empty):
     if expr["type"] == CONS:
         # [mfs] '(1 2 3) doesn't print nicely
         res = __indent()
-        if expr == empty:
+        if expr is empty:
             res += "()"
             return res
         first = False
@@ -304,24 +302,26 @@ def AstToScheme(expr, indentation, inList, empty):
         res += "\n"
         car = expr["car"]
         cdr = expr["cdr"]
-        if car == None:
+        if car is None:
             res += __indent() + "()"
         elif car["type"] == CONS:
-            res += AstToScheme(car, indentation+1, False, empty)
+            res += AstToScheme(car, indentation, False, empty)
         else:
-            res += __indent() + AstToScheme(car, indentation+1, inList, empty)
-        if cdr != empty:
+            res += __indent() + AstToScheme(car, indentation, inList, empty)
+        if cdr is not empty:
             if cdr["type"] != CONS:
                 res += ".\n" + __indent() + AstToScheme(cdr, indentation, inList, empty)
             else:
                 res += __indent() + AstToScheme(cdr, indentation, inList, empty)
         if first:
             res += ")"
+            inList = False
+            indentation -= 1
         return res
     if expr["type"] == VEC:
         res = __indent() + "#("
         for i in expr["items"]:
-            res += "\n " + __indent() + AstToScheme(i, indentation+1, inList, empty)
+            res += "\n" + __indent() + AstToScheme(i, indentation+1, inList, empty)
         return res + ")"
     if expr["type"] == SYMBOL:
         return __indent() + expr["name"]

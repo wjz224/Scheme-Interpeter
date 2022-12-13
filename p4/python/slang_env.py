@@ -27,7 +27,7 @@ class Env:
 
     def update(self, key, val):
         """Update a key's value **in the scope where it is defined**"""
-        if self.map.get(key) != None:
+        if key in self.map:
             self.map[key] = val
         else:
             self.outer.update(key, val)
