@@ -66,7 +66,12 @@ def XmlToAst(xml):
             next += 1
         if next >= len(lines):
             return None
+        if lines[next].find("<Symbol") > -1:
+            val = __unescape(lines[next][valStart + 5: valEnd - 1])
+            next += 1
+            return SymbolNode(val)
         if lines[next].find("<Identifier") > -1:
+            valStart = lines[next].find("val=")
             val = __unescape(lines[next][valStart + 5: valEnd - 1])
             next += 1
             return IdentifierNode(val)
@@ -175,13 +180,13 @@ def XmlToAst(xml):
             val = __unescape(lines[next][valStart + 5: valEnd - 1])
             next += 1
             literal = val.charAt(0)
-            if val.equals("\\"):
+            if val == "\\":
                 literal = '\\'
-            elif val.equals("\\t"):
+            elif val == "\\t":
                 literal = '\t'
-            elif val.equals("\\n"):
+            elif val == "\\n":
                 literal = '\n'
-            elif val.equals("\\'"):
+            elif val == "\\'":
                 literal = '\''
             return CharNode(literal)
         if lines[next].find("<Str") > -1:
