@@ -37,9 +37,9 @@ def evaluate(expr, env):
 
     def visitIf(expr):
         #Visiting every expr condition and checking values
-        if((evaluate(expr["c"],env) == slang_parser.BoolNode(True))):
-            return slang_parser.BoolNode(True)
-        return slang_parser.BoolNode(False)
+        if((evaluate(expr["cond"],env) == slang_parser.BoolNode(True))):
+            return evaluate(expr["true"],env)
+        return evaluate(expr["false"],env)
 
     def visitSet(expr):
         #Visiting and updating each identifier name
@@ -131,7 +131,7 @@ def evaluate(expr, env):
             i += 1
         return slang_parser.BoolNode(False)
     if(expr['type'] == slang_parser.INT):
-        return visitBool(expr)
+        return visitInt(expr)
     elif(expr['type'] == slang_parser.BEGIN):
         return visitBegin(expr)
     elif(expr['type'] == slang_parser.BOOL):
