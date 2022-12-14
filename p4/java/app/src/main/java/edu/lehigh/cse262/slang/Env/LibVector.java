@@ -64,7 +64,7 @@ public class LibVector {
         var vecset = new Nodes.BuiltInFunc("vector-set!", (List<IValue> args) -> {
             // Semantic analysis: make sure there are only and atleast  three arguments
             if (args.size() != 3)
-                throw new Exception("Wrong number of arguments in vector-get. Can only handle 2");
+                throw new Exception("Wrong number of arguments in vector-get. Can only handle 3");
             // Type checking: check the first argument is a Vec node and second argument is an Int Node
             if(!((args.get(0) instanceof Nodes.Vec) && (args.get(1) instanceof Nodes.Int))){
                 throw new Exception("Wrong argument types. vector-get only handles first argument must be a Vec, second argument must be an Int.");

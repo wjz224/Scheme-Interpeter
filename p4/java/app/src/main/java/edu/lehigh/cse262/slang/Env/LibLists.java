@@ -61,7 +61,7 @@ public class LibLists {
         var cons = new Nodes.BuiltInFunc("cons", (List<IValue> args) -> { 
             // Type checking: make sure we only two arguments
             if (args.size() != 2)
-                throw new Exception("Wrong number of arguments in cdr. Can only handle 1");
+                throw new Exception("Wrong number of arguments in cons. Can only handle 2");
             // Compute, Nodes.Cons with the two arguments and return it
             IValue c1 = args.get(0);
             IValue c2 = args.get(1);
