@@ -8,12 +8,15 @@ def evaluate(expr, env):
         return env
 
     def visitIdentifier(expr):
-        return slang_parser.StrNode(expr["name"])
+        if(env.get(expr['name']) != None):
+            return env.get(expr["name"])
+        else:
+            raise Exception ("No value for identifier" + expr['name'])
 
 
     def visitDefine(expr):
         env.put(expr["id"]['name'], (evaluate(expr["expr"], env)))
-        return slang_parser.IntNode(env.get(expr["id"]['name']))
+        return env.get(expr["id"]["name"])
 
     def visitBool(expr):
         #return IValue
@@ -69,20 +72,18 @@ def evaluate(expr, env):
     def visitApply(expr):
         #Creating a new List<IValue> and grabbing the first IValue in expr expressions
         args = []
-        # get the lambda/built in associated with the identifier
-        firstValue = env.get(evaluate(expr["exprs"][0],env))
+        # get the lambda/built in associated with the identifie
+        firstValue = (evaluate(expr["exprs"][0],env))
         #Checking for a Nodes.BuiltInFunc
-        print(firstValue)
+    
         if(firstValue["type"] == slang_parser.BUILTIN):
             #Visiting each expression in expr and saving it into a list of arguments passing the args that will be used to execute a built-in-func.
             args = []
-            for i in expr["exprs"][1:-1]:
+            for i in expr["exprs"][1:]:
                 args.append(evaluate(i,env))
-            
             return firstValue['func'](args)
         #Else not a BuiltInFunc
         elif(firstValue['type'] == slang_parser.LAMBDAVAL):
-            
             #If the number of formals matches the number of arguments
             if((len(firstValue['lambda']['formals']) + 1) == len(expr['exprs'])):
                 #Make an inner scope Env
@@ -90,17 +91,17 @@ def evaluate(expr, env):
                 #Iterate through the arguments and pass it into the inner Env
                 i = 1
                 while i < len(expr['exprs']):
-                    tempEnv.put(firstValue['lambda']['formals'][i-1]['name'], evaluate(expr['expressions'][i]),env)
+                    tempEnv.put(firstValue['lambda']['formals'][i-1]['name'], evaluate(expr['exprs'][i],env))
                     i += 1
                 #Visit each value
                 lambda_visitor = ExprEvaluator(tempEnv)
                 j = 0
-                while j < firstValue['lambda']['exprs']:
-                    evaluate(firstValue ['lambda']['exprs'][i],lambda_visitor)
+                while j < len(firstValue['lambda']['exprs']) - 1:
+                    evaluate(firstValue['lambda']['exprs'][j],lambda_visitor)
                     j += 1
                 
                 #Return the last value
-                return evaluate(firstValue ['lambda']['exprs'][len(firstValue ['lambda']['exprs'])] - 1, lambda_visitor)
+                return evaluate(firstValue ['lambda']['exprs'][len(firstValue ['lambda']['exprs'])- 1] , lambda_visitor)
             else:
                 raise SyntaxError("Number of Formals does not Equal arguments")
             ""
