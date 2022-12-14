@@ -12,7 +12,7 @@ def evaluate(expr, env):
 
 
     def visitDefine(expr):
-        env.put(expr["id"]['name'], (evaluate(expr["expr"],env)['val']))
+        env.put(expr["id"]['name'], (evaluate(expr["expr"], env)))
         return slang_parser.IntNode(env.get(expr["id"]['name']))
 
     def visitBool(expr):
@@ -33,7 +33,7 @@ def evaluate(expr, env):
 
     def visitLambdaDef(expr):
         #return a LambdaVal IValue
-        return slang_parser.LambdaDefNode(env, expr)
+        return slang_parser.LambdaValNode(env, expr)
 
     def visitIf(expr):
         #Visiting every expr condition and checking values
@@ -70,9 +70,9 @@ def evaluate(expr, env):
         #Creating a new List<IValue> and grabbing the first IValue in expr expressions
         args = []
         # get the lambda/built in associated with the identifier
-        firstValue = env.get(evaluate(expr["exprs"][0],env)['val'])
+        firstValue = env.get(evaluate(expr["exprs"][0],env))
         #Checking for a Nodes.BuiltInFunc
-    
+        print(firstValue)
         if(firstValue["type"] == slang_parser.BUILTIN):
             #Visiting each expression in expr and saving it into a list of arguments passing the args that will be used to execute a built-in-func.
             args = []
@@ -82,10 +82,11 @@ def evaluate(expr, env):
             return firstValue['func'](args)
         #Else not a BuiltInFunc
         elif(firstValue['type'] == slang_parser.LAMBDAVAL):
+            
             #If the number of formals matches the number of arguments
             if((len(firstValue['lambda']['formals']) + 1) == len(expr['exprs'])):
                 #Make an inner scope Env
-                tempEnv = slang_env.makeInner(firstValue['env'])
+                tempEnv = slang_env.makeInnerEnv(firstValue['env'])
                 #Iterate through the arguments and pass it into the inner Env
                 i = 1
                 while i < len(expr['exprs']):
