@@ -254,17 +254,19 @@ def addMathFuncs(env):
     lessEFunc = slang_parser.BuiltInNode("<",lessequal)
     env.put(lessEFunc["name"], lessEFunc)
 
-    def abs(args):
+    def absolute(args):
         #Checking for arguments
         if(len(args) != 1):
             raise SyntaxError ("Wrong number of arguments passed into procedure abs")
         #Type checking: make sure we only have int and dbl arguments
-        first = args[0]['val']
-        if(not((first['type'] == slang_parser.INT) and not(first['type'] == slang_parser.DBL))):
+        first = args[0]
+
+        if(not((first['type'] == slang_parser.INT)) and not(first['type'] == slang_parser.DBL)):
             raise SyntaxError ("abs can only handle Int and Dbl arguments")
+        val = args[0]['val']
         #Computing the return dbl 
-        return slang_parser.IntNode(abs(first))
-    absFunc = slang_parser.BuiltInNode("abs",abs)
+        return slang_parser.IntNode(abs(val))
+    absFunc = slang_parser.BuiltInNode("abs",absolute)
     env.put(absFunc["name"], absFunc)
 
     def sqrt(args):
@@ -272,11 +274,12 @@ def addMathFuncs(env):
         if(len(args) != 1):
             raise SyntaxError("Wrong number of arguments passed into procedure sqrt")
         #Type checking: make sure we only have int and dbl arguments
-        first = args[0]['val']
+        first = args[0]
         if(not(first['type']  == slang_parser.INT) and not(first['type'] == slang_parser.DBL)):
             raise SyntaxError ("sqrt can only handle Int and Dbl arguments")
+        val = args[0]['val']
         #Computing the return dbl 
-        return slang_parser.IntNode(sqrt(first))
+        return slang_parser.IntNode(math.sqrt(val))
     sqrtFunc = slang_parser.BuiltInNode("sqrt",sqrt)
     env.put(sqrtFunc["name"], sqrtFunc)
 
@@ -578,7 +581,7 @@ def addListFuncs(env):
         if len(args) != 1:
             raise SyntaxError("Wrong number of arguments in car. Can only handle 1")
         # Compute the first  lis item and return it.
-        return slang_parser.ConsNode(args[0]["car"])
+        return slang_parser.ConsNode(args[0]["car"], None)
     # Build Null Check Built-In Node and put it into environment
     carFunc = slang_parser.BuiltInNode("car", car)
     env.put(carFunc["name"],carFunc)
@@ -597,7 +600,7 @@ def addListFuncs(env):
         if len(args) != 1:
             raise SyntaxError("Wrong number of arguments in cdr. Can only handle 1")
         # Compute the first  lis item and return it.
-        return slang_parser.ConsNode(args[0]["cdr"])
+        return slang_parser.ConsNode(args[0]["cdr"],None)
     # Build Null Check Built-In Node and put it into environment
     cdrFunc = slang_parser.BuiltInNode("cdr", cdr)
     env.put(cdrFunc["name"],cdrFunc)
@@ -614,16 +617,16 @@ def addListFuncs(env):
 
     def list(args):
         # Semantic analysis: make sure there is only one argument
+        values = []
         if len(args) < 0:
             raise SyntaxError("Wrong number of arguments in list. Can only handle 0 or more")
         elif len(args) == 0:
             return
         else:
-            values = []
             for arg in args:
                 values.append(arg)                
         # Compute the first  lis item and return it.
-        return slang_parser.ConsNode(values, None)
+        return slang_parser.ConsNode(values, slang_parser.ConsNode(None,None))
     # Build Null Check Built-In Node and put it into environment
     listFunc = slang_parser.BuiltInNode("list", list)
     env.put(listFunc["name"],listFunc)
@@ -645,7 +648,7 @@ def addListFuncs(env):
     def setcar (args):
         # Semantic analysis: make sure there are only 2 arguments
         if (len(args) != 2):
-            raise SyntaxError("Wrong number of arguments in set-cdr!. Can only handle 2 arguments. A Cons argument followed by a value");
+            raise SyntaxError("Wrong number of arguments in set-car!. Can only handle 2 arguments. A Cons argument followed by a value");
         # Type checking: make sure our first argument is a Cons Node
         if (not(args[0]['type'] == slang_parser.CONS)):
             raise SyntaxError("First argument must be a Cons. Pair Expected")
@@ -687,12 +690,12 @@ def addStringFuncs(env):
                 strCount+=1
         # if len(args) is greater than strCount than there is an argument that is not a Str
         if len(args) > strCount:
-            raise SyntaxError("+ can only handle String arguments");
+            raise SyntaxError("String-append can only handle String arguments");
         # Semantic analysis: make sure there are arguments!
         if len(args) != 2:
             raise SyntaxError("Wrong number of arguments in string-append. Can only handle 2")
         # Computing the return str
-        result = arg[0]["val"] + arg[1]["val"]
+        result = args[0]["val"] + args[1]["val"]
         return slang_parser.StrNode(result)
     strAppFunc = slang_parser.BuiltInNode("string-append", stringappend)
     env.put(strAppFunc["name"],strAppFunc)
@@ -711,7 +714,7 @@ def addStringFuncs(env):
         if len(args) != 1:
             raise SyntaxError("Wrong number of arguments in string-length. Can only handle 1")
         # Computing the return str
-        result = len(arg[0]["val"])
+        result = len(args[0]["val"])
         return slang_parser.IntNode(result)
     strLengthFunc = slang_parser.BuiltInNode("string-length", stringlength)
     env.put(strLengthFunc["name"],strLengthFunc)
@@ -807,10 +810,10 @@ def addVectorFuncs(env):
         if len(args) != 1:
             raise SyntaxError("Wrong number of arguments in vector-length. Can only handle 1")
         # Compute, making sure to know the return type which an integer
-        len = len(args[0]["items"])
+        length = len(args[0]["items"])
         # get length of vector which is the length of items array in the node
         # return an  Int Node created with the length of the vector
-        return slang_parser.IntNode(len)
+        return slang_parser.IntNode(length)
     # put the vectorlength function into the env
     vecLenFunc = slang_parser.BuiltInNode("vector-length", vecLength)
     env.put(vecLenFunc["name"],vecLenFunc)
@@ -818,13 +821,10 @@ def addVectorFuncs(env):
     def vecget(args):
         # get count for number of int and dbl args
         vecCount = 0
+
         for arg in args:
             if arg['type'] == slang_parser.VEC:
                 vecCount+=1
-        # if arg size is greater than vecCount that means there must be a argument in the list thats not an argument
-        # throw an error because vector-length can only handle vector arguments
-        if len(args) > vecCount:
-            raise SyntaxError("vector-length can only handle vector arguments");
         # Semantic analysis: only one argument is allwed for vector-length
         if len(args) != 2:
             raise SyntaxError("Wrong number of arguments in vector-get. Can only handle 2")
@@ -848,7 +848,7 @@ def addVectorFuncs(env):
         # if arg size is greater than vecCount that means there must be a argument in the list thats not an argument
         # throw an error because vector-length can only handle vector arguments
         if len(args) > vecCount:
-            raise SyntaxError("vector-length can only handle vector arguments");
+            raise SyntaxError("vector-set can only handle vector arguments");
         # Semantic analysis: only one argument is allwed for vector-length
         if len(args) != 3:
             raise SyntaxError("Wrong number of arguments in vector-set. Can only handle 3")
@@ -860,10 +860,21 @@ def addVectorFuncs(env):
             raise SyntaxError ("vec-get Argument 2 out of range")
         args[0]["items"][index] = args[2]
         return None
-    # put the vectorlength function into the env
+    # put the vectorset function into the env
     vecsetFunc = slang_parser.BuiltInNode("vector-set", vecset)
     env.put(vecsetFunc["name"],vecsetFunc)
     
+    def vec (args):
+            newVector = []
+            # computing the vector from the given args
+            for arg in args:
+                newVector.append(arg)
+            return slang_parser.VecNode(newVector)
+    # put the vector function into the env
+    vecFunc = slang_parser.BuiltInNode("vector", vec)
+    env.put(vecFunc["name"],vecFunc)   
+  
+        
     # vec? function
     def vecq (args):
         #Semantic analysis: make sure there is only one argument
