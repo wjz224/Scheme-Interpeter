@@ -11,5 +11,5 @@ The first process in the <b>Interpreter</b> process. Follows a set of specificat
 <h2> Project Details</h2>
 This project has implementations in both **Java** and **Python**.  <br>
 The project ontains two directories, one for each language version: <br>
-- `java/`: The Java implementation.
-- `python/`: The Python implementation.
+<h3>- `java/`: The Java implementation.</h3>
+<h3>- `python/`: The Python implementation.</h3>
