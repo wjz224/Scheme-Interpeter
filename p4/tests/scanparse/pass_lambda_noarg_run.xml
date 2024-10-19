@@ -1,0 +1,15 @@
+<Define>
+ <Identifier val='ten' />
+ <Lambda>
+  <Formals>
+  </Formals>
+  <Expressions>
+   <Int val='10' />
+  </Expressions>
+ </Lambda>
+</Define>
+
+<Apply>
+ <Identifier val='ten' />
+</Apply>
+

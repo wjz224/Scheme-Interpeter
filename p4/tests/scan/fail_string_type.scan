@@ -1,0 +1,7 @@
+<LParenToken line=1 col=1 />
+<IdentifierToken line=1 col=2 val='string-append' />
+<StrToken line=1 col=16 val='hello ' />
+<AbbrevToken line=1 col=25 />
+<IdentifierToken line=1 col=26 val='world' />
+<RParenToken line=1 col=31 />
+<EofToken />

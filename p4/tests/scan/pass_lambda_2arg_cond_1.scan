@@ -1,0 +1,43 @@
+<LParenToken line=1 col=1 />
+<DefineToken line=1 col=2 />
+<IdentifierToken line=1 col=9 val='both-true' />
+<LParenToken line=1 col=19 />
+<LambdaToken line=1 col=20 />
+<LParenToken line=1 col=27 />
+<IdentifierToken line=1 col=28 val='x' />
+<IdentifierToken line=1 col=30 val='y' />
+<RParenToken line=1 col=31 />
+<LParenToken line=1 col=33 />
+<CondToken line=1 col=34 />
+<LParenToken line=1 col=39 />
+<LParenToken line=1 col=40 />
+<AndToken line=1 col=41 />
+<IdentifierToken line=1 col=45 val='x' />
+<IdentifierToken line=1 col=47 val='y' />
+<RParenToken line=1 col=48 />
+<AbbrevToken line=1 col=50 />
+<IdentifierToken line=1 col=51 val='both' />
+<RParenToken line=1 col=55 />
+<LParenToken line=1 col=57 />
+<IdentifierToken line=1 col=58 val='x' />
+<AbbrevToken line=1 col=60 />
+<IdentifierToken line=1 col=61 val='justx' />
+<RParenToken line=1 col=66 />
+<LParenToken line=1 col=68 />
+<IdentifierToken line=1 col=69 val='y' />
+<AbbrevToken line=1 col=71 />
+<IdentifierToken line=1 col=72 val='justy' />
+<RParenToken line=1 col=77 />
+<LParenToken line=1 col=79 />
+<BoolToken line=1 col=80 val='true' />
+<BoolToken line=1 col=83 val='false' />
+<RParenToken line=1 col=85 />
+<RParenToken line=1 col=86 />
+<RParenToken line=1 col=87 />
+<RParenToken line=1 col=88 />
+<LParenToken line=2 col=1 />
+<IdentifierToken line=2 col=2 val='both-true' />
+<IntToken line=2 col=12 val='1' />
+<IntToken line=2 col=14 val='2' />
+<RParenToken line=2 col=15 />
+<EofToken />

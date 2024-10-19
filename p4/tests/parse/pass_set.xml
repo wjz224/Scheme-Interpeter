@@ -1,0 +1,14 @@
+<Define>
+ <Identifier val='x' />
+ <Int val='10' />
+</Define>
+
+<Identifier val='x' />
+
+<Set>
+ <Identifier val='x' />
+ <Int val='11' />
+</Set>
+
+<Identifier val='x' />
+

@@ -1,0 +1,6 @@
+<Apply>
+ <Identifier val='vector-get' />
+ <Str val='hi' />
+ <Int val='1' />
+</Apply>
+

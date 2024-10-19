@@ -1,0 +1,19 @@
+<LParenToken line=3 col=1 />
+<DefineToken line=3 col=2 />
+<IdentifierToken line=3 col=9 val='x' />
+<LParenToken line=4 col=5 />
+<LambdaToken line=4 col=6 />
+<LParenToken line=4 col=13 />
+<IdentifierToken line=4 col=14 val='a' />
+<IntToken line=4 col=16 val='10' />
+<IdentifierToken line=4 col=19 val='b' />
+<IntToken line=4 col=21 val='10' />
+<RParenToken line=4 col=23 />
+<LParenToken line=4 col=25 />
+<IdentifierToken line=4 col=26 val='a' />
+<IdentifierToken line=4 col=28 val='+' />
+<IdentifierToken line=4 col=30 val='b' />
+<RParenToken line=4 col=31 />
+<RParenToken line=4 col=32 />
+<RParenToken line=5 col=1 />
+<EofToken />

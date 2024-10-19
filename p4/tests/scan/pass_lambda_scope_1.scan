@@ -1,0 +1,33 @@
+<LParenToken line=1 col=1 />
+<DefineToken line=1 col=2 />
+<IdentifierToken line=1 col=9 val='myvar' />
+<IntToken line=1 col=15 val='10' />
+<RParenToken line=1 col=17 />
+<LParenToken line=2 col=1 />
+<DefineToken line=2 col=2 />
+<IdentifierToken line=2 col=9 val='myfunc' />
+<LParenToken line=2 col=16 />
+<LambdaToken line=2 col=17 />
+<LParenToken line=2 col=24 />
+<IdentifierToken line=2 col=25 val='myvar' />
+<RParenToken line=2 col=30 />
+<LParenToken line=2 col=32 />
+<LambdaToken line=2 col=33 />
+<LParenToken line=2 col=40 />
+<RParenToken line=2 col=41 />
+<IdentifierToken line=2 col=43 val='myvar' />
+<RParenToken line=2 col=48 />
+<RParenToken line=2 col=49 />
+<RParenToken line=2 col=50 />
+<LParenToken line=3 col=1 />
+<DefineToken line=3 col=2 />
+<IdentifierToken line=3 col=9 val='scopetest' />
+<LParenToken line=3 col=19 />
+<IdentifierToken line=3 col=20 val='myfunc' />
+<IntToken line=3 col=27 val='11' />
+<RParenToken line=3 col=29 />
+<RParenToken line=3 col=30 />
+<LParenToken line=4 col=1 />
+<IdentifierToken line=4 col=2 val='scopetest' />
+<RParenToken line=4 col=11 />
+<EofToken />

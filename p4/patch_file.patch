@@ -1,0 +1,171 @@
+diff --git a/p4/python/slang.py b/p4/python/slang.py
+index ac9f981..97cd930 100644
+--- a/p4/python/slang.py
++++ b/p4/python/slang.py
+@@ -82,11 +82,11 @@ def main(args):
+ 
+             # INTERPRET mode
+             if mode == "-interpret":
+-                expressions = slang_parser.XmlToAst(codeToRun)
++                expressions = slang_parser.XmlToAst(codeToRun, defaultEnv)
+                 for expr in expressions:
+                     result = slang_evaluator.evaluate(expr, defaultEnv)
+-                    if result != None:
+-                        print(";" + slang_evaluator.AstToScheme(result,
++                    if result is not None:
++                        print("; " + slang_parser.AstToScheme(result,
+                               0, False, defaultEnv.empty))
+ 
+             # FULL mode
+diff --git a/p4/python/slang_env.py b/p4/python/slang_env.py
+index 1c6dc37..ff3d013 100644
+--- a/p4/python/slang_env.py
++++ b/p4/python/slang_env.py
+@@ -26,7 +26,7 @@ class Env:
+ 
+     def update(self, key, val):
+         """Update a key's value **in the scope where it is defined**"""
+-        if self.map.get(key) != None:
++        if key in self.map:
+             self.map[key] = val
+         else:
+             self.outer.update(key, val)
+diff --git a/p4/python/slang_parser.py b/p4/python/slang_parser.py
+index c78575e..2f2ff6a 100644
+--- a/p4/python/slang_parser.py
++++ b/p4/python/slang_parser.py
+@@ -44,7 +44,7 @@ def __unescape(s):
+     return s.replace("'", "\\'").replace("\n", "\\n").replace("\t", "\\t").replace("\\", "\\\\")
+ 
+ 
+-def XmlToAst(xml):
++def XmlToAst(xml, env):
+     """
+     Given a string that is assumed to represent the output of astToXML,
+     re-create the AST.
+@@ -60,12 +60,12 @@ def XmlToAst(xml):
+         """A helper function for parsing the next AST node"""
+         nonlocal lines
+         nonlocal next
+-        valStart = lines[next].find("val=")
+-        valEnd = len(lines[next]) - 3
+         while next < len(lines) and lines[next] == "":
+             next += 1
+         if next >= len(lines):
+             return None
++        valStart = lines[next].find("val=")
++        valEnd = len(lines[next]) - 3
+         if lines[next].find("<Identifier") > -1:
+             val = __unescape(lines[next][valStart + 5: valEnd - 1])
+             next += 1
+@@ -79,7 +79,8 @@ def XmlToAst(xml):
+         if lines[next].find("<Bool") > -1:
+             val = lines[next][valStart + 5: valEnd - 1]
+             next += 1
+-            return BoolNode(val == "true")
++            # return BoolNode(val == "true")
++            return env.poundT if val == "true" else env.poundF
+         if lines[next].find("<Int") > -1:
+             val = lines[next][valStart + 5: valEnd - 1]
+             next += 1
+@@ -153,7 +154,8 @@ def XmlToAst(xml):
+             else:
+                 next += 1
+             next += 1
+-            return ConsNode(car, cdr)
++            # return ConsNode(car, cdr)
++            return ConsNode(car, cdr) if car is not None else env.empty
+         if lines[next].find("<Vector") > -1:
+             next += 1
+             exprs = []
+@@ -174,20 +176,24 @@ def XmlToAst(xml):
+         if lines[next].find("<Char") > -1:
+             val = __unescape(lines[next][valStart + 5: valEnd - 1])
+             next += 1
+-            literal = val.charAt(0)
+-            if val.equals("\\"):
++            literal = val[0]
++            if val == "\\":
+                 literal = '\\'
+-            elif val.equals("\\t"):
++            elif val == "\\t":
+                 literal = '\t'
+-            elif val.equals("\\n"):
++            elif val == "\\n":
+                 literal = '\n'
+-            elif val.equals("\\'"):
++            elif val == "\\'":
+                 literal = '\''
+             return CharNode(literal)
+         if lines[next].find("<Str") > -1:
+             val = __unescape(lines[next][valStart + 5: valEnd - 1])
+             next += 1
+             return StrNode(val)
++        if lines[next].find("<Symbol") > -1:
++            val = lines[next][valStart + 5: valEnd - 1]
++            next += 1
++            return SymbolNode(val)
+         if lines[next].find("<Cond") > -1:
+             next += 1
+             conditions = []
+@@ -221,10 +227,7 @@ def AstToScheme(expr, indentation, inList, empty):
+     """Print an AST as nicely-formatted Scheme code"""
+     def __indent():
+         """Helper function for indentation"""
+-        res = ""
+-        for i in range(0, indentation):
+-            res += ""
+-        return res
++        return " " * indentation
+ 
+     # for each of the AST Node types, print it as if it were scheme code
+     #
+@@ -245,7 +248,6 @@ def AstToScheme(expr, indentation, inList, empty):
+         return __indent() + str(expr["val"])
+     if expr["type"] == LAMBDADEF:
+         res = __indent() + "(lambda ("
+-        indentation += 1
+         for f in expr[1]:
+             res += "\n" + AstToScheme(f, indentation+1, inList, empty)
+         res += ")"
+@@ -287,7 +289,7 @@ def AstToScheme(expr, indentation, inList, empty):
+     if expr["type"] == CONS:
+         # [mfs] '(1 2 3) doesn't print nicely
+         res = __indent()
+-        if expr == empty:
++        if expr is empty:
+             res += "()"
+             return res
+         first = False
+@@ -299,24 +301,26 @@ def AstToScheme(expr, indentation, inList, empty):
+         res += "\n"
+         car = expr["car"]
+         cdr = expr["cdr"]
+-        if car == None:
++        if car is None:
+             res += __indent() + "()"
+         elif car["type"] == CONS:
+-            res += AstToScheme(car, indentation+1, False, empty)
++            res += AstToScheme(car, indentation, False, empty)
+         else:
+-            res += __indent() + AstToScheme(car, indentation+1, inList, empty)
+-        if cdr != empty:
++            res += __indent() + AstToScheme(car, indentation, inList, empty)
++        if cdr is not empty:
+             if cdr["type"] != CONS:
+                 res += ".\n" + __indent() + AstToScheme(cdr, indentation, inList, empty)
+             else:
+                 res += __indent() + AstToScheme(cdr, indentation, inList, empty)
+         if first:
+             res += ")"
++            inList = False
++            indentation -= 1
+         return res
+     if expr["type"] == VEC:
+         res = __indent() + "#("
+         for i in expr["items"]:
+-            res += "\n " + __indent() + AstToScheme(i, indentation+1, inList, empty)
++            res += "\n" + __indent() + AstToScheme(i, indentation+1, inList, empty)
+         return res + ")"
+     if expr["type"] == SYMBOL:
+         return __indent() + expr["name"]

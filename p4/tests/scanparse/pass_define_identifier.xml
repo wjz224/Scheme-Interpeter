@@ -1,0 +1,12 @@
+<Define>
+ <Identifier val='x' />
+ <Int val='10' />
+</Define>
+
+<Define>
+ <Identifier val='y' />
+ <Identifier val='x' />
+</Define>
+
+<Identifier val='y' />
+

@@ -1,0 +1,4 @@
+<Or>
+ <Bool val='true' />
+ <Bool val='false' />
+</Or>

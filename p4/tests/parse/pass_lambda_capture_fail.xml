@@ -1,0 +1,35 @@
+<Define>
+ <Identifier val='capture' />
+ <Lambda>
+  <Formals>
+   <Identifier val='x' />
+  </Formals>
+  <Expressions>
+   <Lambda>
+    <Formals>
+     <Identifier val='y' />
+    </Formals>
+    <Expressions>
+     <And>
+      <Identifier val='x' />
+      <Identifier val='y' />
+</And>
+    </Expressions>
+   </Lambda>
+  </Expressions>
+ </Lambda>
+</Define>
+
+<Define>
+ <Identifier val='failing' />
+ <Apply>
+  <Identifier val='capture' />
+  <Bool val='false' />
+ </Apply>
+</Define>
+
+<Apply>
+ <Identifier val='failing' />
+ <Bool val='true' />
+</Apply>
+

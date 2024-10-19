@@ -1,0 +1,9 @@
+<If>
+ <Bool val='true' />
+ <Tick>
+  <Symbol val='a' />
+ </Tick>
+ <Tick>
+  <Symbol val='b' />
+ </Tick>
+</If>

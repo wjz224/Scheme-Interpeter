@@ -1,2 +1,31 @@
-<Bool val='true' />
+<Define>
+ <Identifier val='a' />
+ <Lambda>
+ <Formals>
+  <Identifier val='x' />
+  <Identifier val='y' />
+  <Identifier val='z' />
+ </Formals>
+ <Expressions>
+  <Begin>
+   <Apply>
+    <Identifier val='+' />
+    <Int val='1' />
+    <Int val='2' />
+   </Apply>
+   <Apply>
+    <Identifier val='-' />
+    <Int val='2' />
+    <Int val='3' />
+   </Apply>
+   <Apply>
+    <Identifier val='+' />
+    <Identifier val='x' />
+    <Identifier val='y' />
+    <Identifier val='z' />
+   </Apply>
+  </Begin>
+ </Expressions>
+ </Lambda>
+</Define>
 

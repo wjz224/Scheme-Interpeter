@@ -1,0 +1,187 @@
+<LParenToken line=2 col=1 />
+<DefineToken line=2 col=2 />
+<LParenToken line=2 col=9 />
+<IdentifierToken line=2 col=10 val='substring-wildcard' />
+<IdentifierToken line=2 col=29 val='source' />
+<IdentifierToken line=2 col=36 val='pattern' />
+<RParenToken line=2 col=43 />
+<LParenToken line=4 col=5 />
+<LParenToken line=4 col=6 />
+<LambdaToken line=4 col=7 />
+<LParenToken line=4 col=14 />
+<IdentifierToken line=4 col=15 val='n' />
+<IdentifierToken line=4 col=17 val='n2' />
+<RParenToken line=4 col=19 />
+<LParenToken line=5 col=9 />
+<IdentifierToken line=5 col=10 val='loop' />
+<IdentifierToken line=5 col=15 val='source' />
+<IdentifierToken line=5 col=22 val='pattern' />
+<IdentifierToken line=5 col=30 val='n' />
+<IdentifierToken line=5 col=32 val='n2' />
+<IntToken line=5 col=35 val='0' />
+<IntToken line=5 col=37 val='0' />
+<RParenToken line=5 col=38 />
+<RParenToken line=5 col=39 />
+<LParenToken line=6 col=5 />
+<IdentifierToken line=6 col=6 val='-' />
+<LParenToken line=6 col=8 />
+<IdentifierToken line=6 col=9 val='string-length' />
+<IdentifierToken line=6 col=23 val='source' />
+<RParenToken line=6 col=29 />
+<IntToken line=6 col=31 val='1' />
+<RParenToken line=6 col=32 />
+<LParenToken line=6 col=34 />
+<IdentifierToken line=6 col=35 val='string-length' />
+<IdentifierToken line=6 col=49 val='pattern' />
+<RParenToken line=6 col=56 />
+<RParenToken line=6 col=57 />
+<RParenToken line=6 col=58 />
+<LParenToken line=10 col=1 />
+<DefineToken line=10 col=2 />
+<LParenToken line=10 col=9 />
+<IdentifierToken line=10 col=10 val='loop' />
+<IdentifierToken line=10 col=15 val='source' />
+<IdentifierToken line=10 col=22 val='pattern' />
+<IdentifierToken line=10 col=30 val='n' />
+<IdentifierToken line=10 col=32 val='n2' />
+<IdentifierToken line=10 col=35 val='i' />
+<IdentifierToken line=10 col=37 val='count' />
+<RParenToken line=10 col=42 />
+<LParenToken line=11 col=5 />
+<CondToken line=11 col=6 />
+<LParenToken line=11 col=11 />
+<LParenToken line=11 col=12 />
+<IdentifierToken line=11 col=13 val='=' />
+<IdentifierToken line=11 col=15 val='i' />
+<IdentifierToken line=11 col=17 val='n2' />
+<RParenToken line=11 col=19 />
+<BoolToken line=11 col=21 val='true' />
+<RParenToken line=11 col=23 />
+<LParenToken line=13 col=7 />
+<LParenToken line=13 col=8 />
+<IdentifierToken line=13 col=9 val='char=?' />
+<LParenToken line=13 col=16 />
+<IdentifierToken line=13 col=17 val='string-ref' />
+<IdentifierToken line=13 col=28 val='pattern' />
+<IdentifierToken line=13 col=36 val='i' />
+<RParenToken line=13 col=37 />
+<CharToken line=13 col=39 val='?' />
+<RParenToken line=13 col=42 />
+<LParenToken line=13 col=44 />
+<IdentifierToken line=13 col=45 val='loop' />
+<IdentifierToken line=13 col=50 val='source' />
+<IdentifierToken line=13 col=57 val='pattern' />
+<IdentifierToken line=13 col=65 val='n' />
+<IdentifierToken line=13 col=67 val='n2' />
+<LParenToken line=13 col=70 />
+<IdentifierToken line=13 col=71 val='+' />
+<IdentifierToken line=13 col=73 val='i' />
+<IntToken line=13 col=75 val='1' />
+<RParenToken line=13 col=76 />
+<LParenToken line=13 col=78 />
+<IdentifierToken line=13 col=79 val='+' />
+<IdentifierToken line=13 col=81 val='count' />
+<IntToken line=13 col=87 val='1' />
+<RParenToken line=13 col=88 />
+<RParenToken line=13 col=89 />
+<RParenToken line=13 col=90 />
+<LParenToken line=15 col=7 />
+<LParenToken line=15 col=8 />
+<IdentifierToken line=15 col=9 val='char=?' />
+<LParenToken line=15 col=16 />
+<IdentifierToken line=15 col=17 val='string-ref' />
+<IdentifierToken line=15 col=28 val='source' />
+<IdentifierToken line=15 col=35 val='count' />
+<RParenToken line=15 col=40 />
+<LParenToken line=15 col=42 />
+<IdentifierToken line=15 col=43 val='string-ref' />
+<IdentifierToken line=15 col=54 val='pattern' />
+<IdentifierToken line=15 col=62 val='i' />
+<RParenToken line=15 col=63 />
+<RParenToken line=15 col=64 />
+<LParenToken line=15 col=66 />
+<IdentifierToken line=15 col=67 val='loop' />
+<IdentifierToken line=15 col=72 val='source' />
+<IdentifierToken line=15 col=79 val='pattern' />
+<IdentifierToken line=15 col=87 val='n' />
+<IdentifierToken line=15 col=89 val='n2' />
+<LParenToken line=15 col=92 />
+<IdentifierToken line=15 col=93 val='+' />
+<IdentifierToken line=15 col=95 val='i' />
+<IntToken line=15 col=97 val='1' />
+<RParenToken line=15 col=98 />
+<LParenToken line=15 col=100 />
+<IdentifierToken line=15 col=101 val='+' />
+<IdentifierToken line=15 col=103 val='count' />
+<IntToken line=15 col=109 val='1' />
+<RParenToken line=15 col=110 />
+<RParenToken line=15 col=111 />
+<RParenToken line=15 col=112 />
+<LParenToken line=17 col=7 />
+<LParenToken line=17 col=8 />
+<IdentifierToken line=17 col=9 val='not' />
+<LParenToken line=17 col=13 />
+<IdentifierToken line=17 col=14 val='=' />
+<IdentifierToken line=17 col=16 val='count' />
+<IdentifierToken line=17 col=22 val='n' />
+<RParenToken line=17 col=23 />
+<RParenToken line=17 col=24 />
+<LParenToken line=19 col=7 />
+<CondToken line=19 col=8 />
+<LParenToken line=19 col=13 />
+<LParenToken line=19 col=14 />
+<IdentifierToken line=19 col=15 val='>' />
+<IdentifierToken line=19 col=17 val='i' />
+<IntToken line=19 col=19 val='0' />
+<RParenToken line=19 col=20 />
+<LParenToken line=19 col=22 />
+<IdentifierToken line=19 col=23 val='loop' />
+<IdentifierToken line=19 col=28 val='source' />
+<IdentifierToken line=19 col=35 val='pattern' />
+<IdentifierToken line=19 col=43 val='n' />
+<IdentifierToken line=19 col=45 val='n2' />
+<IntToken line=19 col=48 val='0' />
+<IdentifierToken line=19 col=50 val='count' />
+<RParenToken line=19 col=55 />
+<RParenToken line=19 col=56 />
+<LParenToken line=21 col=13 />
+<LParenToken line=21 col=14 />
+<IdentifierToken line=21 col=15 val='=' />
+<IdentifierToken line=21 col=17 val='i' />
+<IntToken line=21 col=19 val='0' />
+<RParenToken line=21 col=20 />
+<LParenToken line=21 col=22 />
+<IdentifierToken line=21 col=23 val='loop' />
+<IdentifierToken line=21 col=28 val='source' />
+<IdentifierToken line=21 col=35 val='pattern' />
+<IdentifierToken line=21 col=43 val='n' />
+<IdentifierToken line=21 col=45 val='n2' />
+<IntToken line=21 col=48 val='0' />
+<LParenToken line=21 col=50 />
+<IdentifierToken line=21 col=51 val='+' />
+<IdentifierToken line=21 col=53 val='count' />
+<IntToken line=21 col=59 val='1' />
+<RParenToken line=21 col=60 />
+<RParenToken line=21 col=61 />
+<RParenToken line=21 col=62 />
+<RParenToken line=22 col=7 />
+<RParenToken line=22 col=8 />
+<LParenToken line=24 col=7 />
+<LParenToken line=24 col=8 />
+<IdentifierToken line=24 col=9 val='=' />
+<IdentifierToken line=24 col=11 val='count' />
+<IdentifierToken line=24 col=17 val='n' />
+<RParenToken line=24 col=18 />
+<BoolToken line=24 col=20 val='false' />
+<RParenToken line=24 col=22 />
+<RParenToken line=25 col=5 />
+<RParenToken line=26 col=1 />
+<LParenToken line=28 col=1 />
+<IdentifierToken line=28 col=2 val='display' />
+<LParenToken line=28 col=10 />
+<IdentifierToken line=28 col=11 val='substring-wildcard' />
+<StrToken line=28 col=30 val='hello' />
+<StrToken line=28 col=38 val='?e2llo' />
+<RParenToken line=28 col=46 />
+<RParenToken line=28 col=47 />
+<EofToken />

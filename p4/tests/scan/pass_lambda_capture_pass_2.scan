@@ -1,0 +1,34 @@
+<LParenToken line=1 col=1 />
+<DefineToken line=1 col=2 />
+<IdentifierToken line=1 col=9 val='capture' />
+<LParenToken line=1 col=17 />
+<LambdaToken line=1 col=18 />
+<LParenToken line=1 col=25 />
+<IdentifierToken line=1 col=26 val='x' />
+<RParenToken line=1 col=27 />
+<LParenToken line=1 col=29 />
+<LambdaToken line=1 col=30 />
+<LParenToken line=1 col=37 />
+<IdentifierToken line=1 col=38 val='y' />
+<RParenToken line=1 col=39 />
+<LParenToken line=1 col=41 />
+<AndToken line=1 col=42 />
+<IdentifierToken line=1 col=46 val='x' />
+<IdentifierToken line=1 col=48 val='y' />
+<RParenToken line=1 col=49 />
+<RParenToken line=1 col=50 />
+<RParenToken line=1 col=51 />
+<RParenToken line=1 col=52 />
+<LParenToken line=2 col=1 />
+<DefineToken line=2 col=2 />
+<IdentifierToken line=2 col=9 val='passing' />
+<LParenToken line=2 col=17 />
+<IdentifierToken line=2 col=18 val='capture' />
+<BoolToken line=2 col=26 val='true' />
+<RParenToken line=2 col=28 />
+<RParenToken line=2 col=29 />
+<LParenToken line=3 col=1 />
+<IdentifierToken line=3 col=2 val='passing' />
+<BoolToken line=3 col=10 val='false' />
+<RParenToken line=3 col=12 />
+<EofToken />

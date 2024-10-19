@@ -1,0 +1,23 @@
+<Cond>
+ <Condition>
+  <Test>
+   <Bool val='true' />
+  </Test>
+  <Actions>
+   <Int val='1' />
+   <Int val='2' />
+   <Int val='3' />
+  </Actions>
+ </Condition>
+ <Condition>
+  <Test>
+   <Bool val='false' />
+  </Test>
+  <Actions>
+   <Apply>
+    <Identifier val='explode' />
+   </Apply>
+  </Actions>
+ </Condition>
+</Cond>
+

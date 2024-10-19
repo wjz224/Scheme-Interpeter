@@ -1,0 +1,13 @@
+<If>
+ <Apply>
+  <Identifier val='>' />
+  <Int val='1' />
+  <Int val='2' />
+ </Apply>
+ <Tick>
+  <Symbol val='a' />
+ </Tick>
+ <Tick>
+  <Symbol val='b' />
+ </Tick>
+</If>

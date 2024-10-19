@@ -1,0 +1,4 @@
+<Or>
+ <Bool val='true' />
+ <Identifier val='explode' />
+</Or>

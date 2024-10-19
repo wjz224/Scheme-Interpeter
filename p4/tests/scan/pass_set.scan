@@ -1,0 +1,13 @@
+<LParenToken line=1 col=1 />
+<DefineToken line=1 col=2 />
+<IdentifierToken line=1 col=9 val='x' />
+<IntToken line=1 col=11 val='10' />
+<RParenToken line=1 col=13 />
+<IdentifierToken line=2 col=1 val='x' />
+<LParenToken line=3 col=1 />
+<SetToken line=3 col=2 />
+<IdentifierToken line=3 col=7 val='x' />
+<IntToken line=3 col=9 val='11' />
+<RParenToken line=3 col=11 />
+<IdentifierToken line=4 col=1 val='x' />
+<EofToken />

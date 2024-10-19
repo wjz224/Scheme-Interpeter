@@ -1,2 +1,4 @@
-<Bool val='true' />
+<Apply>
+ <Identifier val='+' />
+</Apply>
 

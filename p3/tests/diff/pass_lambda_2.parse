@@ -1,0 +1,13 @@
+<Lambda>
+<Formals>
+ <Identifier val='x' />
+</Formals>
+<Expressions>
+ <Apply>
+  <Identifier val='+' />
+  <Identifier val='x' />
+  <Identifier val='y' />
+ </Apply>
+</Expressions>
+</Lambda>
+

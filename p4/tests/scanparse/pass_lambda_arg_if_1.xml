@@ -1,0 +1,26 @@
+<Define>
+ <Identifier val='trueish' />
+ <Lambda>
+  <Formals>
+   <Identifier val='x' />
+  </Formals>
+  <Expressions>
+   <If>
+    <Identifier val='x' />
+    <Bool val='true' />
+    <Bool val='false' />
+   </If>
+  </Expressions>
+ </Lambda>
+</Define>
+
+<Apply>
+ <Identifier val='trueish' />
+ <Tick>
+  <Cons>
+   <Null />
+   <Null />
+  </Cons>
+ </Tick>
+</Apply>
+

@@ -1,0 +1,10 @@
+<If>
+ <Bool val='true' />
+ <Apply>
+  <Identifier val='+' />
+  <Int val='1' />
+  <Int val='2' />
+  <Int val='3' />
+ </Apply>
+ <Str val='hello' />
+</If>

@@ -1,0 +1,24 @@
+<LParenToken line=1 col=1 />
+<DefineToken line=1 col=2 />
+<IdentifierToken line=1 col=9 val='l' />
+<AbbrevToken line=1 col=11 />
+<LParenToken line=1 col=12 />
+<IntToken line=1 col=13 val='1' />
+<IntToken line=1 col=15 val='2' />
+<IntToken line=1 col=17 val='3' />
+<RParenToken line=1 col=18 />
+<RParenToken line=1 col=19 />
+<LParenToken line=2 col=1 />
+<IdentifierToken line=2 col=2 val='set-cdr!' />
+<IdentifierToken line=2 col=11 val='l' />
+<AbbrevToken line=2 col=13 />
+<LParenToken line=2 col=14 />
+<IntToken line=2 col=15 val='4' />
+<IntToken line=2 col=17 val='5' />
+<IntToken line=2 col=19 val='6' />
+<IntToken line=2 col=21 val='7' />
+<IntToken line=2 col=23 val='8' />
+<RParenToken line=2 col=24 />
+<RParenToken line=2 col=25 />
+<IdentifierToken line=3 col=1 val='l' />
+<EofToken />

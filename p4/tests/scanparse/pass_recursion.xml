@@ -1,0 +1,156 @@
+<Define>
+ <Identifier val='recurse' />
+ <Lambda>
+  <Formals>
+   <Identifier val='a' />
+   <Identifier val='b' />
+   <Identifier val='c' />
+   <Identifier val='val' />
+  </Formals>
+  <Expressions>
+   <Cond>
+    <Condition>
+     <Test>
+      <And>
+       <Identifier val='a' />
+       <Identifier val='b' />
+       <Identifier val='c' />
+</And>
+     </Test>
+     <Actions>
+      <Identifier val='val' />
+     </Actions>
+    </Condition>
+    <Condition>
+     <Test>
+      <And>
+       <Identifier val='b' />
+       <Identifier val='c' />
+</And>
+     </Test>
+     <Actions>
+      <Apply>
+       <Identifier val='recurse' />
+       <Bool val='true' />
+       <Bool val='false' />
+       <Bool val='false' />
+       <Int val='4' />
+      </Apply>
+      <Identifier val='val' />
+     </Actions>
+    </Condition>
+    <Condition>
+     <Test>
+      <And>
+       <Identifier val='a' />
+       <Identifier val='c' />
+</And>
+     </Test>
+     <Actions>
+      <Apply>
+       <Identifier val='recurse' />
+       <Bool val='true' />
+       <Bool val='true' />
+       <Bool val='false' />
+       <Int val='6' />
+      </Apply>
+      <Identifier val='val' />
+     </Actions>
+    </Condition>
+    <Condition>
+     <Test>
+      <And>
+       <Identifier val='a' />
+       <Identifier val='b' />
+</And>
+     </Test>
+     <Actions>
+      <Apply>
+       <Identifier val='recurse' />
+       <Bool val='true' />
+       <Bool val='true' />
+       <Bool val='true' />
+       <Int val='7' />
+      </Apply>
+      <Identifier val='val' />
+     </Actions>
+    </Condition>
+    <Condition>
+     <Test>
+      <And>
+       <Identifier val='a' />
+</And>
+     </Test>
+     <Actions>
+      <Apply>
+       <Identifier val='recurse' />
+       <Bool val='true' />
+       <Bool val='false' />
+       <Bool val='true' />
+       <Int val='5' />
+      </Apply>
+      <Identifier val='val' />
+     </Actions>
+    </Condition>
+    <Condition>
+     <Test>
+      <And>
+       <Identifier val='b' />
+</And>
+     </Test>
+     <Actions>
+      <Apply>
+       <Identifier val='recurse' />
+       <Bool val='false' />
+       <Bool val='true' />
+       <Bool val='true' />
+       <Int val='3' />
+      </Apply>
+      <Identifier val='val' />
+     </Actions>
+    </Condition>
+    <Condition>
+     <Test>
+      <And>
+       <Identifier val='c' />
+</And>
+     </Test>
+     <Actions>
+      <Apply>
+       <Identifier val='recurse' />
+       <Bool val='false' />
+       <Bool val='true' />
+       <Bool val='false' />
+       <Int val='2' />
+      </Apply>
+      <Identifier val='val' />
+     </Actions>
+    </Condition>
+    <Condition>
+     <Test>
+      <Bool val='true' />
+     </Test>
+     <Actions>
+      <Apply>
+       <Identifier val='recurse' />
+       <Bool val='false' />
+       <Bool val='false' />
+       <Bool val='true' />
+       <Int val='1' />
+      </Apply>
+      <Identifier val='val' />
+     </Actions>
+    </Condition>
+   </Cond>
+  </Expressions>
+ </Lambda>
+</Define>
+
+<Apply>
+ <Identifier val='recurse' />
+ <Bool val='false' />
+ <Bool val='false' />
+ <Bool val='false' />
+ <Int val='17' />
+</Apply>
+

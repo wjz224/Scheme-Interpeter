@@ -1,0 +1,34 @@
+<Lambda>
+<Formals>
+ <Identifier val='x' />
+</Formals>
+<Expressions>
+ <Begin>
+  <Apply>
+   <Identifier val='x' />
+   <Int val='78' />
+  </Apply>
+  <Apply>
+   <Identifier val='/' />
+   <Int val='7' />
+   <Identifier val='y' />
+  </Apply>
+  <Apply>
+   <Identifier val='+' />
+   <Apply>
+    <Identifier val='-' />
+    <Int val='1' />
+    <Int val='2' />
+   </Apply>
+   <Int val='3' />
+  </Apply>
+  <Apply>
+   <Identifier val='+' />
+   <Int val='1' />
+   <Int val='2' />
+  </Apply>
+  <Int val='12' />
+ </Begin>
+</Expressions>
+</Lambda>
+

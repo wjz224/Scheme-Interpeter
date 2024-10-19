@@ -1,0 +1,12 @@
+<Or>
+ <Apply>
+  <Identifier val='>' />
+  <Int val='1' />
+  <Int val='2' />
+ </Apply>
+ <Apply>
+  <Identifier val='<' />
+  <Int val='1' />
+  <Int val='2' />
+ </Apply>
+</Or>

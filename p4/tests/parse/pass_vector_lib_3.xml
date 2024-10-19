@@ -1,0 +1,19 @@
+<Define>
+ <Identifier val='v' />
+ <Tick>
+  <Vector>
+   <Int val='1' />
+   <Int val='2' />
+   <Int val='3' />
+   <Int val='4' />
+   <Int val='5' />
+  </Vector>
+ </Tick>
+</Define>
+
+<Apply>
+ <Identifier val='vector-get' />
+ <Identifier val='v' />
+ <Int val='2' />
+</Apply>
+

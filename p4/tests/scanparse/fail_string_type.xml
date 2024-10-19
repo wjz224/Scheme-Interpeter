@@ -1,0 +1,8 @@
+<Apply>
+ <Identifier val='string-append' />
+ <Str val='hello ' />
+ <Tick>
+  <Symbol val='world' />
+ </Tick>
+</Apply>
+

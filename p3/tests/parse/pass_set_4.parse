@@ -1,0 +1,4 @@
+<Set>
+ <Identifier val='x' />
+ <Str val='hello' />
+</Set>

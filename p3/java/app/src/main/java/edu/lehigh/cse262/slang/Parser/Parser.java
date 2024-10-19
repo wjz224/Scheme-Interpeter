@@ -506,12 +506,11 @@ public class Parser {
         }
     }
     /**
-     * Transform a stream of tokens into a Node
+     * Vec function for the production of a vec
      *
      * @param tokens a stream of tokens
      *
-     * @return A AstNode, because a Scheme program may have multiple
-     *         top-level expressions.
+     * @return Nodes.BaseNode (Nodes.Vec)
      */
     public Nodes.BaseNode vec(TokenStream tokens) throws Exception{
         //Set cur to next token

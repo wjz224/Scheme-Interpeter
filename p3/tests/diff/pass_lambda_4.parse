@@ -1,0 +1,16 @@
+<Lambda>
+<Formals>
+ <Identifier val='x' />
+ <Identifier val='y' />
+ <Identifier val='z' />
+</Formals>
+<Expressions>
+ <Apply>
+  <Identifier val='+' />
+  <Identifier val='x' />
+  <Identifier val='y' />
+  <Identifier val='z' />
+ </Apply>
+</Expressions>
+</Lambda>
+

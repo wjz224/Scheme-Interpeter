@@ -1,0 +1,86 @@
+<LParenToken line=2 col=1 />
+<DefineToken line=2 col=2 />
+<IdentifierToken line=2 col=9 val='list2vector' />
+<LParenToken line=2 col=21 />
+<LParenToken line=2 col=22 />
+<LambdaToken line=2 col=23 />
+<LParenToken line=2 col=30 />
+<IdentifierToken line=2 col=31 val='vec' />
+<RParenToken line=2 col=34 />
+<RParenToken line=2 col=35 />
+<RParenToken line=2 col=36 />
+<LParenToken line=4 col=3 />
+<LParenToken line=4 col=4 />
+<LambdaToken line=4 col=5 />
+<LParenToken line=4 col=12 />
+<IdentifierToken line=4 col=13 val='lstvec' />
+<RParenToken line=4 col=19 />
+<LParenToken line=6 col=6 />
+<LParenToken line=6 col=7 />
+<LambdaToken line=6 col=8 />
+<LParenToken line=6 col=15 />
+<IdentifierToken line=6 col=16 val='listCheck' />
+<RParenToken line=6 col=25 />
+<LParenToken line=7 col=9 />
+<CondToken line=7 col=10 />
+<LParenToken line=9 col=11 />
+<IdentifierToken line=9 col=12 val='listCheck' />
+<LParenToken line=9 col=22 />
+<IdentifierToken line=9 col=23 val='vector-append' />
+<LParenToken line=9 col=37 />
+<IdentifierToken line=9 col=38 val='vector' />
+<LParenToken line=9 col=45 />
+<IdentifierToken line=9 col=46 val='car' />
+<IdentifierToken line=9 col=50 val='lstvec' />
+<RParenToken line=9 col=56 />
+<RParenToken line=9 col=57 />
+<LParenToken line=9 col=59 />
+<IdentifierToken line=9 col=60 val='list2vector' />
+<LParenToken line=9 col=72 />
+<IdentifierToken line=9 col=73 val='cdr' />
+<IdentifierToken line=9 col=77 val='lstvec' />
+<RParenToken line=9 col=83 />
+<RParenToken line=9 col=84 />
+<RParenToken line=9 col=85 />
+<RParenToken line=9 col=86 />
+<LParenToken line=11 col=11 />
+<LParenToken line=11 col=12 />
+<IdentifierToken line=11 col=13 val='null?' />
+<IdentifierToken line=11 col=19 val='lstvec' />
+<RParenToken line=11 col=25 />
+<LParenToken line=11 col=27 />
+<IdentifierToken line=11 col=28 val='vector' />
+<LParenToken line=11 col=35 />
+<IdentifierToken line=11 col=36 val='list' />
+<RParenToken line=11 col=41 />
+<RParenToken line=11 col=42 />
+<RParenToken line=11 col=43 />
+<LParenToken line=13 col=11 />
+<IdentifierToken line=13 col=12 val='else' />
+<LParenToken line=13 col=17 />
+<IdentifierToken line=13 col=18 val='vector' />
+<LParenToken line=13 col=25 />
+<IdentifierToken line=13 col=26 val='car' />
+<IdentifierToken line=13 col=30 val='lstvec' />
+<RParenToken line=13 col=36 />
+<RParenToken line=13 col=37 />
+<RParenToken line=13 col=38 />
+<RParenToken line=14 col=9 />
+<RParenToken line=14 col=10 />
+<LParenToken line=16 col=9 />
+<IdentifierToken line=16 col=10 val='not' />
+<LParenToken line=16 col=13 />
+<IdentifierToken line=16 col=14 val='<=' />
+<LParenToken line=16 col=17 />
+<IdentifierToken line=16 col=18 val='length' />
+<IdentifierToken line=16 col=25 val='lstvec' />
+<RParenToken line=16 col=31 />
+<IntToken line=16 col=33 val='1' />
+<RParenToken line=16 col=34 />
+<RParenToken line=16 col=35 />
+<RParenToken line=16 col=36 />
+<RParenToken line=16 col=37 />
+<IdentifierToken line=18 col=5 val='vec' />
+<RParenToken line=18 col=8 />
+<RParenToken line=19 col=1 />
+<EofToken />

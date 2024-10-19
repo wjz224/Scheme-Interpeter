@@ -1,0 +1,15 @@
+<Tick>
+ <Cons>
+  <Int val='1' />
+  <Cons>
+   <Int val='2' />
+   <Cons>
+    <Int val='3' />
+    <Cons>
+     <Null />
+     <Null />
+    </Cons>
+   </Cons>
+  </Cons>
+ </Cons>
+</Tick>

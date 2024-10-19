@@ -1,0 +1,131 @@
+<LParenToken line=1 col=1 />
+<DefineToken line=1 col=2 />
+<IdentifierToken line=1 col=9 val='recurse' />
+<LParenToken line=1 col=17 />
+<LambdaToken line=1 col=18 />
+<LParenToken line=1 col=25 />
+<IdentifierToken line=1 col=26 val='a' />
+<IdentifierToken line=1 col=28 val='b' />
+<IdentifierToken line=1 col=30 val='c' />
+<IdentifierToken line=1 col=32 val='val' />
+<RParenToken line=1 col=35 />
+<LParenToken line=2 col=3 />
+<CondToken line=2 col=4 />
+<LParenToken line=3 col=4 />
+<LParenToken line=3 col=5 />
+<AndToken line=3 col=6 />
+<IdentifierToken line=3 col=10 val='a' />
+<IdentifierToken line=3 col=12 val='b' />
+<IdentifierToken line=3 col=14 val='c' />
+<RParenToken line=3 col=15 />
+<IdentifierToken line=3 col=17 val='val' />
+<RParenToken line=3 col=20 />
+<LParenToken line=4 col=4 />
+<LParenToken line=4 col=5 />
+<AndToken line=4 col=6 />
+<IdentifierToken line=4 col=12 val='b' />
+<IdentifierToken line=4 col=14 val='c' />
+<RParenToken line=4 col=15 />
+<LParenToken line=4 col=17 />
+<IdentifierToken line=4 col=18 val='recurse' />
+<BoolToken line=4 col=26 val='true' />
+<BoolToken line=4 col=29 val='false' />
+<BoolToken line=4 col=32 val='false' />
+<IntToken line=4 col=35 val='4' />
+<RParenToken line=4 col=36 />
+<IdentifierToken line=4 col=38 val='val' />
+<RParenToken line=4 col=41 />
+<LParenToken line=5 col=4 />
+<LParenToken line=5 col=5 />
+<AndToken line=5 col=6 />
+<IdentifierToken line=5 col=10 val='a' />
+<IdentifierToken line=5 col=14 val='c' />
+<RParenToken line=5 col=15 />
+<LParenToken line=5 col=17 />
+<IdentifierToken line=5 col=18 val='recurse' />
+<BoolToken line=5 col=26 val='true' />
+<BoolToken line=5 col=29 val='true' />
+<BoolToken line=5 col=32 val='false' />
+<IntToken line=5 col=35 val='6' />
+<RParenToken line=5 col=36 />
+<IdentifierToken line=5 col=38 val='val' />
+<RParenToken line=5 col=41 />
+<LParenToken line=6 col=4 />
+<LParenToken line=6 col=5 />
+<AndToken line=6 col=6 />
+<IdentifierToken line=6 col=10 val='a' />
+<IdentifierToken line=6 col=12 val='b' />
+<RParenToken line=6 col=15 />
+<LParenToken line=6 col=17 />
+<IdentifierToken line=6 col=18 val='recurse' />
+<BoolToken line=6 col=26 val='true' />
+<BoolToken line=6 col=29 val='true' />
+<BoolToken line=6 col=32 val='true' />
+<IntToken line=6 col=35 val='7' />
+<RParenToken line=6 col=36 />
+<IdentifierToken line=6 col=38 val='val' />
+<RParenToken line=6 col=41 />
+<LParenToken line=7 col=4 />
+<LParenToken line=7 col=5 />
+<AndToken line=7 col=6 />
+<IdentifierToken line=7 col=10 val='a' />
+<RParenToken line=7 col=15 />
+<LParenToken line=7 col=17 />
+<IdentifierToken line=7 col=18 val='recurse' />
+<BoolToken line=7 col=26 val='true' />
+<BoolToken line=7 col=29 val='false' />
+<BoolToken line=7 col=32 val='true' />
+<IntToken line=7 col=35 val='5' />
+<RParenToken line=7 col=36 />
+<IdentifierToken line=7 col=38 val='val' />
+<RParenToken line=7 col=41 />
+<LParenToken line=8 col=4 />
+<LParenToken line=8 col=5 />
+<AndToken line=8 col=6 />
+<IdentifierToken line=8 col=12 val='b' />
+<RParenToken line=8 col=15 />
+<LParenToken line=8 col=17 />
+<IdentifierToken line=8 col=18 val='recurse' />
+<BoolToken line=8 col=26 val='false' />
+<BoolToken line=8 col=29 val='true' />
+<BoolToken line=8 col=32 val='true' />
+<IntToken line=8 col=35 val='3' />
+<RParenToken line=8 col=36 />
+<IdentifierToken line=8 col=38 val='val' />
+<RParenToken line=8 col=41 />
+<LParenToken line=9 col=4 />
+<LParenToken line=9 col=5 />
+<AndToken line=9 col=6 />
+<IdentifierToken line=9 col=14 val='c' />
+<RParenToken line=9 col=15 />
+<LParenToken line=9 col=17 />
+<IdentifierToken line=9 col=18 val='recurse' />
+<BoolToken line=9 col=26 val='false' />
+<BoolToken line=9 col=29 val='true' />
+<BoolToken line=9 col=32 val='false' />
+<IntToken line=9 col=35 val='2' />
+<RParenToken line=9 col=36 />
+<IdentifierToken line=9 col=38 val='val' />
+<RParenToken line=9 col=41 />
+<LParenToken line=10 col=4 />
+<BoolToken line=10 col=5 val='true' />
+<LParenToken line=10 col=17 />
+<IdentifierToken line=10 col=18 val='recurse' />
+<BoolToken line=10 col=26 val='false' />
+<BoolToken line=10 col=29 val='false' />
+<BoolToken line=10 col=32 val='true' />
+<IntToken line=10 col=35 val='1' />
+<RParenToken line=10 col=36 />
+<IdentifierToken line=10 col=38 val='val' />
+<RParenToken line=10 col=41 />
+<RParenToken line=11 col=4 />
+<RParenToken line=11 col=5 />
+<RParenToken line=11 col=6 />
+<LParenToken line=12 col=1 />
+<IdentifierToken line=12 col=2 val='recurse' />
+<BoolToken line=12 col=10 val='false' />
+<BoolToken line=12 col=13 val='false' />
+<BoolToken line=12 col=16 val='false' />
+<IntToken line=12 col=19 val='17' />
+<RParenToken line=12 col=21 />
+<EofToken />

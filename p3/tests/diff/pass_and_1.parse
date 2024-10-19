@@ -1,2 +1,5 @@
-<Bool val='true' />
+<And>
+ <Bool val='true' />
+ <Bool val='false' />
+</And>
 

@@ -1,0 +1,5 @@
+<Apply>
+ <Identifier val='string-length' />
+ <Str val='hello' />
+</Apply>
+

@@ -1,0 +1,35 @@
+<Define>
+ <Identifier val='myvar' />
+ <Int val='10' />
+</Define>
+
+<Define>
+ <Identifier val='myfunc' />
+ <Lambda>
+  <Formals>
+   <Identifier val='myvar' />
+  </Formals>
+  <Expressions>
+   <Lambda>
+    <Formals>
+    </Formals>
+    <Expressions>
+     <Identifier val='myvar' />
+    </Expressions>
+   </Lambda>
+  </Expressions>
+ </Lambda>
+</Define>
+
+<Define>
+ <Identifier val='scopetest' />
+ <Apply>
+  <Identifier val='myfunc' />
+  <Int val='11' />
+ </Apply>
+</Define>
+
+<Apply>
+ <Identifier val='scopetest' />
+</Apply>
+

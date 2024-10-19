@@ -1,0 +1,6 @@
+<Apply>
+ <Identifier val='string-append' />
+ <Str val='hello' />
+ <Str val=' world' />
+</Apply>
+

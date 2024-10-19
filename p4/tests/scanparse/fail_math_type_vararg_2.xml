@@ -1,0 +1,6 @@
+<Apply>
+ <Identifier val='+' />
+ <Int val='1' />
+ <Str val='hi' />
+</Apply>
+

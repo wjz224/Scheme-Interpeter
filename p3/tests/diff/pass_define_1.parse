@@ -1,2 +1,5 @@
-<Bool val='true' />
+<Define>
+ <Identifier val='a' />
+ <Int val='1' />
+</Define>
 
