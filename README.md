@@ -6,6 +6,7 @@ The repostiory contains 4 directories. The main components of the Scheme Interpr
 <h3>1. /p2 - Scanner: </h3>
 The first process in the <b>Interpreter</b> process. Follows a set of specifications (See "/specifications directory" to see the Finite State Machine (FSM) diagrams) using <b>Lexical Analysis following the FSM diagram</b> to look for keywords and extract tokens using regular expressions for <b>Tokenization</b>. The tokens will then be used for our parsing process. <br>
 <h4> FSM Diagram: </h4>
+
 ![FSM Diagram](p2/specifications/scanner_full.png)
 
 <h3>2. /p3 - Parser:</h3> The second process is the <b>Parser</b>. the Parser uses <b>Syntax analysis</b> to check if the tokenized source code follows the grammar rules of the programming language (See "/specifications" directory to see the Tokenized Grammar specification diagram). During this process, the parser builds an <b>Abstract Syntax Tree (AST)</b>, which represents the hierarchical structure of the code. The AST simplifies the code, making it easier for the interpreter or compiler to analyze and execute.
