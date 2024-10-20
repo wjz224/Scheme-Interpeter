@@ -10,9 +10,13 @@ The first process in the <b>Interpreter</b> process. Follows a set of specificat
 ![FSM Diagram](p2/specifications/scanner_full.png)
 
 <h3>2. /p3 - Parser:</h3> The second process is the <b>Parser</b>. the Parser uses <b>Syntax analysis</b> to check if the tokenized source code follows the grammar rules of the programming language (See "/specifications" directory to see the Tokenized Grammar specification diagram). During this process, the parser builds an <b>Abstract Syntax Tree (AST)</b>, which represents the hierarchical structure of the code. The AST simplifies the code, making it easier for the interpreter or compiler to analyze and execute.
-![Tokenized Grammar Diagram](https://github.com/wjz224/Scheme-Interpeter/blob/main/p3/specifications/TokenizedGrammar.md) <br>
+
+<h4>Tokenized Grammar: <a>https://github.com/wjz224/Scheme-Interpreter/blob/main/p4/specifications/TokenizedGrammar.md</a></h4> 
+<h4> </h4>
 <h3>3. /p4 - Interpreter:</h3> The third process is the <b>Interpreter</b>.The interpreter is the component that directly executes the code by evaluating the Abstract Syntax Tree (AST) produced by the parser. It traverses the AST node by node, performing the operations specified, such as arithmetic calculations, variable assignments, and function calls, without needing to compile the code into machine language (See "/specifications" directory to see all the functions that are apart of Scheme that were implemented). Unlike a compiler, an interpreter executes the code line-by-line or expression-by-expression, making it ideal for dynamically typed and interpreted languages like Python or JavaScript.
-![Scheme Functions Diagram](https://github.com/wjz224/Scheme-Interpeter/blob/main/p4/specifications/TokenizedGrammar.md)
+
+<h4>Matlib functions and arithmetics: <a>https://github.com/wjz224/Scheme-Interpreter/blob/main/p4/specifications/StdLib.md</a></h4> 
+
 <h2> Project Details</h2>
 This project has implementations in both **Java** and **Python**.  <br>
 The project ontains two directories, one for each language version: <br>
